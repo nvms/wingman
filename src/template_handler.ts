@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 import * as vscode from "vscode";
 
 import { display, getConfig, SecondaryViewProvider } from "./extension";
-import { CallbackType, render, type Template } from "./template_render";
+import { CallbackType, render, type Command } from "./template_render";
 
 /**
  * Defines the shape of the conversation context object.
@@ -75,7 +75,7 @@ function formatCodeBlockResponse(text: string) {
 }
 
 let lastQuestion: string | undefined;
-let lastTemplate: Template | undefined;
+let lastTemplate: Command | undefined;
 let lastSystemMessage: string | undefined;
 
 /**
@@ -87,7 +87,7 @@ let lastSystemMessage: string | undefined;
  * @param template 
  * @returns 
  */
-export const ask = async (question: string, systemMessage?: string, template?: Template) => {
+export const ask = async (question: string, systemMessage?: string, template?: Command) => {
   let isFollowup = false;
 
   lastQuestion = question;
@@ -174,7 +174,7 @@ export const repeatLast = async () => {
   await ask(lastQuestion, lastSystemMessage, lastTemplate);
 };
 
-export const templateHandler = async (template: Template) => {
+export const templateHandler = async (template: Command) => {
   const { activeTextEditor } = vscode.window;
 
   if (!activeTextEditor) return;

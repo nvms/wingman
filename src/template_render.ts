@@ -49,7 +49,7 @@ export enum ContextType {
   None = "none",
 };
 
-export interface Template {
+export interface Command {
   model?: string;
   maxTokens?: number;
   temperature?: number;
@@ -66,7 +66,7 @@ export interface Template {
   category?: string;
 }
 
-export const baseTemplate: Template = {
+export const baseCommand: Command = {
   maxTokens: 4096,
   numberOfChoices: 1,
   model: "gpt-3.5-turbo",
@@ -87,7 +87,7 @@ export const baseTemplate: Template = {
   category: "Default",
 };
 
-export const defaultTemplates: Template[] = [
+export const defaultCommands: Command[] = [
   {
     command: "completion",
     label: "Completion",
@@ -204,12 +204,12 @@ export const defaultTemplates: Template[] = [
  * @param command The name of either a builtin command or a user-defined command.
  * @returns 
  */
-export const buildCommandTemplate = (command: string): Template => {
-  const userTemplates = getConfig<Template[]>("userCommands", []);
-  const defaultTemplate = defaultTemplates.find((t) => t.command === command);
-  const base = { ...baseTemplate };
+export const buildCommandTemplate = (command: string): Command => {
+  const userTemplates = getConfig<Command[]>("userCommands", []);
+  const defaultTemplate = defaultCommands.find((t) => t.command === command);
+  const base = { ...baseCommand };
 
-  const template: Template = userTemplates.find((t) => t.command === command) || defaultTemplate || base;
+  const template: Command = userTemplates.find((t) => t.command === command) || defaultTemplate || base;
 
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();

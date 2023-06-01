@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
 import { ask, Chat, repeatLast, templateHandler } from "./template_handler";
-import { defaultTemplates, buildCommandTemplate, type Template, CallbackType } from "./template_render";
+import { defaultCommands, buildCommandTemplate, type Command, CallbackType } from "./template_render";
 
 export const getConfig = <T>(key: string, fallback: unknown): T => {
   const config = vscode.workspace.getConfiguration("wingman");
@@ -63,12 +63,12 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
     const chatCircleSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><g fill="currentColor"><path d="M224 128a96 96 0 0 1-144.07 83.11l-37.39 12.47a8 8 0 0 1-10.12-10.12l12.47-37.39A96 96 0 1 1 224 128Z" opacity=".2"/><path d="M128 24a104 104 0 0 0-91.82 152.88l-11.35 34.05a16 16 0 0 0 20.24 20.24l34.05-11.35A104 104 0 1 0 128 24Zm0 192a87.87 87.87 0 0 1-44.06-11.81a8 8 0 0 0-4-1.08a7.85 7.85 0 0 0-2.53.42L40 216l12.47-37.4a8 8 0 0 0-.66-6.54A88 88 0 1 1 128 216Zm12-88a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm-44 0a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm88 0a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z"/></g></svg>';
     const swapSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 48v104a8 8 0 0 1-8 8h-40v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V104a8 8 0 0 1 8-8h40V48a8 8 0 0 1 8-8h112a8 8 0 0 1 8 8Z" opacity=".2"/><path d="M224 48v104a16 16 0 0 1-16 16H99.31l10.35 10.34a8 8 0 0 1-11.32 11.32l-24-24a8 8 0 0 1 0-11.32l24-24a8 8 0 0 1 11.32 11.32L99.31 152H208V48H96v8a8 8 0 0 1-16 0v-8a16 16 0 0 1 16-16h112a16 16 0 0 1 16 16Zm-56 144a8 8 0 0 0-8 8v8H48V104h108.69l-10.35 10.34a8 8 0 0 0 11.32 11.32l24-24a8 8 0 0 0 0-11.32l-24-24a8 8 0 0 0-11.32 11.32L156.69 88H48a16 16 0 0 0-16 16v104a16 16 0 0 0 16 16h112a16 16 0 0 0 16-16v-8a8 8 0 0 0-8-8Z"/></g></svg>';
 
-    const builtinTemplates = [...defaultTemplates];
-    const userTemplates = getConfig("userCommands", []) as Template[];
+    const builtinTemplates = [...defaultCommands];
+    const userTemplates = getConfig("userCommands", []) as Command[];
     const allTemplates = [...builtinTemplates, ...userTemplates].map((t) => buildCommandTemplate(t.command));
     const categories = [...new Set(allTemplates.map(template => template.category))];
 
-    const buttonHtml = (template: Template) => {
+    const buttonHtml = (template: Command) => {
       return `
       <li>
         <button
@@ -212,7 +212,7 @@ export function activate(context: vscode.ExtensionContext) {
       }),
     );
 
-    const registerCommand = (template: Template & { command: string }) => {
+    const registerCommand = (template: Command & { command: string }) => {
       if (!template.command) return;
 
       const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {
@@ -222,11 +222,11 @@ export function activate(context: vscode.ExtensionContext) {
       context.subscriptions.push(command);
     };
 
-    const builtinTemplates = [...defaultTemplates];
-    const userTemplates = getConfig("userCommands", []) as Template[];
+    const builtinTemplates = [...defaultCommands];
+    const userTemplates = getConfig("userCommands", []) as Command[];
     const allTemplates = [...builtinTemplates, ...userTemplates];
 
-    allTemplates.forEach((template: Template) => {
+    allTemplates.forEach((template: Command) => {
       registerCommand(template);
     });
   } catch (error) {

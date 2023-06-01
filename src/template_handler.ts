@@ -49,13 +49,32 @@ export function replaceLinesWithText(editor: vscode.TextEditor, { startLine, end
     new vscode.Position(startLine, 0),
     new vscode.Position(endLine, editor.document.lineAt(endLine).range.end.character)
   );
-  const originalFirstLine = editor.document.lineAt(startLine);
-  const firstLineIndentation = originalFirstLine.text.match(/^(\s*)/);
-  const indentation = firstLineIndentation ? firstLineIndentation[0] : "";
-  const indentedNewText = newText.split("\n").map(line => indentation + line).join("\n");
-
+  
+  const indentedNewText = indentText(newText, editor.document.lineAt(startLine));
+  
   edit.replace(editor.document.uri, range, indentedNewText);
   vscode.workspace.applyEdit(edit);
+}
+
+export function addTextAfterSelection(editor: vscode.TextEditor, { startLine }: { startLine: number, endLine: number }, newText: string): vscode.Range {
+  const edit = new vscode.WorkspaceEdit();
+  const position = editor.selection.end;
+
+  const newLine = editor.document.lineAt(position.line).rangeIncludingLineBreak;
+  const insertRange = new vscode.Range(newLine.end, newLine.end);
+
+  const indentedNewText = indentText(`\n${newText}\n`, editor.document.lineAt(startLine));
+  
+  edit.insert(editor.document.uri, insertRange.start, indentedNewText);
+  vscode.workspace.applyEdit(edit);
+
+  return insertRange;
+}
+
+function indentText(text: string, line: vscode.TextLine): string {
+  const firstLineIndentation = line.text.match(/^(\s*)/);
+  const indentation = firstLineIndentation ? firstLineIndentation[0] : "";
+  return text.split("\n").map(line => indentation + line).join("\n");
 }
 
 /**
@@ -158,12 +177,16 @@ export const ask = async (question: string, systemMessage?: string, template?: C
 
     SecondaryViewProvider.postMessage({ type: "responseFinished", value: response });
 
-    // Only replace lines if this is the first message in the conversation.
-    if (!isFollowup && template.callbackType === CallbackType.Replace) {
-      const formattedText = formatCodeBlockResponse(response.text);
-      replaceLinesWithText(editor, selection, formattedText);
-
-      // openDiffWindow("hello world", "hello dolly");
+    // Only modify the editor if this is the first message in the conversation.
+    if (!isFollowup) {
+      if (template.callbackType === CallbackType.Replace) {
+        const formattedText = formatCodeBlockResponse(response.text);
+        replaceLinesWithText(editor, selection, formattedText);
+      } else if (template.callbackType === CallbackType.AfterSelected) {
+        const formattedText = formatCodeBlockResponse(response.text);
+        const newRange = addTextAfterSelection(editor, selection, formattedText);
+        editor.selection = new vscode.Selection(newRange.start, newRange.end);
+      }
     }
   } catch (error) {
     display(String(error));

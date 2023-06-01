@@ -81,7 +81,7 @@
         "wingman.model": {
           "type": "string",
           "default": "gpt-3.5-turbo",
-          "description": "ChatGPT model (fallback if command does not specify)",
+          "description": "Model (a fallback if the command does not specify)",
           "enum": [
             "gpt-3.5-turbo",
             "gpt-4"
@@ -90,12 +90,12 @@
         "wingman.apiBaseUrl": {
           "type": "string",
           "default": "https://api.openai.com/v1",
-          "description": "ChatGPT API base URL (without trailing slash, for local LLaMa-based inference use something like github.com/go-skynet/LocalAI)"
+          "description": "API base URL (without trailing slash, for local LLaMa-based inference use something like github.com/go-skynet/LocalAI)"
         },
         "wingman.temperature": {
           "type": "number",
           "default": 0.8,
-          "description": "ChatGPT temperature (fallback if command does not specify)"
+          "description": "Temperature (a fallback if the command does not specify)"
         },
         "wingman.userCommands": {
           "type": "array",

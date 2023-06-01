@@ -41,10 +41,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --no-optional
 
-      # - name: Publish to Visual Studio Marketplace
-      #   run: pnpm run publish:vs-marketplace
-      #   env:
-      #     VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+      - name: Publish to Visual Studio Marketplace
+        run: pnpm run publish:vs-marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
 
       # - name: Publish to Open VSX Registry
       #   run: pnpm run publish:open-vsx -p ${{ secrets.OPEN_VSX_TOKEN }}

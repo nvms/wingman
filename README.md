@@ -22,18 +22,18 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 
   ```json
    {
-    command: "doc",
-    label: "Write documentation",
-    userMessageTemplate:
+    "command": "doc",
+    "label": "Write documentation",
+    "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else.",
-    languageInstructions: {
-      cpp: "Use doxygen style comments for functions.",
-      java: "Use javadoc style comments for functions.",
-      typescript: "Use TSDoc style comments for functions.",
-      javascript: "Use JSDoc style comments for functions.",
+    "languageInstructions": {
+      "cpp": "Use doxygen style comments for functions.",
+      "java": "Use javadoc style comments for functions.",
+      "typescript": "Use TSDoc style comments for functions.",
+      "javascript": "Use JSDoc style comments for functions.",
     },
-    callbackType: "replace",
-    contextType: "selection"
+    "callbackType": "replace",
+    "contextType": "selection"
   }
   ```
 

@@ -31,19 +31,6 @@ export enum CallbackType {
   AfterSelected = "afterSelected",
 }
 
-export function callbackTypeToReadable(t: CallbackType | undefined) {
-  if (!t) return "New buffer";
-
-  switch (t) {
-    case CallbackType.Buffer:
-      return "";
-    case CallbackType.Replace:
-      return "Replaces selected lines";
-    case CallbackType.AfterSelected:
-      return "Place after selected";
-  }
-}
-
 export enum ContextType {
   Selection = "selection",
   None = "none",

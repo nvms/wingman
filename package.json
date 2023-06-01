@@ -1,5 +1,5 @@
 {
-  "name": "wingman",
+  "name": "ai-wingman",
   "displayName": "Wingman",
   "version": "1.0.0",
   "description": "Your pair programming wingman",
@@ -20,7 +20,9 @@
   },
   "keywords": [
     "chatgpt",
-    "ai"
+    "ai",
+    "wingman",
+    "pair programming"
   ],
   "categories": [
     "Other"

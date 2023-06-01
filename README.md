@@ -20,7 +20,7 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 
 - **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration. Add `{{language_instructions}}` to your templates:
 
-  ```json{highlight=[5, 6, 7, 8, 9, 10]}
+  ```json
    {
     "command": "doc",
     "label": "Write documentation",

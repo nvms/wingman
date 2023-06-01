@@ -38,12 +38,77 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
   ```
 
 - **Automatically replaces selected text** - OPTIONAL. If you have text selected, it will automatically replace it with the generated code block. This can be disabled or enabled per-command.
-- **Elaboration/additional context** - OPTIONAL. If your command defines a `{{commandArgs}}` in its template, it will prompt you for elaboration on the command. This can be disabled or enabled per-command.
+- **Elaboration/additional context** - OPTIONAL. If your command defines a `{{command_args}}` in its template, it will prompt you for elaboration on the command. This can be disabled or enabled per-command.
 - **Configurable API url** - This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
 - **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available. `gpt-3.5-turbo` is the default. This is currently an `enum` but will likely be changed to a `string` in the future to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
 - **Cancel requests** - Cancel an in-progress request.
 
-## Commands
+## Command interface
+
+You can create your own commands by adding them to your settings under `wingman.userCommands`. Your commands need to implement the `Command` interface:
+
+```typescript
+export interface Command {
+  model?: string;
+  maxTokens?: number;
+  temperature?: number;
+  numberOfChoices?: number;
+  command: string;
+  label: string;
+  userMessageTemplate: string;
+  systemMessageTemplate?: string;
+  languageInstructions?: {
+    [languageId: string]: string;
+  };
+  callbackType?: CallbackType;
+  contextType: ContextType;
+  category?: string;
+}
+```
+
+This is what the default, base command looks like:
+
+```typescript
+export const baseCommand: Command = {
+  maxTokens: 4096,
+  numberOfChoices: 1,
+  model: "gpt-3.5-turbo",
+  temperature: 0.8,
+  command: "default",
+  label: "Default",
+  systemMessageTemplate: "You are a {{language}} coding assistant.",
+  userMessageTemplate: "",
+  callbackType: CallbackType.Buffer,
+  languageInstructions: {
+    javascript: "Use modern JavaScript syntax.",
+    typescript: "Use modern TypeScript syntax.",
+    cpp: "Use modern C++ features.",
+    html: "Use modern HTML syntax.",
+    csharp: "Use modern C# syntax.",
+  },
+  contextType: ContextType.Selection,
+  category: "Default",
+};
+```
+
+When you create your own command, you can override any of these properties. The only required properties are `command`, `label`, `userMessageTemplate`, and `contextType`.
+
+| Property | Description |
+| -------- | ----------- |
+| `model` | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported. |
+| `maxTokens` | See OpenAI API docs. |
+| `numberOfChoices` | See OpenAI API docs. |
+| `temperature` | See OpenAI API docs. |
+| `command` | The command name. This value is used to register the command with vscode: `wingman.<command>`. |
+| `label` | The label for the command to show in the UI. |
+| `systemMessageTemplate` | See OpenAI API docs. |
+| `userMessageTemplate` | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}`. |
+| `callbackType` | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected` |
+| `languageInstructions` | A map of language identifiers to instructions for the given `userMessageTemplate`. |
+| `contextType` | The type of context to use: `ContextType.Selection` or `ContextType.None` |
+| `category` | The category to place the command under in the UI. |
+
+## Default commands
 
 | Command | Description |
 | ------- | ----------- |

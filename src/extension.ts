@@ -4,7 +4,7 @@ import path from "node:path";
 import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
-import { ask, Chat, repeatLast, templateHandler } from "./template_handler";
+import { ask, Chat, repeatLast, commandHandler } from "./template_handler";
 import { defaultCommands, buildCommandTemplate, type Command, CallbackType } from "./template_render";
 
 export const getConfig = <T>(key: string, fallback: unknown): T => {
@@ -216,7 +216,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (!template.command) return;
 
       const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {
-        templateHandler(buildCommandTemplate(template.command));
+        commandHandler(buildCommandTemplate(template.command));
       });
 
       context.subscriptions.push(command);

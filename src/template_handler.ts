@@ -196,7 +196,7 @@ export const repeatLast = async () => {
   await ask(lastQuestion, lastSystemMessage, lastTemplate);
 };
 
-export const templateHandler = async (template: Command) => {
+export const commandHandler = async (template: Command) => {
   const { activeTextEditor } = vscode.window;
 
   if (!activeTextEditor) return;

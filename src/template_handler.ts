@@ -192,7 +192,7 @@ export const ask = async (question: string, systemMessage?: string, template?: C
 };
 
 export const repeatLast = async () => {
-  if (!lastQuestion) { return; }
+  if (!lastQuestion || !lastSystemMessage || !lastTemplate) { return; }
   await ask(lastQuestion, lastSystemMessage, lastTemplate);
 };
 

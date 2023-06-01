@@ -81,7 +81,8 @@ let lastSystemMessage: string | undefined;
 /**
  * When ask is called without a template, it's assumed to be a continuation
  * of the previous conversation. In this case, we use the last template that
- * was used, and we don't replace the text in the editor.
+ * was used, and we don't send a "newChat" event to the secondary view, so the
+ * chat is not cleared. Instead, new replies show up in the same conversation thread.
  * @param question
  * @param systemMessage 
  * @param template 

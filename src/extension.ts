@@ -70,21 +70,21 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
 
     const buttonHtml = (template: Command) => {
       return `
-      <li>
-        <button
-          class="command-button secondary flex flex-col justify-between items-start p-1"
-          data-command="${template.command}">
-          <div class="text-sm pointer-events-none flex flex-1 w-full justify-between">
-            <span>${template.label}</span>
-            <div class="flex">
-              <span>${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>
-              <span>${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
-              <span>${template.callbackType === CallbackType.Replace ? swapSvg : ""}</span>
+        <li>
+          <button
+            class="command-button secondary flex flex-col justify-between items-start p-1"
+            data-command="${template.command}">
+            <div class="text-sm pointer-events-none flex flex-1 w-full justify-between">
+              <span>${template.label}</span>
+              <div class="flex">
+                <span>${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>
+                <span>${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
+                <span>${template.callbackType === CallbackType.Replace ? swapSvg : ""}</span>
+              </div>
             </div>
-          </div>
-        </button>
-      </li>
-    `;
+          </button>
+        </li>
+      `;
     };
 
     const commands = categories
@@ -92,15 +92,15 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
         const templatesWithThisCategory = allTemplates.filter((template) => template.category === category);
         const categoryCommandsHTML = templatesWithThisCategory.map(buttonHtml).join("");
         return `
-          <div>
             <div>
-              <h2 class="text-sm font-semibold px-1">${category}</h2>
+              <div>
+                <h2 class="text-sm font-semibold px-1">${category}</h2>
+              </div>
+              <ul class="command-list">
+                ${categoryCommandsHTML}
+              </ul>
             </div>
-            <ul class="command-list">
-              ${categoryCommandsHTML}
-            </ul>
-          </div>
-        `;
+          `;
       }).join("");
 
     return $.html()

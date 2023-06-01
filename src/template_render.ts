@@ -205,22 +205,15 @@ export const defaultTemplates: Template[] = [
  * @returns 
  */
 export const buildCommandTemplate = (command: string): Template => {
-  const base = Object.assign({}, baseTemplate);
-  const template: Template = (getConfig("userCommands", []) as Template[]).find((t) => t.command === command)
-    || defaultTemplates.find((t) => t.command === command)
-    || baseTemplate;
+  const userTemplates = getConfig<Template[]>("userCommands", []);
+  const defaultTemplate = defaultTemplates.find((t) => t.command === command);
+  const base = { ...baseTemplate };
 
-  const ret: Template = {
-    ...base,
-    ...template,
-    languageInstructions: {
-      ...base.languageInstructions,
-      ...template.languageInstructions,
-    },
-  };
+  const template: Template = userTemplates.find((t) => t.command === command) || defaultTemplate || base;
 
-  ret.userMessageTemplate = ret.userMessageTemplate.trim();
-  ret.systemMessageTemplate = ret.systemMessageTemplate?.trim();
+  const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
+  const userMessageTemplate = template.userMessageTemplate.trim();
+  const systemMessageTemplate = template.systemMessageTemplate?.trim();
 
-  return ret;
+  return { ...base, ...template, languageInstructions, userMessageTemplate, systemMessageTemplate };
 };

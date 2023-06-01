@@ -9,8 +9,17 @@ import * as vscode from "vscode";
 import { display, getConfig, SecondaryViewProvider } from "./extension";
 import { CallbackType, render, type Template } from "./template_render";
 
+/**
+ * Defines the shape of the conversation context object.
+ */
 interface ConversationContext {
+  /**
+   * The id of the conversation. Can be undefined if no conversation has been started yet.
+   */
   conversationId: string | undefined;
+  /**
+   * The id of the parent message, if any.
+   */
   parentMessageId: string;
 }
 
@@ -65,6 +74,7 @@ function formatCodeBlockResponse(text: string) {
   return text;
 }
 
+let lastQuestion: string | undefined;
 let lastTemplate: Template | undefined;
 let lastSystemMessage: string | undefined;
 
@@ -79,6 +89,8 @@ let lastSystemMessage: string | undefined;
  */
 export const ask = async (question: string, systemMessage?: string, template?: Template) => {
   let isFollowup = false;
+
+  lastQuestion = question;
 
   if (template) { lastTemplate = template; }
   if (!template && !lastTemplate) { return; }
@@ -155,6 +167,11 @@ export const ask = async (question: string, systemMessage?: string, template?: T
   } catch (error) {
     display(String(error));
   }
+};
+
+export const repeatLast = async () => {
+  if (!lastQuestion) { return; }
+  await ask(lastQuestion, lastSystemMessage, lastTemplate);
 };
 
 export const templateHandler = async (template: Template) => {

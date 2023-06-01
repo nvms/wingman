@@ -2,12 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <!--
-		Use a content security policy to only allow loading styles from our extension directory,
-		and only allow scripts that have a specific nonce.
-		(See the 'webview-sample' extension sample for img-src content security policy examples)
-	-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="{{tailwindJsUri}}"></script>
@@ -35,10 +29,11 @@
             <button id="abort" class="hidden px-2 bg-red-600 text-white h-full">Cancel request</button>
           </div>
           <div class="flex-1">
-            <div class="flex">
-              <input id="input" class="px-4 flex-1" placeholder="Send a message." type="text" />
-              <div class="flex-0">
-                <button id="clear-conversation" class="px-2 h-full">Clear conversation</button>
+            <div class="flex h-10">
+              <input id="input" class="h-full px-4 flex-1" placeholder="Send a message." type="text" />
+              <div class="flex-0 flex h-full">
+                <button id="repeat-last" class="px-2 h-full whitespace-nowrap">Repeat last</button>
+                <button id="clear-conversation" class="px-2 h-full whitespace-nowrap">Clear conversation</button>
               </div>
             </div>
           </div>

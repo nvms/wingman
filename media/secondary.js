@@ -77,6 +77,10 @@
     }
   });
 
+  $("#repeat-last").on("click", () => {
+    vscode.postMessage({ type: "repeatLast" });
+  });
+
   function showInput() {
     $("#input-container").removeClass("hidden");
   }
@@ -113,6 +117,7 @@
     const userTextDiv = createUserTextDiv(text);
     div.append(userTextDiv);
     $("#abort").removeClass("hidden");
+    $("#repeat-last").addClass("hidden");
     scrollToBottom();
   }
 
@@ -124,12 +129,14 @@
     formatDiv(div[0], message.value.text);
     responseId++;
     $("#abort").addClass("hidden");
+    $("#repeat-last").removeClass("hidden");
     scrollToBottom();
   }
 
   function responseAborted() {
     aiIsResponding = false;
     $("#abort").addClass("hidden");
+    $("#repeat-last").removeClass("hidden");
     const div = $(`#ai-${responseId}`);
     formatDiv(div[0], message.value.text);
     responseId++;
@@ -151,6 +158,7 @@
     }
 
     $("#abort").removeClass("hidden");
+    $("#repeat-last").addClass("hidden");
     scrollToBottom();
   }
 

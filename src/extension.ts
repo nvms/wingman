@@ -4,15 +4,15 @@ import path from "node:path";
 import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
-import { ask, Chat, templateHandler } from "./template_handler";
+import { ask, Chat, repeatLast, templateHandler } from "./template_handler";
 import { defaultTemplates, buildCommandTemplate, type Template, CallbackType } from "./template_render";
 
-export const getConfig = (key: string, fallback: unknown) => {
+export const getConfig = <T>(key: string, fallback: unknown): T => {
   const config = vscode.workspace.getConfiguration("wingman");
   if (fallback) {
-    return config.get(key, fallback);
+    return config.get(key, fallback) as T;
   }
-  return config.get(key);
+  return config.get(key) as T;
 };
 
 export const display = (message: string) => {
@@ -150,6 +150,10 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
           Chat.abort?.abort?.();
           Chat.abort = new AbortController();
           SecondaryViewProvider.postMessage({ type: "aborted" });
+          break;
+        }
+        case "repeatLast": {
+          repeatLast();
           break;
         }
         case "sendInput": {

@@ -46,6 +46,3 @@ class BinarySearchTree<T> {
     return this.root.find(value);
   }
 }
-
-// A vue 3 (composition API) counter component.
-<script lang="ts" setup>

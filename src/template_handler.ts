@@ -219,7 +219,7 @@ export const templateHandler = async (template: Command) => {
   
     const { selectedText } = getSelectionInfo(activeTextEditor);
   
-    const prompt = render(
+    const userMessage = render(
       template.userMessageTemplate,
       languageId,
       selectedText,
@@ -235,7 +235,7 @@ export const templateHandler = async (template: Command) => {
       template.languageInstructions?.[languageId] ?? "",
     );
 
-    await ask(prompt, systemMessage, template);
+    await ask(userMessage, systemMessage, template);
   } catch (error) {
     display(String(error));
   }

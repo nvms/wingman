@@ -174,23 +174,10 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
   }
 }
 
-// function getNonce() {
-//   let text = "";
-//   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//   for (let i = 0; i < 32; i++) {
-//     text += possible.charAt(Math.floor(Math.random() * possible.length));
-//   }
-//   return text;
-// }
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   try {
-    // Create a new ChatGPTViewProvider instance and register it with the extension's context
     const mainViewProvider = new MainViewProvider(context.extensionPath, context.extensionUri);
 
-    // Register the provider with the extension's context
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(MainViewProvider.viewType, mainViewProvider, {
         webviewOptions: { retainContextWhenHidden: true },
@@ -199,40 +186,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     const secondaryViewProvider = new SecondaryViewProvider(context.extensionPath, context.extensionUri);
 
-    // Register the provider with the extension's context
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(SecondaryViewProvider.viewType, secondaryViewProvider, {
         webviewOptions: { retainContextWhenHidden: true },
       }),
     );
-
-    // Add panel item
-    // const panelItem = vscode.window.createWebviewPanel("wingman.sidebarItem", "My Sidebar Item", vscode.ViewColumn.Beside, {
-    //   enableScripts: true,
-    // });
-    // panelItem.webview.html = `<h1>Hello World</h1>`;
-
-    const replaceLinesDisposable = vscode.commands.registerCommand("wingman.replaceLines", () => {
-      const editor = vscode.window.activeTextEditor;
-      if (!editor) {
-        return;
-      }
-
-      const { selection } = editor;
-      const startLine = selection.start.line;
-      const endLine = selection.end.line;
-      const capturedText: string[] = [];
-      const edit = new vscode.WorkspaceEdit();
-
-      for (let i = startLine; i <= endLine; i++) {
-        const line = editor.document.lineAt(i);
-        const range = new vscode.Range(line.range.start, line.range.end);
-        edit.replace(editor.document.uri, range, "pancake");
-        capturedText.push(line.text);
-      }
-
-      vscode.workspace.applyEdit(edit);
-    });
 
     const registerCommand = (template: Template & { command: string }) => {
       const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {
@@ -249,12 +207,9 @@ export function activate(context: vscode.ExtensionContext) {
     allTemplates.forEach((template: Template) => {
       registerCommand(template);
     });
-
-    context.subscriptions.push(replaceLinesDisposable);
   } catch (error) {
     display(String(error));
   }
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}

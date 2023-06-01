@@ -92,7 +92,7 @@ export const defaultCommands: Command[] = [
     command: "doc",
     label: "Write documentation",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain yourself.",
     languageInstructions: {
       cpp: "Use doxygen style comments for functions.",
       java: "Use javadoc style comments for functions.",

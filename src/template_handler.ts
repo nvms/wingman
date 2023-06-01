@@ -27,11 +27,11 @@ export class Chat {
   public static api: ChatGPTAPI | undefined;
   public static conversationId: string;
   public static abort: AbortController = new AbortController();
-  public static context: ConversationContext | undefined;
+  public static conversationState: ConversationContext | undefined;
 
   public static newApi(options: ChatGPTAPIOptions) {
     Chat.api = new ChatGPTAPI(options);
-    Chat.context = undefined;
+    Chat.conversationState = undefined;
   }
 }
 
@@ -139,8 +139,6 @@ export const ask = async (question: string, systemMessage?: string, template?: C
     });
   }
 
-  // SecondaryViewProvider._view?.show()
-
   let parentMessageId: string | undefined;
 
   if (!isFollowup) {
@@ -166,11 +164,11 @@ export const ask = async (question: string, systemMessage?: string, template?: C
         systemMessage,
         timeoutMs: 60 * 1000,
         abortSignal: Chat.abort.signal,
-        ...Chat.context,
+        ...Chat.conversationState,
       },
     );
 
-    Chat.context = {
+    Chat.conversationState = {
       conversationId: response.conversationId,
       parentMessageId: response.id,
     }

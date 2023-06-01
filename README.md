@@ -57,3 +57,8 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 | Modify | Makes changes to the selected code |
 | Chat | Communicate with team members about the selected code |
 | Question | Asks a question about the selected code |
+
+
+## TODO
+
+- Repeat last: Sometimes the ChatGPT API is overloaded, and the request fails. In these scenarios it might be useful to have a "repeat last question" functionality.

@@ -1,12 +1,10 @@
 body {
-	/* background: #24252D; */
 }
 
 .command-list {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-	/* color: #9CA1AC; */
 }
 
 .command-list li {
@@ -19,9 +17,16 @@ body {
 }
 
 .command-list li button:hover {
-		/* color: white; */
 }
 
 .muted {
 	opacity: 0.5;
+}
+
+.command-list svg {
+	width: 18px;
+	height: 18px;
+	fill: var(--vscode-foreground);
+	background: transparent;
+	margin-left: 5px;
 }

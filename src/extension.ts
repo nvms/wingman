@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
 import { ask, Chat, templateHandler } from "./template_handler";
-import { callbackTypeToReadable, ContextType, defaultTemplates, type Template } from "./template_render";
+import { callbackTypeToReadable, defaultTemplates, buildCommandTemplate, type Template } from "./template_render";
 
 export const getConfig = (key: string, fallback: unknown) => {
   const config = vscode.workspace.getConfiguration("wingman");
@@ -64,10 +64,8 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
 
     const builtinTemplates = [...defaultTemplates];
     const userTemplates = getConfig("userCommands", []) as Template[];
-    const allTemplates = [...builtinTemplates, ...userTemplates];
-
-    const commandsWithSelectionContext = allTemplates.filter((template) => template.contextType === ContextType.Selection);
-    const commandsWithNoContext = allTemplates.filter((template) => template.contextType === ContextType.None);
+    const allTemplates = [...builtinTemplates, ...userTemplates].map((t) => buildCommandTemplate(t.command));
+    const categories = [...new Set(allTemplates.map(template => template.category))];
 
     const buttonHtml = (template: Template) => {
       return `
@@ -90,9 +88,21 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
     `;
     };
 
-    const commandsWithSelectionContextHTML = commandsWithSelectionContext.map(buttonHtml).join("");
-    const commandsWithNoContextHTML = commandsWithNoContext.map(buttonHtml).join("");
-    // const commands = allTemplates.map(buttonHtml).join("");
+    const commands = categories
+      .map((category) => {
+        const templatesWithThisCategory = allTemplates.filter((template) => template.category === category);
+        const categoryCommandsHTML = templatesWithThisCategory.map(buttonHtml).join("");
+        return `
+          <div>
+            <div>
+              <h2 class="text-sm font-semibold px-1">${category}</h2>
+            </div>
+            <ul class="command-list">
+              ${categoryCommandsHTML}
+            </ul>
+          </div>
+        `;
+      }).join("");
 
     return $.html()
       .replace("{{scriptUri}}", scriptUri.toString())
@@ -101,8 +111,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
       .replace("{{styleMainUri}}", styleMainUri.toString())
       .replace("{{tailwindJsUri}}", tailwindJsUri.toString())
       .replace("{{tailwindCssUri}}", tailwindCssUri.toString())
-      .replace("{{selectionContextComments}}", commandsWithSelectionContextHTML)
-      .replace("{{noContextComments}}", commandsWithNoContextHTML);
+      .replace("{{commands}}", commands);
   }
 }
 
@@ -201,8 +210,10 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     const registerCommand = (template: Template & { command: string }) => {
+      if (!template.command) return;
+
       const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {
-        templateHandler(template);
+        templateHandler(buildCommandTemplate(template.command));
       });
 
       context.subscriptions.push(command);

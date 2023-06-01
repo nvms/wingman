@@ -1,20 +1,15 @@
+import { getConfig } from "./extension";
+
 export function render(
-  userMessage: string, // sub-command template
-  languageId: string, // e.g. "typescript"
-  textSelection: string, // whatever is highlighted
-  commandArgs: string | undefined, // arbitrary text given by user in the prompt before command is run
-  languageInstructions: string, // config.get("languageInstructions", "")
+  userMessage: string,
+  languageId: string,
+  textSelection: string,
+  commandArgs: string | undefined,
+  languageInstructions: string,
 ) {
-  // replace {{filetype}} with the current file type
   userMessage = userMessage.replace("{{filetype}}", languageId);
-
-  // replace {{language}} with the current language
   userMessage = userMessage.replace("{{language}}", languageId);
-
-  // replace {{text_selection}} with textSelection
   userMessage = userMessage.replace("{{text_selection}}", textSelection);
-
-  // replace {{command_args}} with commandArgs
   if (commandArgs) {
     const endingPunctuations = [".", "!", "?"];
 
@@ -27,7 +22,6 @@ export function render(
     userMessage = userMessage.replace("{{command_args}}.", "");
   }
 
-  // replace {{language_instructions}} with the language instructions
   return userMessage.replace("{{language_instructions}}", languageInstructions);
 }
 
@@ -69,6 +63,7 @@ export interface Template {
   };
   callbackType?: CallbackType;
   contextType: ContextType;
+  category?: string;
 }
 
 export const baseTemplate: Template = {
@@ -80,7 +75,7 @@ export const baseTemplate: Template = {
   label: "Default",
   systemMessageTemplate: "You are a {{language}} coding assistant.",
   userMessageTemplate: "",
-  callbackType: CallbackType.Replace,
+  callbackType: CallbackType.Buffer,
   languageInstructions: {
     javascript: "Use modern JavaScript syntax.",
     typescript: "Use modern TypeScript syntax.",
@@ -89,6 +84,7 @@ export const baseTemplate: Template = {
     csharp: "Use modern C# syntax.",
   },
   contextType: ContextType.Selection,
+  category: "Default",
 };
 
 export const defaultTemplates: Template[] = [
@@ -191,6 +187,7 @@ export const defaultTemplates: Template[] = [
       "{{command_args}}.",
     callbackType: CallbackType.Buffer,
     contextType: ContextType.None,
+    category: "Miscellaneous",
   },
   {
     command: "question",
@@ -202,9 +199,16 @@ export const defaultTemplates: Template[] = [
   }
 ];
 
-export const getCommandTemplate = (command: string): Template => {
+/**
+ * Ensures that the template is merged into the base template.
+ * @param command The name of either a builtin command or a user-defined command.
+ * @returns 
+ */
+export const buildCommandTemplate = (command: string): Template => {
   const base = Object.assign({}, baseTemplate);
-  const template: Template = defaultTemplates.find((t) => t.command === command) || baseTemplate;
+  const template: Template = (getConfig("userCommands", []) as Template[]).find((t) => t.command === command)
+    || defaultTemplates.find((t) => t.command === command)
+    || baseTemplate;
 
   const ret: Template = {
     ...base,

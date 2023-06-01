@@ -1,7 +1,7 @@
 {
   "name": "wingman",
   "displayName": "Wingman",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "Your pair programming wingman",
   "publisher": "nvms",
   "private": true,

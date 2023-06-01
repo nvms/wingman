@@ -61,5 +61,4 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 
 ## TODO
 
-- Repeat last: Sometimes the ChatGPT API is overloaded, and the request fails. In these scenarios it might be useful to have a "repeat last question" functionality.
 - `CallbackType.Buffer` doesn't do anything at the moment. The desired behavior is to stick all generated code blocks into a panel at the end of the response, and stick a "copy" button above each block.

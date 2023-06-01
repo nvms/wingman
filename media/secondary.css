@@ -1,0 +1,83 @@
+body {
+	/* background-color: transparent; */
+}
+
+.user-text {
+	/* background: #24252e; */
+	color: var(--vscode-foreground);
+}
+
+.ai-text {
+	/* background: #3c3f4e; */
+	color: var(--vscode-foreground);
+	border-top: 1px solid var(--vscode-activityBar-border);
+	background: var(--vscode-activityBar-background);
+	border-bottom: 1px solid var(--vscode-activityBar-border);
+}
+
+.ai-text.in-progress-response {
+	/* color: var(--vscode-foreground); */
+	/* color: var(--vscode-terminal-ansiWhite); */
+}
+
+.ai-text.finished-response {
+	/* color: var(--vscode-terminal-ansiBlack); */
+}
+
+/* last instance of p inside .user-text make no padding or margin */
+.user-text p:last-child {
+	margin: 0;
+	padding: 0;
+}
+
+.ai-text p {
+	margin-bottom: 14px;
+}
+
+/* same with ai-text */
+.ai-text p:last-child {
+	margin: 0;
+	padding: 0;
+}
+
+#chat {
+	/* background: #24252e; */
+}
+
+#input-container {
+	background: transparent;
+	padding-top: 10px;
+}
+
+#input-wrap {
+	border-top: 1px solid var(--vscode-activityBar-border);
+}
+
+input#input {
+	/* background: #323341;
+	color: #fff; */
+}
+
+/* input placeholder text should be muted */
+input#input::placeholder {
+	/* color: #9CA1AC; */
+}
+
+.hljs {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+/*
+make ul's be bulleted with some indentation
+*/
+.ai-text menu,
+.ai-text ul {
+	list-style-type: disc;
+	padding-left: 20px;
+}
+
+.ai-text ol {
+	list-style-type: decimal;
+	padding-left: 20px;
+}

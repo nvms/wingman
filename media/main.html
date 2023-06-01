@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!--
+		Use a content security policy to only allow loading styles from our extension directory,
+		and only allow scripts that have a specific nonce.
+		(See the 'webview-sample' extension sample for img-src content security policy examples)
+	-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="{{tailwindJsUri}}"></script>
+
+    <link href="{{styleResetUri}}" rel="stylesheet" />
+    <link href="{{styleVSCodeUri}}" rel="stylesheet" />
+    <link href="{{styleMainUri}}" rel="stylesheet" />
+    <link href="{{tailwindCssUri}}" rel="stylesheet" />
+
+    <title>Main view</title>
+  </head>
+  <body class="p-0">
+    <div class="text-xs uppercase font-semibold px-1">Selection context</div>
+    <ul class="command-list">
+      {{selectionContextComments}}
+    </ul>
+    <per class="text-xs uppercase font-semibold px-1">No context</div>
+    <ul class="command-list">
+      {{noContextComments}}
+    </ul>
+    <script src="{{scriptUri}}"></script>
+  </body>
+</html>

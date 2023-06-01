@@ -1,0 +1,231 @@
+{
+  "name": "wingman",
+  "displayName": "Wingman",
+  "version": "0.0.12",
+  "description": "Your pair programming wingman",
+  "publisher": "nvms",
+  "private": true,
+  "preview": true,
+  "author": {
+    "name": "nvms"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/nvms/wingman/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nvms/wingman"
+  },
+  "bugs": {
+    "url": "https://github.com/nvms/wingman/issues"
+  },
+  "keywords": [
+    "chatgpt",
+    "ai"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "icon": "assets/logo.png",
+  "engines": {
+    "vscode": "^1.76.2"
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/badge/PRs-welcome-brightgreen.svg",
+      "description": "PRs Welcome",
+      "href": "https://github.com/nvms/wingman"
+    }
+  ],
+  "activationEvents": [],
+  "contributes": {
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "wingman",
+          "title": "Wingman",
+          "icon": "assets/logo.png"
+        }
+      ]
+    },
+    "views": {
+      "wingman": [
+        {
+          "type": "webview",
+          "id": "wingman.mainView",
+          "name": "Prompts"
+        },
+        {
+          "type": "webview",
+          "id": "wingman.secondaryView",
+          "name": "Conversation"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "wingman.replaceLines",
+        "title": "Replace Lines"
+      }
+    ],
+    "configuration": {
+      "title": "Wingman",
+      "properties": {
+        "wingman.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "ChatGPT API Key"
+        },
+        "wingman.model": {
+          "type": "string",
+          "default": "gpt-3.5-turbo",
+          "description": "ChatGPT model (fallback if command does not specify)",
+          "enum": [
+            "gpt-3.5-turbo",
+            "gpt-4"
+          ]
+        },
+        "wingman.apiBaseUrl": {
+          "type": "string",
+          "default": "https://api.openai.com/v1",
+          "description": "ChatGPT API base URL (without trailing slash, for local LLaMa-based inference use something like github.com/go-skynet/LocalAI)"
+        },
+        "wingman.temperature": {
+          "type": "number",
+          "default": 0.8,
+          "description": "ChatGPT temperature (fallback if command does not specify)"
+        },
+        "wingman.userCommands": {
+          "type": "array",
+          "default": [
+            {
+              "command": "complexity",
+              "label": "Calculate time complexity",
+              "userMessageTemplate": "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nPlease answer the following two questions and nothing else.\n1) What is the time complexity of this code? 2) How did you come to this conclusion?",
+              "systemMessageTemplate": "You are an assistant to a software developer.",
+              "callbackType": "buffer",
+              "contextType": "selection"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "string",
+                "default": "",
+                "description": "User-defined command name."
+              },
+              "label": {
+                "type": "string",
+                "default": "",
+                "description": "User-defined readable command label."
+              },
+              "userMessageTemplate": {
+                "type": "string",
+                "default": "",
+                "description": "User-defined message template."
+              },
+              "systemMessageTemplate": {
+                "type": "string",
+                "default": "",
+                "description": "User-defined system message template."
+              },
+              "callbackType": {
+                "type": "string",
+                "default": "buffer",
+                "enum": [
+                  "buffer",
+                  "replace",
+                  "afterSelected"
+                ],
+                "description": "User-defined callback type."
+              },
+              "contextType": {
+                "type": "string",
+                "default": "selection",
+                "enum": [
+                  "selection",
+                  "none"
+                ],
+                "description": "User-defined context type."
+              }
+            }
+          },
+          "description": "User-defined prompt command templates."
+        }
+      }
+    }
+  },
+  "eslintConfig": {
+    "extends": "@yutengjing/eslint-config-typescript",
+    "ignorePatterns": [
+      "test-workspace"
+    ]
+  },
+  "prettier": {
+    "singleQuote": false,
+    "trailingComma": "all",
+    "printWidth": 180,
+    "tabWidth": 2,
+    "semi": true
+  },
+  "lint-staged": {
+    "*.{js,ts,json,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm esbuild:base --minify",
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "stale-dep -u",
+    "clean": "rimraf -rf ./out",
+    "esbuild:base": "stale-dep && tsx scripts/esbuild.ts",
+    "esbuild:watch": "pnpm esbuild:base --sourcemap --watch",
+    "esbuild:analyze": "pnpm esbuild:base --minify --metafile --analyze && esbuild-visualizer --metadata ./meta.json --open",
+    "compile:test": "pnpm clean && tsc -b ./test/tsconfig.json",
+    "lint": "eslint src --ext ts",
+    "test": "stale-dep && pnpm compile:test && node ./out/test/runTests.js",
+    "package": "vsce package --no-dependencies",
+    "release": "bumpp -c \"release: v%s\" package.json",
+    "publish:vs-marketplace": "vsce publish --no-dependencies",
+    "publish:open-vsx": "ovsx publish --no-dependencies",
+    "prepare": "simple-git-hooks"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.16.16",
+    "@types/vscode": "^1.76.2",
+    "@vscode/test-electron": "^2.3.2",
+    "@vscode/vsce": "^2.19.0",
+    "@yutengjing/eslint-config-typescript": "^0.4.1",
+    "@yutengjing/prettier-config": "^0.0.1",
+    "bumpp": "^9.1.0",
+    "esbuild": "^0.17.19",
+    "esbuild-visualizer": "^0.4.0",
+    "eslint": "^8.41.0",
+    "glob": "^10.2.6",
+    "lint-staged": "^13.2.2",
+    "mocha": "^10.2.0",
+    "ovsx": "^0.8.1",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "simple-git-hooks": "^2.8.1",
+    "stale-dep": "^0.6.0",
+    "ts-loader": "^9.4.3",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4",
+    "webpack": "^5.84.1",
+    "webpack-cli": "^5.1.1"
+  },
+  "dependencies": {
+    "chatgpt": "github:nvms/chatgpt-api",
+    "cheerio": "1.0.0-rc.12",
+    "fetch": "^1.1.0",
+    "node-fetch": "^3.3.1"
+  }
+}

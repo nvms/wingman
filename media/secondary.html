@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!--
+		Use a content security policy to only allow loading styles from our extension directory,
+		and only allow scripts that have a specific nonce.
+		(See the 'webview-sample' extension sample for img-src content security policy examples)
+	-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="{{tailwindJsUri}}"></script>
+    <script src="{{markedJsUri}}"></script>
+    <script src="{{highlightJsUri}}"></script>
+    <script src="{{jqueryJsUri}}"></script>
+
+    <link href="{{styleResetUri}}" rel="stylesheet" />
+    <link href="{{styleVSCodeUri}}" rel="stylesheet" />
+    <link href="{{tailwindCssUri}}" rel="stylesheet" />
+    <link href="{{highlightCssUri}}" rel="stylesheet" />
+    <link href="{{styleSecondaryUri}}" rel="stylesheet" />
+
+    <title>Secondary view</title>
+  </head>
+  <body class="p-0">
+    <div id="chat" class="flex flex-col justify-between h-screen m-0">
+			<div class="flex-1 overflow-y-auto" id="scroll">
+				<div id="output"></div>
+			</div>
+
+			<div class="flex w-full hidden" id="input-container">
+        <div class="flex w-full" id="input-wrap">
+          <div class="flex-0 h-full flex items-center align-middle">
+            <button id="abort" class="hidden px-2 bg-red-600 text-white h-full">Cancel request</button>
+          </div>
+          <div class="flex-1">
+            <div class="flex">
+              <input id="input" class="px-4 flex-1" placeholder="Send a message." type="text" />
+              <div class="flex-0">
+                <button id="clear-conversation" class="px-2 h-full">Clear conversation</button>
+              </div>
+            </div>
+          </div>
+        </div>
+			</div>
+		</div>
+
+    <script src="{{scriptUri}}"></script>
+  </body>
+</html>

@@ -6,19 +6,18 @@
 
   let chatId = 0;
   let responseId = 0;
+  let aiIsResponding = false;
+  let autoScroll = false;
 
   const getUserBoxClasses = () => {
-    // return "user-text p-4 text-gray-100 overflow-x-auto";
     return "user-text p-4 overflow-x-auto";
   };
 
   const getAiBoxClasses = () => {
-    // return "ai-text text-gray-400 p-4 overflow-x-auto";
     return "ai-text p-4 overflow-x-auto in-progress-response";
   };
 
   const getAiBoxClassesFinished = () => {
-    // return "ai-text text-gray-100 p-4 overflow-x-auto";
     return "ai-text p-4 overflow-x-auto finished-response";
   };
 
@@ -67,16 +66,15 @@
   });
 
   $("#clear-conversation").on("click", () => {
-    // if #abort is visible, then send abort message
-    // else send clear conversation message
-    // if (!$("#abort").hasClass("hidden")) {
-    //   vscode.postMessage({
-    //     type: "abort",
-    //   });
-    // }
     vscode.postMessage({ type: "abort" });
     $("#output").empty();
     hideInput();
+  });
+
+  $("#scroll").on("wheel", () => {
+    if (aiIsResponding) {
+      autoScroll = false;
+    }
   });
 
   function showInput() {
@@ -88,17 +86,11 @@
   }
 
   function newChat() {
-    // find #output and empty it.
-    // create a new chat div inside of #output.
-    // increment chatId and assign it to the div's id, e.g. "chat-1"
     const output = $("#output");
     output.empty();
-
     const div = $("<div>");
     div.attr("id", `chat-${++chatId}`);
-
     output.append(div);
-
     showInput();
   }
 
@@ -110,39 +102,33 @@
   }
 
   function scrollToBottom() {
+    if (!autoScroll) return;
     const output = $("#scroll");
     output.scrollTop(output[0].scrollHeight);
   }
 
   function requestMessage(text) {
-    // find the chat div
+    autoScroll = true;
     const div = document.querySelector(`#chat-${chatId}`);
     const userTextDiv = createUserTextDiv(text);
-
-    // append a new div
     div.append(userTextDiv);
-
     $("#abort").removeClass("hidden");
-    
     scrollToBottom();
   }
 
   function responseFinished(message) {
+    aiIsResponding = false;
     const div = $(`#ai-${responseId}`);
-
     div.removeClass();
     div.addClass(getAiBoxClassesFinished());
-
     formatDiv(div[0], message.value.text);
-
     responseId++;
-
     $("#abort").addClass("hidden");
-    
     scrollToBottom();
   }
 
   function responseAborted() {
+    aiIsResponding = false;
     $("#abort").addClass("hidden");
     const div = $(`#ai-${responseId}`);
     formatDiv(div[0], message.value.text);
@@ -151,10 +137,10 @@
   }
 
   function partialResponse(message) {
+    aiIsResponding = true;
     const existing = document.querySelector(`#ai-${responseId}`);
     const chatBox = $(`#chat-${chatId}`);
     const div = $("<div>").addClass(getAiBoxClasses()).attr("id", `ai-${responseId}`).text(message.value.text);
-
     formatDiv(div[0], message.value.text);
 
     if (!existing) {
@@ -165,7 +151,6 @@
     }
 
     $("#abort").removeClass("hidden");
-    
     scrollToBottom();
   }
 
@@ -197,8 +182,6 @@
     const html = marked.parse(fixedText);
     div.innerHTML = html;
 
-    // find any `code` blocks that are a direct descendant of a `pre` and add the `hljs` class
-    // if it is missing.
     const codeBlocks = div.querySelectorAll("pre > code");
     codeBlocks.forEach((codeBlock) => {
       if (!codeBlock.classList.contains("hljs")) {

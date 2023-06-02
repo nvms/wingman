@@ -73,7 +73,7 @@ export function addTextAfterSelection(editor: vscode.TextEditor, { startLine }: 
 
 export async function putTextInNewBuffer(editor: vscode.TextEditor, newText: string) {
   const { languageId } = editor.document;
-  const doc = await vscode.workspace.openTextDocument({language: languageId});
+  const doc = await vscode.workspace.openTextDocument({ language: languageId });
   const newEditor = await vscode.window.showTextDocument(doc);
   await newEditor.edit(edit => {
     edit.insert(new vscode.Position(0, 0), newText);
@@ -87,8 +87,8 @@ function indentText(text: string, line: vscode.TextLine): string {
 }
 
 /**
- * 
- * @param text Unformatted text. It MIGHT be a code block, in which case it will begin with "```{{language}}\n" and end with "\n```\n". THis function should remove those and return the text in between.
+ * @param text Unformatted text. It MIGHT be a code block, in which case it will begin with "```{{language}}\n" and end with "\n```\n". This function should remove those and return the text in between.
+ * If it's not a code block, the text will be returned as-is.
  */
 function formatCodeBlockResponse(text: string) {
   // const regex = /^```[\w-]*\n([\s\S]+)\n```$/m;
@@ -107,7 +107,7 @@ let lastTemplate: Command | undefined;
 let lastSystemMessage: string | undefined;
 
 /**
- * When ask is called without a template, it's assumed to be a continuation
+ * When `ask` is called without a template, it's assumed to be a continuation
  * of the previous conversation. In this case, we use the last template that
  * was used, and we don't send a "newChat" event to the secondary view, so the
  * chat is not cleared. Instead, new replies show up in the same conversation thread.

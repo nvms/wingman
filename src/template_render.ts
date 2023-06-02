@@ -69,7 +69,7 @@ export const baseCommand: Command = {
     csharp: "Use modern C# syntax.",
   },
   contextType: ContextType.Selection,
-  category: "Default",
+  category: "Builtin default",
 };
 
 export const defaultCommands: Command[] = [
@@ -172,7 +172,7 @@ export const defaultCommands: Command[] = [
       "{{command_args}}.",
     callbackType: CallbackType.None,
     contextType: ContextType.None,
-    category: "Miscellaneous",
+    category: "Builtin miscellaneous",
   },
   {
     command: "question",
@@ -200,5 +200,5 @@ export const buildCommandTemplate = (command: string): Command => {
   const userMessageTemplate = template.userMessageTemplate.trim();
   const systemMessageTemplate = template.systemMessageTemplate?.trim();
 
-  return { ...base, ...template, languageInstructions, userMessageTemplate, systemMessageTemplate };
+  return { ...base, category: "Uncategorized", ...template, languageInstructions, userMessageTemplate, systemMessageTemplate };
 };

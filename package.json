@@ -2,7 +2,7 @@
   "name": "ai-wingman",
   "displayName": "Wingman",
   "version": "1.0.9",
-  "description": "Your pair programming wingman",
+  "description": "Your pair programming wingman, powered by ChatGPT or your local LLaMa.",
   "publisher": "nvms",
   "private": true,
   "preview": true,

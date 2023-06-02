@@ -1,6 +1,8 @@
 # wingman
 
-A Visual Studio Code extension with ChatGPT integration with highly extensible and customizable prompting templates, and a number of defaults to get you started.
+A Visual Studio Code extension with ChatGPT (3.5 and 4) or LLaMa integration with _**highly extensible and COMPLETELY CUSTOMIZABLE PROMPTING**_ templates. No magic. No shenanigans. These are your prompts, with a few built-in defaults to get you started.
+
+To use a local LLaMa model for completely offline generation, set `wingman.apiBaseUrl` to your local API URL and `wingman.model` to your desired model. This works best with something like [https://github.com/go-skynet/LocalAI](LocalAI). Whatever API you choose to use just has to implement the same REST interface as the OpenAI API - _this is exactly what LocalAI does_.
 
 <center>
 
@@ -11,7 +13,7 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 ## Quickstart
 
 1. Install the extension.
-2. Create an OpenAI account and get an API key.
+2. Create an OpenAI account and get an API key (if you're using ChatGPT for generation).
 3. Add your API key to your settings under `wingman.apiKey`: open Settings, search for "wingman", and paste your API key into the input field labeled "Api key".
 4. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
 5. Highlight a block of code and click "Refactor" in the Wingman tab to refactor the selected code. The generated code will automatically replace the selected text.

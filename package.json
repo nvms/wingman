@@ -118,22 +118,22 @@
               "command": {
                 "type": "string",
                 "default": "",
-                "description": "User-defined command name."
+                "description": "The name of the command to register (e.g. wingman.myCommand). Must be unique, or it will override an existing command (override the builtins if you'd like!)"
               },
               "label": {
                 "type": "string",
                 "default": "",
-                "description": "User-defined readable command label."
+                "description": "The label of the command is what shows up in the button text in the UI."
               },
               "userMessageTemplate": {
                 "type": "string",
                 "default": "",
-                "description": "User-defined message template."
+                "description": "The prompt to send, which can include string interpolations, e.g.: 'I have the following {{language}} code: {{text_selection}}. Please find and fix the bugs!'"
               },
               "systemMessageTemplate": {
                 "type": "string",
                 "default": "",
-                "description": "User-defined system message template."
+                "description": "System message template, which can include string interpolations, e.g.:  'You are an assistant to a {{language}} software developer.'"
               },
               "callbackType": {
                 "type": "string",
@@ -143,7 +143,7 @@
                   "replace",
                   "afterSelected"
                 ],
-                "description": "User-defined callback type."
+                "description": "This defines what wingman does when the model finishes replying with a block of code. 'buffer' (currently not implemented), 'replace' (replaces the selected text with the model's response), 'afterSelected' (inserts the model's response after the selected text on the next line)."
               },
               "contextType": {
                 "type": "string",
@@ -152,7 +152,12 @@
                   "selection",
                   "none"
                 ],
-                "description": "User-defined context type."
+                "description": "When this is 'selection', '{{text_selection}}' will be replaced in your prompt with the selected text."
+              },
+              "category": {
+                "type": "string",
+                "default": "Default",
+                "description": "What UI category should this command button live under?"
               }
             }
           },

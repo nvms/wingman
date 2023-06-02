@@ -63,6 +63,7 @@
 
   $("#abort").on("click", () => {
     vscode.postMessage({ type: "abort" });
+    $("#input").prop("disabled", false);
   });
 
   $("#clear-conversation").on("click", () => {
@@ -130,6 +131,7 @@
     responseId++;
     $("#abort").addClass("hidden");
     $("#repeat-last").removeClass("hidden");
+    $("#input").prop("disabled", false);
     scrollToBottom();
   }
 
@@ -140,6 +142,7 @@
     const div = $(`#ai-${responseId}`);
     formatDiv(div[0], message.value.text);
     responseId++;
+    $("#input").prop("disabled", false);
     scrollToBottom();
   }
 
@@ -159,6 +162,7 @@
 
     $("#abort").removeClass("hidden");
     $("#repeat-last").addClass("hidden");
+    $("#input").prop("disabled", true);
     scrollToBottom();
   }
 

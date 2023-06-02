@@ -1,5 +1,15 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.0.16 - 2023-06-02
+
+### Added
+
+- `CallbackType.None` does nothing with the response.
+
+### Fixed
+
+- `CallbackType.Buffer` now actually puts the response in a new buffer.
+
 ## 1.0.11 - 2023-06-01
 
 ### Changed

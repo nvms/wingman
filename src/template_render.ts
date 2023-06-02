@@ -23,6 +23,7 @@ export function render(
 }
 
 export enum CallbackType {
+  None = "none",
   Buffer = "buffer",
   Replace = "replace",
   AfterSelected = "afterSelected",
@@ -56,10 +57,10 @@ export const baseCommand: Command = {
   model: "gpt-3.5-turbo",
   temperature: 0.8,
   command: "default",
-  label: "Default",
+  label: "Unnamed command",
   systemMessageTemplate: "You are a {{language}} coding assistant.",
   userMessageTemplate: "",
-  callbackType: CallbackType.Buffer,
+  callbackType: CallbackType.None,
   languageInstructions: {
     javascript: "Use modern JavaScript syntax.",
     typescript: "Use modern TypeScript syntax.",
@@ -129,7 +130,7 @@ export const defaultCommands: Command[] = [
     command: "debug",
     label: "Analyze for bugs",
     userMessageTemplate: "Analyze the following {{language}} code for bugs:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
-    callbackType: CallbackType.Buffer,
+    callbackType: CallbackType.None,
     contextType: ContextType.Selection,
   },
   {
@@ -137,7 +138,7 @@ export const defaultCommands: Command[] = [
     label: "Explain",
     userMessageTemplate:
       "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{command_args}}.",
-    callbackType: CallbackType.Buffer,
+    callbackType: CallbackType.None,
     contextType: ContextType.Selection,
   },
   {
@@ -161,7 +162,7 @@ export const defaultCommands: Command[] = [
     label: "Chat",
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
-    callbackType: CallbackType.Buffer,
+    callbackType: CallbackType.None,
     contextType: ContextType.Selection,
   },
   {
@@ -169,7 +170,7 @@ export const defaultCommands: Command[] = [
     label: "Chat",
     userMessageTemplate:
       "{{command_args}}.",
-    callbackType: CallbackType.Buffer,
+    callbackType: CallbackType.None,
     contextType: ContextType.None,
     category: "Miscellaneous",
   },
@@ -178,7 +179,7 @@ export const defaultCommands: Command[] = [
     label: "Question",
     userMessageTemplate:
       "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{command_args}}.",
-    callbackType: CallbackType.Buffer,
+    callbackType: CallbackType.None,
     contextType: ContextType.Selection,
   }
 ];

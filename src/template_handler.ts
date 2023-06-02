@@ -71,6 +71,15 @@ export function addTextAfterSelection(editor: vscode.TextEditor, { startLine }: 
   return insertRange;
 }
 
+export async function putTextInNewBuffer(editor: vscode.TextEditor, newText: string) {
+  const { languageId } = editor.document;
+  const doc = await vscode.workspace.openTextDocument({language: languageId});
+  const newEditor = await vscode.window.showTextDocument(doc);
+  await newEditor.edit(edit => {
+    edit.insert(new vscode.Position(0, 0), newText);
+  });
+}
+
 function indentText(text: string, line: vscode.TextLine): string {
   const firstLineIndentation = line.text.match(/^(\s*)/);
   const indentation = firstLineIndentation ? firstLineIndentation[0] : "";
@@ -175,15 +184,28 @@ export const ask = async (question: string, systemMessage?: string, template?: C
 
     SecondaryViewProvider.postMessage({ type: "responseFinished", value: response });
 
-    // Only modify the editor if this is the first message in the conversation.
+    // Only care about callback type if this is the first message in the conversation.
     if (!isFollowup) {
-      if (template.callbackType === CallbackType.Replace) {
-        const formattedText = formatCodeBlockResponse(response.text);
-        replaceLinesWithText(editor, selection, formattedText);
-      } else if (template.callbackType === CallbackType.AfterSelected) {
-        const formattedText = formatCodeBlockResponse(response.text);
-        const newRange = addTextAfterSelection(editor, selection, formattedText);
-        editor.selection = new vscode.Selection(newRange.start, newRange.end);
+      switch (template.callbackType) {
+        case CallbackType.Replace:
+          {
+            const formattedText = formatCodeBlockResponse(response.text);
+            replaceLinesWithText(editor, selection, formattedText);
+            break;
+          }
+        case CallbackType.AfterSelected:
+          {
+            const formattedText = formatCodeBlockResponse(response.text);
+            const newRange = addTextAfterSelection(editor, selection, formattedText);
+            editor.selection = new vscode.Selection(newRange.start, newRange.end);
+            break;
+          }
+        case CallbackType.Buffer:
+          {
+            const formattedText = formatCodeBlockResponse(response.text);
+            putTextInNewBuffer(editor, formattedText);
+            break;
+          }
       }
     }
   } catch (error) {

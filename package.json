@@ -139,6 +139,7 @@
                 "type": "string",
                 "default": "buffer",
                 "enum": [
+                  "none",
                   "buffer",
                   "replace",
                   "afterSelected"

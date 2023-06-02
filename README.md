@@ -52,7 +52,7 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 - **Configurable API url** - This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
 - **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available. `gpt-3.5-turbo` is the default. This is currently an `enum` but will likely be changed to a `string` in the future to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
 - **Cancel requests** - Cancel an in-progress request.
-- **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates to automatically fill in values.
+- **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
 
 ## String interpolations
 

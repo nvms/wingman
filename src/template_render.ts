@@ -181,6 +181,16 @@ export const defaultCommands: Command[] = [
       "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{command_args}}.",
     callbackType: CallbackType.None,
     contextType: ContextType.Selection,
+  },
+  {
+    command: "grammar",
+    label: "Fix grammar",
+    userMessageTemplate:
+      "I have the following text:\n```{{filetype}}\n{{text_selection}}\n```\n\nCorrect any grammar mistakes and mistakes in spelling or punctuation. IMPORTANT: Return the text with any additional formatting it might have inside of a code fence and nothing else. If lines in the text are prefixed with what appears to be code comment characters, you must preserve those in your response. IMPORTANT: Do not explain your response, you must reply only with the corrected text.",
+    systemMessageTemplate: "You are a technical writer, grammar expert, and {{language}} coding assistant.",
+    callbackType: CallbackType.Replace,
+    contextType: ContextType.Selection,
+    category: "Builtin miscellaneous",
   }
 ];
 

@@ -81,11 +81,7 @@
         "wingman.model": {
           "type": "string",
           "default": "gpt-3.5-turbo",
-          "description": "Model (a fallback if the command does not specify)",
-          "enum": [
-            "gpt-3.5-turbo",
-            "gpt-4"
-          ]
+          "description": "Model (a fallback if the command does not specify, e.g. 'gpt-3.5-turbo', 'gpt-4', 'ggml-gpt4all-j', 'wizard-mega-13B.ggml.q4.bin')"
         },
         "wingman.apiBaseUrl": {
           "type": "string",

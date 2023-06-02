@@ -6,7 +6,6 @@
 
 - `wingman.model` is now a string, allowing for arbitrary models to be specified, e.g. for usage with `LocalAI`. The default value is still `gpt-3.5-turbo` and `gpt-4` is still supported.
 
-
 ## 1.0.9 - 2023-06-01
 
 ### Changed

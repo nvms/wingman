@@ -147,8 +147,3 @@ When you create your own command, you can override any of these properties. The 
 | Modify | Makes changes to the selected code |
 | Chat | Chat with only the selected code as context. |
 | Question | Asks a question about the selected code |
-
-
-## TODO
-
-- `CallbackType.Buffer` doesn't do anything at the moment. The desired behavior is to stick all generated code blocks into a panel at the end of the response, and stick a "copy" button above each block.

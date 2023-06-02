@@ -52,7 +52,7 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 - **Continue the conversation** - After the model replies to your request, you can continue the conversation by using the input field below. Conversation context is preserved until you start a new request. This gives you the opportunity to follow-up on the models' response, e.g., "What happens if the second parameter is null or undefined?" or "Can you also add a test that ensures the method throws expectedly when given bad input?".
 - **Elaboration/additional context** - OPTIONAL. If your command defines a `{{command_args}}` in its template, it will prompt you for elaboration on the command. This can be disabled or enabled per-command.
 - **Configurable API url** - This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
-- **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available. `gpt-3.5-turbo` is the default. This is currently an `enum` but will likely be changed to a `string` in the future to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
+- **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available for ChatGPT. `gpt-3.5-turbo` is the default. This is a `string` field to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
 - **Cancel requests** - Cancel an in-progress request.
 - **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
 
@@ -63,7 +63,7 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 | `{{language}}` | The language identifier of the current file. |
 | `{{command_args}}` | The arguments passed to the command. When this is present, you will be prompted for additional input when the command button is clicked. |
 | `{{text_selection}}` | The selected text. |
-| `{{filetype}}` | The file type of the current file. |
+| `{{filetype}}` | The file type of the current file. Not the extension name. Currently will have the same value as `{{language}}`. |
 | `{{language_instructions}}` | The language-specific instructions for more generic commands, like the `doc` example above. |
 
 ## Command interface

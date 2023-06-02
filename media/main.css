@@ -13,7 +13,6 @@ body {
 }
 
 .command-button {
-	border-bottom: 1px solid var(--vscode-editor-background);
 }
 
 .command-list li button:hover {
@@ -29,4 +28,19 @@ body {
 	fill: var(--vscode-foreground);
 	background: transparent;
 	margin-left: 5px;
+}
+
+.category {
+	background: var(--vscode-panelSectionHeader-background);
+}
+
+.category.collapsed {
+	opacity: 0.5;
+}
+
+.collapse-arrow svg {
+	width: 15px;
+	height: 15px;
+	fill: var(--vscode-foreground);
+	background: transparent;
 }

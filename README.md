@@ -18,6 +18,7 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 4. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
 5. Highlight a block of code and click "Refactor" in the Wingman tab to refactor the selected code. The generated code will automatically replace the selected text.
 6. Explore all of the other commands.
+7. Write your other commands in your settings under `wingman.userCommands`. See the [Command interface](#command-interface) section for more details.
 
 ## Features
 

@@ -1,5 +1,15 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.0.17 - 2023-06-02
+
+### Added
+
+- `grammar` command to `Builtin miscellaneous` category.
+
+### Changed
+
+- Renamed the default categories to reduce collision with user-defined categories.
+
 ## 1.0.16 - 2023-06-02
 
 ### Added

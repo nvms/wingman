@@ -8,6 +8,15 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
 
 </center>
 
+## Quickstart
+
+1. Install the extension.
+2. Create an OpenAI account and get an API key.
+3. Add your API key to your settings under `wingman.apiKey`: open Settings, search for "wingman", and paste your API key into the input field labeled "Api key".
+4. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
+5. Highlight a block of code and click "Refactor" in the Wingman tab to refactor the selected code. The generated code will automatically replace the selected text.
+6. Explore all of the other commands.
+
 ## Features
 
 - **User-defined commands** - Easily create your own commands with custom prompt templates.
@@ -38,6 +47,7 @@ A Visual Studio Code extension with ChatGPT integration with highly extensible a
   ```
 
 - **Automatically replaces selected text** - OPTIONAL. If you have text selected, it will automatically replace it with the generated code block. This can be disabled or enabled per-command.
+- **Continue the conversation** - After the model replies to your request, you can continue the conversation by using the input field below. Conversation context is preserved until you start a new request. This gives you the opportunity to follow-up on the models' response, e.g., "What happens if the second parameter is null or undefined?" or "Can you also add a test that ensures the method throws expectedly when given bad input?".
 - **Elaboration/additional context** - OPTIONAL. If your command defines a `{{command_args}}` in its template, it will prompt you for elaboration on the command. This can be disabled or enabled per-command.
 - **Configurable API url** - This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
 - **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available. `gpt-3.5-turbo` is the default. This is currently an `enum` but will likely be changed to a `string` in the future to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.

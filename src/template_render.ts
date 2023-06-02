@@ -10,16 +10,13 @@ export function render(
   userMessage = userMessage.replace("{{filetype}}", languageId);
   userMessage = userMessage.replace("{{language}}", languageId);
   userMessage = userMessage.replace("{{text_selection}}", textSelection);
-  if (commandArgs) {
-    const endingPunctuations = [".", "!", "?"];
 
-    if (endingPunctuations.some((p) => commandArgs!.endsWith(p))) {
-      userMessage = userMessage.replace("{{command_args}}.", `${commandArgs}`);
-    } else {
-      userMessage = userMessage.replace("{{command_args}}", `${commandArgs}.`);
-    }
+  if (commandArgs) {
+    userMessage = userMessage.replace("{{command_args}}.", `${commandArgs}`);
+    userMessage = userMessage.replace("{{command_args}}", `${commandArgs}`);
   } else {
     userMessage = userMessage.replace("{{command_args}}.", "");
+    userMessage = userMessage.replace("{{command_args}}", "");
   }
 
   return userMessage.replace("{{language_instructions}}", languageInstructions);

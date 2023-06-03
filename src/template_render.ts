@@ -22,6 +22,11 @@ export function render(
   return userMessage.replace("{{language_instructions}}", languageInstructions);
 }
 
+enum BuiltinCategory {
+  Default = "Builtin default",
+  Miscellaneous = "Builtin miscellaneous",
+}
+
 export enum CallbackType {
   None = "none",
   Buffer = "buffer",
@@ -69,7 +74,7 @@ export const baseCommand: Command = {
     csharp: "Use modern C# syntax.",
   },
   contextType: ContextType.Selection,
-  category: "Builtin default",
+  category: BuiltinCategory.Default,
 };
 
 export const defaultCommands: Command[] = [
@@ -153,7 +158,7 @@ export const defaultCommands: Command[] = [
     command: "modify",
     label: "Modify",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nModify the code in the following way:\n\n{{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nModify the code in the following way:\n\n{{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     contextType: ContextType.Selection,
   },
@@ -172,7 +177,7 @@ export const defaultCommands: Command[] = [
       "{{command_args}}.",
     callbackType: CallbackType.None,
     contextType: ContextType.None,
-    category: "Builtin miscellaneous",
+    category: BuiltinCategory.Miscellaneous,
   },
   {
     command: "question",
@@ -190,7 +195,7 @@ export const defaultCommands: Command[] = [
     systemMessageTemplate: "You are a technical writer, grammar expert, and {{language}} coding assistant.",
     callbackType: CallbackType.Replace,
     contextType: ContextType.Selection,
-    category: "Builtin miscellaneous",
+    category: BuiltinCategory.Miscellaneous,
   }
 ];
 
@@ -210,5 +215,12 @@ export const buildCommandTemplate = (command: string): Command => {
   const userMessageTemplate = template.userMessageTemplate.trim();
   const systemMessageTemplate = template.systemMessageTemplate?.trim();
 
-  return { ...base, category: "Uncategorized", ...template, languageInstructions, userMessageTemplate, systemMessageTemplate };
+  return {
+    ...base,
+    category: template.category || BuiltinCategory.Default,
+    ...template,
+    languageInstructions,
+    userMessageTemplate,
+    systemMessageTemplate,
+  };
 };

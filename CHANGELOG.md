@@ -1,5 +1,11 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.0.18 - 2023-06-03
+
+### Changed
+
+- When the wingman panel is toggled visible, and there's an active conversation, the input field is now automatically focused.
+
 ## 1.0.17 - 2023-06-02
 
 ### Added

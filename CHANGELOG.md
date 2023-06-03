@@ -1,5 +1,11 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.0.19 - 2023-06-03
+
+### Fixed
+
+- Fixed the bug where the builtin commands were categorized as "Uncategorized". They're now correctly categorized as "Builtin default" and "Builtin miscellaneous".
+
 ## 1.0.18 - 2023-06-03
 
 ### Changed

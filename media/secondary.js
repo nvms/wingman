@@ -45,6 +45,11 @@
         responseAborted();
         break;
       }
+      case "shown": {
+        if (!$("#input-container").hasClass("hidden")) {
+          $("#input").focus();
+        }
+      }
     }
   });
 

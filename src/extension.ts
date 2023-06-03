@@ -32,6 +32,12 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
     };
     this._view = webviewView;
 
+    webviewView.onDidChangeVisibility(() => {
+      if (webviewView.visible) {
+        SecondaryViewProvider.postMessage({ type: "shown" });
+      }
+    });
+
     webviewView.webview.html = this.getWebviewHTML(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage((data) => {

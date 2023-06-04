@@ -179,12 +179,30 @@
     return count % 2 === 0 ? response : `${response}\n\`\`\``;
   }
 
+  const appendCopyButton = (el) => {
+    const button = $("<button>").addClass("copy-button").text("Copy");
+
+    const onCopyClick = () => {
+      const text = el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        button.text("Copied!");
+        setTimeout(() => {
+          button.text("Copy");
+        }, 2000);
+      });
+    };
+
+    button.on("click", onCopyClick);
+
+    const wrapper = $(el).parent();
+    wrapper.addClass("copy-wrapper");
+    wrapper.append(button);
+  };
+
   function formatDiv(div, text) {
     const options = {
       renderer: new marked.Renderer(),
-      highlight(code, language) {
-        return hljs.highlightAuto(code).value;
-      },
+      highlight: (code, language) => hljs.highlightAuto(code).value,
       langPrefix: "hljs language-",
       breaks: false,
       pedantic: false,
@@ -201,6 +219,10 @@
 
     const codeBlocks = div.querySelectorAll("pre > code");
     codeBlocks.forEach((codeBlock) => {
+      if ($(codeBlock.parentElement).children(".copy-button").length === 0) {
+        appendCopyButton(codeBlock);
+      }
+
       if (!codeBlock.classList.contains("hljs")) {
         codeBlock.classList.add("hljs");
       }

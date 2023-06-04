@@ -229,9 +229,7 @@
     "stale-dep": "^0.6.0",
     "ts-loader": "^9.4.3",
     "tsx": "^3.12.7",
-    "typescript": "^5.0.4",
-    "webpack": "^5.84.1",
-    "webpack-cli": "^5.1.1"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "chatgpt": "github:nvms/chatgpt-api",

@@ -22,6 +22,34 @@
   </head>
   <body class="p-0">
     {{commands}}
+
+    <div class="flex flex-col" id="help-container">
+      <div class="text-right flex-1">
+        <a href="#" id="command-help" class="text-xs px-2 py-1">HELP</a>
+      </div>
+      <div id="help-panel" class="p-1 hidden">
+        <ul>
+          <li class="mx-1">
+            <div class="help-item flex items-start p-1 rounded-md">
+              <span class="mr-2">{{bracketsCurlySvg}}</span>
+              <span class="help-item-text">Command uses selection text as context</span>
+            </div>
+          </li>
+          <li class="mx-1">
+            <div class="help-item flex items-start p-1 rounded-md mt-1">
+              <span class="mr-2">{{chatCircleSvg}}</span>
+              <span class="help-item-text">Command allows for additional user input as clarification context</span>    
+            </div>
+          </li>
+          <li class="mx-1">
+            <div class="help-item flex items-start p-1 rounded-md mt-1">
+              <span class="mr-2">{{swapSvg}}</span> 
+              <span class="help-item-text">Command replaces selection text with the first code block of the generated response</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
     <script src="{{scriptUri}}"></script>
   </body>
 </html>

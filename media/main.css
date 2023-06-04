@@ -22,11 +22,15 @@ body {
 	opacity: 0.5;
 }
 
+#help-container svg,
 .command-list svg {
 	width: 18px;
 	height: 18px;
 	fill: var(--vscode-foreground);
 	background: transparent;
+}
+
+.command-list svg {
 	margin-left: 5px;
 }
 
@@ -43,4 +47,21 @@ body {
 	height: 15px;
 	fill: var(--vscode-foreground);
 	background: transparent;
+}
+
+#help-panel ul {
+	padding: 0;
+	margin: 0;
+}
+
+#help-panel li {
+	list-style: none;
+}
+
+#help-panel .help-item {
+	background: var(--vscode-panelSectionHeader-background);
+}
+
+#help-panel .help-item .help-item-text {
+	opacity: 0.5;
 }

@@ -4,6 +4,8 @@ A Visual Studio Code extension with ChatGPT (3.5 and 4) or LLaMa integration wit
 
 To use a local LLaMa model for completely offline generation, set `wingman.apiBaseUrl` to your local API URL and `wingman.model` to your desired model. This works best with something like [https://github.com/go-skynet/LocalAI](LocalAI). Whatever API you choose to use just has to implement the same REST interface as the OpenAI API - _this is exactly what LocalAI does_.
 
+_Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
+
 <center>
 
 ![example image](.github/example1.png)
@@ -14,7 +16,7 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 
 1. Install the extension.
 2. Create an OpenAI account and get an API key (if you're using ChatGPT for generation).
-3. Add your API key to your settings under `wingman.apiKey`: open Settings, search for "wingman", and paste your API key into the input field labeled "Api key".
+3. Add your OpenAI API key to your settings under `wingman.openai.apiKey`: open Settings, search for "wingman", and paste your API key into the input field labeled "Api key".
 4. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
 5. Highlight a block of code and click "Refactor" in the Wingman tab to refactor the selected code. The generated code will automatically replace the selected text.
 6. Explore all of the other commands.
@@ -23,7 +25,7 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 ## Features
 
 - **User-defined commands** - Easily create your own commands with custom prompt templates.
-  
+
 <center>
 
 ![example configuration](.github/example2.png)
@@ -32,22 +34,23 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 
 - **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration. Add `{{language_instructions}}` to your templates:
 
-  ```json
-   {
+  ````json
+  {
     "command": "doc",
     "label": "Write documentation",
-    "userMessageTemplate":
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else.",
+    "userMessageTemplate": "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else.",
     "languageInstructions": {
       "cpp": "Use doxygen style comments for functions.",
       "java": "Use javadoc style comments for functions.",
       "typescript": "Use TSDoc style comments for functions.",
-      "javascript": "Use JSDoc style comments for functions.",
+      "javascript": "Use JSDoc style comments for functions."
     },
     "callbackType": "replace",
-    "contextType": "selection"
+    "contextType": "selection",
+    "provider": "openai",
+    "category": "Documentation"
   }
-  ```
+  ````
 
 - **Automatically replaces selected text** - OPTIONAL. If you have text selected, it will automatically replace it with the generated code block. This can be disabled or enabled per-command.
 - **Continue the conversation** - After the model replies to your request, you can continue the conversation by using the input field below. Conversation context is preserved until you start a new request. This gives you the opportunity to follow-up on the models' response, e.g., "What happens if the second parameter is null or undefined?" or "Can you also add a test that ensures the method throws expectedly when given bad input?".
@@ -59,13 +62,13 @@ To use a local LLaMa model for completely offline generation, set `wingman.apiBa
 
 ## String interpolations
 
-| Interpolation | Description |
-| ------------- | ----------- |
-| `{{language}}` | The language identifier of the current file. |
-| `{{command_args}}` | The arguments passed to the command. When this is present, you will be prompted for additional input when the command button is clicked. |
-| `{{text_selection}}` | The selected text. |
-| `{{filetype}}` | The file type of the current file. Not the extension name. Currently will have the same value as `{{language}}`. |
-| `{{language_instructions}}` | The language-specific instructions for more generic commands, like the `doc` example above. |
+| Interpolation               | Description                                                                                                                              |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `{{language}}`              | The language identifier of the current file.                                                                                             |
+| `{{command_args}}`          | The arguments passed to the command. When this is present, you will be prompted for additional input when the command button is clicked. |
+| `{{text_selection}}`        | The selected text.                                                                                                                       |
+| `{{filetype}}`              | The file type of the current file. Not the extension name. Currently will have the same value as `{{language}}`.                         |
+| `{{language_instructions}}` | The language-specific instructions for more generic commands, like the `doc` example above.                                              |
 
 ## Command interface
 
@@ -87,6 +90,7 @@ export interface Command {
   callbackType?: CallbackType;
   contextType: ContextType;
   category?: string;
+  provider?: "openai" | "anthropic"; // anthropic support still a WIP, defaults to "openai"
 }
 ```
 
@@ -112,6 +116,7 @@ export const baseCommand: Command = {
   },
   contextType: ContextType.Selection,
   category: "Default",
+  provider: "openai",
 };
 ```
 
@@ -119,32 +124,33 @@ When you create your own command, you can override any of these properties. The 
 
 ## Command properties
 
-| Property | Description |
-| -------- | ----------- |
-| `model` | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported. |
-| `maxTokens` | See OpenAI API docs. |
-| `numberOfChoices` | See OpenAI API docs. |
-| `temperature` | See OpenAI API docs. |
-| `command` | The command name. This value is used to register the command with vscode: `wingman.<command>`. |
-| `label` | The label for the command to show in the UI. |
-| `systemMessageTemplate` | See OpenAI API docs. |
-| `userMessageTemplate` | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}`. |
-| `callbackType` | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected` |
-| `languageInstructions` | A map of language identifiers to instructions for the given `userMessageTemplate`. |
-| `contextType` | The type of context to use: `ContextType.Selection` or `ContextType.None` |
-| `category` | The category to place the command under in the UI. |
+| Property                | Description                                                                                                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`                 | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported.                                                                                                 |
+| `maxTokens`             | See OpenAI API docs.                                                                                                                                                         |
+| `numberOfChoices`       | See OpenAI API docs.                                                                                                                                                         |
+| `temperature`           | See OpenAI API docs.                                                                                                                                                         |
+| `command`               | The command name. This value is used to register the command with vscode: `wingman.<command>`.                                                                               |
+| `label`                 | The label for the command to show in the UI.                                                                                                                                 |
+| `systemMessageTemplate` | See OpenAI API docs.                                                                                                                                                         |
+| `userMessageTemplate`   | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}`. |
+| `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                     |
+| `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                           |
+| `contextType`           | The type of context to use: `ContextType.Selection` or `ContextType.None`                                                                                                    |
+| `category`              | The category to place the command under in the UI.                                                                                                                           |
+| `provider`              | The provider to use for the generation of this command. Currently, only `openai` is supported, but `anthropic` support is in the works.                                      |
 
 ## Default commands
 
-| Command | Description |
-| ------- | ----------- |
-| Completion | Completes the selected text |
-| Write documentation | Writes documentation for the selected text |
-| Write unit tests | Writes unit tests for the selected text |
-| Refactor | Refactors the selected code without changing its functionality, focusing on readability and maintainability |
-| Analyze for bugs | Examines the selected code to alert you of possible bugs |
-| Explain | Provides an explanation of the code |
-| Optimize for performance | Attempt to optimize the selected code, considering performance, readability, etc. |
-| Modify | Makes changes to the selected code |
-| Chat | Chat with only the selected code as context. |
-| Question | Asks a question about the selected code |
+| Command                  | Description                                                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Completion               | Completes the selected text                                                                                 |
+| Write documentation      | Writes documentation for the selected text                                                                  |
+| Write unit tests         | Writes unit tests for the selected text                                                                     |
+| Refactor                 | Refactors the selected code without changing its functionality, focusing on readability and maintainability |
+| Analyze for bugs         | Examines the selected code to alert you of possible bugs                                                    |
+| Explain                  | Provides an explanation of the code                                                                         |
+| Optimize for performance | Attempt to optimize the selected code, considering performance, readability, etc.                           |
+| Modify                   | Makes changes to the selected code                                                                          |
+| Chat                     | Chat with only the selected code as context.                                                                |
+| Question                 | Asks a question about the selected code                                                                     |

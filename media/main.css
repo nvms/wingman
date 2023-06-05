@@ -18,6 +18,10 @@ body {
 .command-list li button:hover {
 }
 
+.command-list li:hover .template-type-indicator {
+	opacity: 1;
+}
+
 .muted {
 	opacity: 0.5;
 }
@@ -64,4 +68,32 @@ body {
 
 #help-panel .help-item .help-item-text {
 	opacity: 0.5;
+}
+
+.template-type-indicator {
+	opacity: 0.5;
+}
+
+.provider .logo svg {
+	background: white;
+	margin: 0;
+	padding: 0;
+	border-radius: 30%;
+}
+
+.provider {
+	width: 20px;
+	height: 20px;
+	background: white;
+	border-radius: 30%;
+	color: black;
+	padding: 1px;
+	margin-left: 5px;
+}
+
+.provider .text {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 700;
 }

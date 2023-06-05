@@ -80,22 +80,22 @@
     "configuration": {
       "title": "Wingman",
       "properties": {
-        "wingman.apiKey": {
+        "wingman.openai.apiKey": {
           "type": "string",
           "default": "",
           "description": "ChatGPT API Key"
         },
-        "wingman.model": {
+        "wingman.openai.model": {
           "type": "string",
           "default": "gpt-3.5-turbo",
           "description": "Model (a fallback if the command does not specify, e.g. 'gpt-3.5-turbo', 'gpt-4', 'ggml-gpt4all-j', 'wizard-mega-13B.ggml.q4.bin')"
         },
-        "wingman.apiBaseUrl": {
+        "wingman.openai.apiBaseUrl": {
           "type": "string",
           "default": "https://api.openai.com/v1",
           "description": "API base URL (without trailing slash, for local LLaMa-based inference use something like github.com/go-skynet/LocalAI)"
         },
-        "wingman.temperature": {
+        "wingman.openai.temperature": {
           "type": "number",
           "default": 0.8,
           "description": "Temperature (a fallback if the command does not specify)"

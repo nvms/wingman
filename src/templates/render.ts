@@ -1,25 +1,19 @@
-import { getConfig } from "./extension";
+import { getConfig } from "../extension";
 
-export function render(
-  userMessage: string,
-  languageId: string,
-  textSelection: string,
-  commandArgs: string | undefined,
-  languageInstructions: string,
-) {
-  userMessage = userMessage.replace("{{filetype}}", languageId);
-  userMessage = userMessage.replace("{{language}}", languageId);
-  userMessage = userMessage.replace("{{text_selection}}", textSelection);
+export function render(templateString: string, languageId: string, textSelection: string, commandArgs: string | undefined, languageInstructions: string) {
+  templateString = templateString.replace("{{filetype}}", languageId);
+  templateString = templateString.replace("{{language}}", languageId);
+  templateString = templateString.replace("{{text_selection}}", textSelection);
 
   if (commandArgs) {
-    userMessage = userMessage.replace("{{command_args}}.", `${commandArgs}`);
-    userMessage = userMessage.replace("{{command_args}}", `${commandArgs}`);
+    templateString = templateString.replace("{{command_args}}.", `${commandArgs}`);
+    templateString = templateString.replace("{{command_args}}", `${commandArgs}`);
   } else {
-    userMessage = userMessage.replace("{{command_args}}.", "");
-    userMessage = userMessage.replace("{{command_args}}", "");
+    templateString = templateString.replace("{{command_args}}.", "");
+    templateString = templateString.replace("{{command_args}}", "");
   }
 
-  return userMessage.replace("{{language_instructions}}", languageInstructions);
+  return templateString.replace("{{language_instructions}}", languageInstructions);
 }
 
 enum BuiltinCategory {
@@ -37,7 +31,12 @@ export enum CallbackType {
 export enum ContextType {
   Selection = "selection",
   None = "none",
-};
+}
+
+export enum AIProvider {
+  OpenAI = "openai",
+  Anthropic = "anthropic",
+}
 
 export interface Command {
   model?: string;
@@ -54,6 +53,7 @@ export interface Command {
   callbackType?: CallbackType;
   contextType: ContextType;
   category?: string;
+  provider?: AIProvider;
 }
 
 export const baseCommand: Command = {
@@ -75,6 +75,7 @@ export const baseCommand: Command = {
   },
   contextType: ContextType.Selection,
   category: BuiltinCategory.Default,
+  provider: AIProvider.OpenAI,
 };
 
 export const defaultCommands: Command[] = [
@@ -86,7 +87,7 @@ export const defaultCommands: Command[] = [
     languageInstructions: {
       typescript: "Use modern TypeScript features.",
       cpp: "Use modern C++ features.",
-      vue: "Use the modern Vue 3 composition API."
+      vue: "Use the modern Vue 3 composition API.",
     },
     callbackType: CallbackType.Replace,
     contextType: ContextType.Selection,
@@ -165,16 +166,14 @@ export const defaultCommands: Command[] = [
   {
     command: "chat_selection_context",
     label: "Chat",
-    userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
+    userMessageTemplate: "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
     callbackType: CallbackType.None,
     contextType: ContextType.Selection,
   },
   {
     command: "chat_no_context",
     label: "Chat",
-    userMessageTemplate:
-      "{{command_args}}.",
+    userMessageTemplate: "{{command_args}}.",
     callbackType: CallbackType.None,
     contextType: ContextType.None,
     category: BuiltinCategory.Miscellaneous,
@@ -182,8 +181,7 @@ export const defaultCommands: Command[] = [
   {
     command: "question",
     label: "Question",
-    userMessageTemplate:
-      "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{command_args}}.",
+    userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{command_args}}.",
     callbackType: CallbackType.None,
     contextType: ContextType.Selection,
   },
@@ -196,20 +194,20 @@ export const defaultCommands: Command[] = [
     callbackType: CallbackType.Replace,
     contextType: ContextType.Selection,
     category: BuiltinCategory.Miscellaneous,
-  }
+  },
 ];
 
 /**
  * Ensures that the template is merged into the base template.
- * @param command The name of either a builtin command or a user-defined command.
- * @returns 
+ * @param commandName The name of either a builtin command or a user-defined command.
+ * @returns
  */
-export const buildCommandTemplate = (command: string): Command => {
+export const buildCommandTemplate = (commandName: string): Command => {
+  const builtinTemplate = defaultCommands.find((t) => t.command === commandName);
   const userTemplates = getConfig<Command[]>("userCommands", []);
-  const defaultTemplate = defaultCommands.find((t) => t.command === command);
   const base = { ...baseCommand };
 
-  const template: Command = userTemplates.find((t) => t.command === command) || defaultTemplate || base;
+  const template: Command = userTemplates.find((t) => t.command === commandName) || builtinTemplate || base;
 
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();

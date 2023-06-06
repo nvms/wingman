@@ -100,6 +100,11 @@
           "default": 0.8,
           "description": "Temperature (a fallback if the command does not specify)"
         },
+        "wingman.showProviderLogo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the provider logo for each command in the command list"
+        },
         "wingman.userCommands": {
           "type": "array",
           "default": [

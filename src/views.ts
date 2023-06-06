@@ -88,9 +88,13 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 <span class="template-type-indicator">${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>
                 <span class="template-type-indicator">${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
                 <span class="template-type-indicator">${template.callbackType === CallbackType.Replace ? swapSvg : ""}</span>
-                <span class="provider">
-                  ${template.provider === AIProvider.OpenAI ? `<span class="logo">${openAiSvg}</span>` : '<span class="text">A\\</span>'}
-                </span>
+                ${
+                  getConfig("showProviderLogo")
+                    ? `<span class="provider">
+                      ${template.provider === AIProvider.OpenAI ? `<span class="logo">${openAiSvg}</span>` : '<span class="text">A\\</span>'}
+                    </span>`
+                    : ""
+                }
               </div>
             </div>
           </button>

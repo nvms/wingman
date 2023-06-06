@@ -199,6 +199,10 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
           send(data.value);
           break;
         }
+        case "display": {
+          display(data.value);
+          break;
+        }
       }
     });
   }

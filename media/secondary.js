@@ -171,13 +171,29 @@
     scrollToBottom();
   }
 
-  function fixCodeBlocks(response) {
-    const REGEX_CODEBLOCK = /```/g;
-    const matches = response.match(REGEX_CODEBLOCK);
-    const count = matches ? matches.length : 0;
+  const getLanguage = (text) => {
+    const languageRegex = /```([a-zA-Z-_]+)/g;
+    const match = text.match(languageRegex);
+    return match ? match[0].replaceAll("```", "") : null;
+  };
 
-    return count % 2 === 0 ? response : `${response}\n\`\`\``;
-  }
+  const fixCodeBlocks = (response) => {
+    const ticks = /```/g;
+    const matches = response.match(ticks);
+    const even = matches ? matches.length % 2 === 0 : true;
+
+    if (even) {
+      return {
+        formatted: response,
+        language: getLanguage(response),
+      };
+    } else {
+      return {
+        formatted: `${response}\n\`\`\``,
+        language: getLanguage(response),
+      };
+    }
+  };
 
   const appendCopyButton = (el) => {
     const button = $("<button>").addClass("copy-button").text("Copy");
@@ -200,9 +216,17 @@
   };
 
   function formatDiv(div, text) {
+    const fixed = fixCodeBlocks(text);
+
     const options = {
       renderer: new marked.Renderer(),
-      highlight: (code, language) => hljs.highlightAuto(code).value,
+      highlight: (code, language) => {
+        if (fixed.language) {
+          return hljs.highlight(code, { language: fixed.language, ignoreIllegals: true }).value;
+        }
+
+        return hljs.highlightAuto(code).value;
+      },
       langPrefix: "hljs language-",
       breaks: false,
       pedantic: false,
@@ -213,8 +237,7 @@
     };
 
     marked.setOptions(options);
-    const fixedText = fixCodeBlocks(text);
-    const html = marked.parse(fixedText);
+    const html = marked.parse(fixed.formatted);
     div.innerHTML = html;
 
     const codeBlocks = div.querySelectorAll("pre > code");

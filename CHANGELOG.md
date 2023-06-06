@@ -1,6 +1,12 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
-## 1.0.21 - 2023-06-05
+## 1.1.1 - 2023-06-05
+
+### Fixed
+
+- Parsing generated output is now improved so that we can better identify the language from the response and apply the right stylings with hljs. The result is much less flickering and more consistent styling.
+
+## 1.1.0 - 2023-06-05
 
 ### Changed
 

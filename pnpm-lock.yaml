@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   chatgpt:
-    specifier: github:nvms/chatgpt-api
-    version: github.com/nvms/chatgpt-api/651c9be74c94daae221405803ff66699399322b6
+    specifier: ^5.2.5
+    version: 5.2.5
   cheerio:
     specifier: 1.0.0-rc.12
     version: 1.0.0-rc.12
@@ -108,10 +108,6 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       chalk: 2.4.2
       js-tokens: 4.0.0
-
-  /@dqbd/tiktoken@1.0.7:
-    resolution: {integrity: sha512-bhR5k5W+8GLzysjk8zTMVygQZsgvf7W1F0IlL4ZQ5ugjo5rCyiwGM5d8DYriXspytfu98tv59niang3/T+FoDw==}
-    dev: false
 
   /@es-joy/jsdoccomment@0.39.4:
     resolution: {integrity: sha512-Jvw915fjqQct445+yron7Dufix9A+m9j1fCJYlCo1FWlRvTxa3pjJelxdSTdaLWcTwRU6vbL+NYjO4YuNIS5Qg==}
@@ -1394,6 +1390,22 @@ packages:
   /charenc@0.0.2:
     resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
     dev: true
+
+  /chatgpt@5.2.5:
+    resolution: {integrity: sha512-DNhBzPb2zTDjJADY44XfngMvsvrvHRq1md2VPXLmnKeP1UCeA1B6pV3s9ZRwlcgjVT0RyM77fRj1xj5V11Vctg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dependencies:
+      cac: 6.7.14
+      conf: 11.0.1
+      eventsource-parser: 1.0.0
+      js-tiktoken: 1.0.6
+      keyv: 4.5.2
+      p-timeout: 6.1.1
+      quick-lru: 6.1.1
+      read-pkg-up: 9.1.0
+      uuid: 9.0.0
+    dev: false
 
   /cheerio-select@2.1.0:
     resolution: {integrity: sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==}
@@ -5372,24 +5384,3 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
-
-  github.com/nvms/chatgpt-api/651c9be74c94daae221405803ff66699399322b6:
-    resolution: {tarball: https://codeload.github.com/nvms/chatgpt-api/tar.gz/651c9be74c94daae221405803ff66699399322b6}
-    name: chatgpt
-    version: 5.2.6
-    engines: {node: '>=14'}
-    hasBin: true
-    prepare: true
-    requiresBuild: true
-    dependencies:
-      '@dqbd/tiktoken': 1.0.7
-      cac: 6.7.14
-      conf: 11.0.1
-      eventsource-parser: 1.0.0
-      js-tiktoken: 1.0.6
-      keyv: 4.5.2
-      p-timeout: 6.1.1
-      quick-lru: 6.1.1
-      read-pkg-up: 9.1.0
-      uuid: 9.0.0
-    dev: false

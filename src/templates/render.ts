@@ -28,11 +28,6 @@ export enum CallbackType {
   AfterSelected = "afterSelected",
 }
 
-export enum ContextType {
-  Selection = "selection",
-  None = "none",
-}
-
 export enum AIProvider {
   OpenAI = "openai",
   Anthropic = "anthropic",
@@ -51,7 +46,6 @@ export interface Command {
     [languageId: string]: string;
   };
   callbackType?: CallbackType;
-  contextType: ContextType;
   category?: string;
   provider?: AIProvider;
 }
@@ -73,7 +67,6 @@ export const baseCommand: Command = {
     html: "Use modern HTML syntax.",
     csharp: "Use modern C# syntax.",
   },
-  contextType: ContextType.Selection,
   category: BuiltinCategory.Default,
   provider: AIProvider.OpenAI,
 };
@@ -90,7 +83,6 @@ export const defaultCommands: Command[] = [
       vue: "Use the modern Vue 3 composition API.",
     },
     callbackType: CallbackType.Replace,
-    contextType: ContextType.Selection,
   },
   {
     command: "doc",
@@ -104,7 +96,6 @@ export const defaultCommands: Command[] = [
       javascript: "Use JSDoc style comments for functions.",
     },
     callbackType: CallbackType.Replace,
-    contextType: ContextType.Selection,
   },
   {
     command: "tests",
@@ -116,7 +107,6 @@ export const defaultCommands: Command[] = [
       java: "Generate unit tests using the JUnit framework.",
     },
     callbackType: CallbackType.Buffer,
-    contextType: ContextType.Selection,
   },
   {
     command: "refactor",
@@ -130,14 +120,12 @@ export const defaultCommands: Command[] = [
       javascript: "Use modern JavaScript syntax.",
     },
     callbackType: CallbackType.Replace,
-    contextType: ContextType.Selection,
   },
   {
     command: "debug",
     label: "Analyze for bugs",
     userMessageTemplate: "Analyze the following {{language}} code for bugs:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
     callbackType: CallbackType.None,
-    contextType: ContextType.Selection,
   },
   {
     command: "explain",
@@ -145,7 +133,6 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{command_args}}.",
     callbackType: CallbackType.None,
-    contextType: ContextType.Selection,
   },
   {
     command: "optimizePerformance",
@@ -153,7 +140,6 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nOptimize it for performance.\n\n{{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else.",
     callbackType: CallbackType.Replace,
-    contextType: ContextType.Selection,
   },
   {
     command: "modify",
@@ -161,21 +147,18 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nModify the code in the following way:\n\n{{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
-    contextType: ContextType.Selection,
   },
   {
     command: "chat_selection_context",
     label: "Chat",
     userMessageTemplate: "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
     callbackType: CallbackType.None,
-    contextType: ContextType.Selection,
   },
   {
     command: "chat_no_context",
     label: "Chat",
     userMessageTemplate: "{{command_args}}.",
     callbackType: CallbackType.None,
-    contextType: ContextType.None,
     category: BuiltinCategory.Miscellaneous,
   },
   {
@@ -183,7 +166,6 @@ export const defaultCommands: Command[] = [
     label: "Question",
     userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{command_args}}.",
     callbackType: CallbackType.None,
-    contextType: ContextType.Selection,
   },
   {
     command: "grammar",
@@ -192,7 +174,6 @@ export const defaultCommands: Command[] = [
       "I have the following text:\n```{{filetype}}\n{{text_selection}}\n```\n\nCorrect any grammar mistakes and mistakes in spelling or punctuation. IMPORTANT: Return the text with any additional formatting it might have inside of a code fence and nothing else. If lines in the text are prefixed with what appears to be code comment characters, you must preserve those in your response. IMPORTANT: Do not explain your response, you must reply only with the corrected text.",
     systemMessageTemplate: "You are a technical writer, grammar expert, and {{language}} coding assistant.",
     callbackType: CallbackType.Replace,
-    contextType: ContextType.Selection,
     category: BuiltinCategory.Miscellaneous,
   },
 ];

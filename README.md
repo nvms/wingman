@@ -46,7 +46,6 @@ _Please note that this extension is currently under active development and its f
       "javascript": "Use JSDoc style comments for functions."
     },
     "callbackType": "replace",
-    "contextType": "selection",
     "provider": "openai",
     "category": "Documentation"
   }
@@ -88,7 +87,6 @@ export interface Command {
     [languageId: string]: string;
   };
   callbackType?: CallbackType;
-  contextType: ContextType;
   category?: string;
   provider?: "openai" | "anthropic"; // anthropic support still a WIP, defaults to "openai"
 }
@@ -114,13 +112,12 @@ export const baseCommand: Command = {
     html: "Use modern HTML syntax.",
     csharp: "Use modern C# syntax.",
   },
-  contextType: ContextType.Selection,
   category: "Default",
   provider: "openai",
 };
 ```
 
-When you create your own command, you can override any of these properties. The only required properties are `command`, `label`, `userMessageTemplate`, and `contextType`.
+When you create your own command, you can override any of these properties. The only required properties are `command`, `label`, and `userMessageTemplate`.
 
 ## Command properties
 
@@ -136,7 +133,6 @@ When you create your own command, you can override any of these properties. The 
 | `userMessageTemplate`   | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}`. |
 | `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                     |
 | `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                           |
-| `contextType`           | The type of context to use: `ContextType.Selection` or `ContextType.None`                                                                                                    |
 | `category`              | The category to place the command under in the UI.                                                                                                                           |
 | `provider`              | The provider to use for the generation of this command. Currently, only `openai` is supported, but `anthropic` support is in the works.                                      |
 

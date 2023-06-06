@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { type Provider } from "./providers";
 import { defaultCommands, buildCommandTemplate, type Command } from "./templates/render";
 import { commandHandler } from "./templates/runner";
+import { display, displayWarning, getConfig } from "./utils";
 import { MainViewProvider, SecondaryViewProvider } from "./views";
 
 let providerInstance: Provider | undefined;
@@ -13,22 +14,6 @@ export const getProviderInstance = () => {
 
 export const setProviderInstance = (provider: Provider) => {
   providerInstance = provider;
-};
-
-export const getConfig = <T>(key: string, fallback?: unknown | undefined): T => {
-  const config = vscode.workspace.getConfiguration("wingman");
-  if (fallback) {
-    return config.get(key, fallback) as T;
-  }
-  return config.get(key) as T;
-};
-
-export const display = (message: string) => {
-  vscode.window.showInformationMessage(message);
-};
-
-export const displayWarning = (message: string) => {
-  vscode.window.showWarningMessage(message);
 };
 
 export class ExtensionState {

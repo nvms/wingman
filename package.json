@@ -105,6 +105,30 @@
           "default": true,
           "description": "Show the provider logo for each command in the command list"
         },
+        "wingmain.context.ignore.useGitignore": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ignore paths defined in .gitignore when calculating context"
+        },
+        "wingman.context.ignore.additionalIgnorePaths": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/out/**",
+            "**/build/**",
+            "**/media/**",
+            "**/assets/**",
+            "**/.github/**",
+            "**/.vscode/**",
+            "**/.vscode-test/**",
+            "**/",
+            "**/package.json",
+            "**/.gitignore",
+            "**/.git/**"
+          ],
+          "description": "Filepaths to ignore when calculating context, in addition to .gitignore (if useGitignore is enabled)"
+        },
         "wingman.userCommands": {
           "type": "array",
           "default": [
@@ -146,9 +170,10 @@
                   "none",
                   "buffer",
                   "replace",
+                  "beforeSelected",
                   "afterSelected"
                 ],
-                "description": "This defines what wingman does when the model finishes replying with a block of code. 'buffer' (currently not implemented), 'replace' (replaces the selected text with the model's response), 'afterSelected' (inserts the model's response after the selected text on the next line)."
+                "description": "This defines what wingman does when the model finishes replying with a block of code. 'buffer' (currently not implemented), 'replace' (replaces the selected text with the model's response), 'beforeSelected' (inserts the model's response before the selected text), 'afterSelected' (inserts the model's response after the selected text on the next line)."
               },
               "contextType": {
                 "type": "string",
@@ -238,6 +263,7 @@
   "dependencies": {
     "chatgpt": "^5.2.5",
     "cheerio": "1.0.0-rc.12",
+    "fast-glob": "^3.2.12",
     "fetch": "^1.1.0",
     "node-fetch": "^3.3.1"
   }

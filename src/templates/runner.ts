@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 import { CallbackType, render, type Command } from "./render";
-import { display, getProviderInstance } from "../extension";
-import { addTextAfterSelection, getSelectionInfo, putTextInNewBuffer, replaceLinesWithText } from "../utils";
+import { getProviderInstance } from "../extension";
+import { addTextAfterSelection, addTextBeforeSelection, displayWarning, getSelectionInfo, putTextInNewBuffer, replaceLinesWithText } from "../utils";
 
 export async function repeatLast() {
   await getProviderInstance()?.repeatLast();
@@ -33,6 +33,12 @@ export function handleResponseCallbackType(template: Command, editor: vscode.Tex
     case CallbackType.Replace: {
       const formattedText = formatCodeBlockResponse(text);
       replaceLinesWithText(editor, selection, formattedText);
+      break;
+    }
+    case CallbackType.BeforeSelected: {
+      const formattedText = formatCodeBlockResponse(text);
+      const newRange = addTextBeforeSelection(editor, selection, formattedText);
+      editor.selection = new vscode.Selection(newRange.start, newRange.end);
       break;
     }
     case CallbackType.AfterSelected: {
@@ -84,6 +90,6 @@ export const commandHandler = async (template: Command) => {
 
     await send(userMessage, systemMessage, template);
   } catch (error) {
-    display(String(error));
+    displayWarning(String(error));
   }
 };

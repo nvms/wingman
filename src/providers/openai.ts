@@ -3,10 +3,9 @@ import fetch from "node-fetch";
 import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { display, getConfig } from "../extension";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSelectionInfo } from "../utils";
 
 interface ConversationState {
   conversationId: string;
@@ -121,7 +120,7 @@ export class OpenAIProvider implements Provider {
         handleResponseCallbackType(template, editor, selection, response.text);
       }
     } catch (error) {
-      display(String(error));
+      displayWarning(String(error));
     }
   }
 

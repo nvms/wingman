@@ -1,5 +1,23 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.2.0 - 2023-06-06
+
+### Changed
+
+- Add `ContextType.BeforeSelected`. Generated code blocks are placed before the selected code block.
+- Change some of the SVGs for clarity.
+- Change `doc` builtin command a bit, have it use `ContextType.BeforeSelected`.
+- Refactor some utils.
+
+### Added
+
+- Config items:
+  - `wingman.context.ignore.useGitignore`: Whether to respect `.gitignore` when determining project-wide context for models with larger context windows.
+  - `wingman.context.ignore.additionalIgnorePaths`: Additional paths to ignore when determining project-wide context for models with larger context windows.
+- Add utils in preparation for Claude, mainly `getFilesForContextFormatted`, which:
+  - Optionally respects `.gitignore` (`wingman.context.ignore.useGitignore`).
+  - Respects `.wmignore` in all open workspace roots, just like a `.gitignore`.
+
 ## 1.1.1 - 2023-06-05
 
 ### Fixed

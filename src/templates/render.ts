@@ -1,4 +1,4 @@
-import { getConfig } from "../extension";
+import { getConfig } from "../utils";
 
 export function render(templateString: string, languageId: string, textSelection: string, commandArgs: string | undefined, languageInstructions: string) {
   templateString = templateString.replace("{{filetype}}", languageId);
@@ -26,6 +26,7 @@ export enum CallbackType {
   Buffer = "buffer",
   Replace = "replace",
   AfterSelected = "afterSelected",
+  BeforeSelected = "beforeSelected",
 }
 
 export enum AIProvider {
@@ -88,14 +89,14 @@ export const defaultCommands: Command[] = [
     command: "doc",
     label: "Write documentation",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain yourself.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{language_instructions}} Attention paid to documenting parameters, return types, any exceptionss or errors.\n\nDo not create comments for the body of the function. IMPORTANT: Only return the comment inside of a code fence and nothing else. Do not include the function at all. Do not include the function signature at all. Do not explain your response.",
     languageInstructions: {
-      cpp: "Use doxygen style comments for functions.",
-      java: "Use javadoc style comments for functions.",
-      typescript: "Use TSDoc style comments for functions.",
-      javascript: "Use JSDoc style comments for functions.",
+      cpp: "Write a doxygen style comments for the function using best practices.",
+      java: "Write a javadoc style comments for the function using best practices.",
+      typescript: "Write a TSDoc style comments for the function using best practices.",
+      javascript: "Write a JSDoc style comments for the function using best practices.",
     },
-    callbackType: CallbackType.Replace,
+    callbackType: CallbackType.BeforeSelected,
   },
   {
     command: "tests",

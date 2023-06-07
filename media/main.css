@@ -97,3 +97,7 @@ body {
 	align-items: center;
 	font-weight: 700;
 }
+
+.template-type-indicator {
+	width: 20px;
+}

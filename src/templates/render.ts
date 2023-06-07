@@ -13,6 +13,8 @@ export function render(templateString: string, languageId: string, textSelection
     templateString = templateString.replace("{{command_args}}", "");
   }
 
+  templateString = templateString.replace("{{project_text}}", getFilesForContextFormatted().join("\n\n"));
+
   return templateString.replace("{{language_instructions}}", languageInstructions);
 }
 

@@ -1,4 +1,4 @@
-import { getConfig } from "../utils";
+import { getConfig, getFilesForContextFormatted } from "../utils";
 
 export function render(templateString: string, languageId: string, textSelection: string, commandArgs: string | undefined, languageInstructions: string) {
   templateString = templateString.replace("{{filetype}}", languageId);

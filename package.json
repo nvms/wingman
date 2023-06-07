@@ -81,36 +81,43 @@
       "title": "Wingman",
       "properties": {
         "wingman.openai.apiKey": {
+          "order": 2,
           "type": "string",
           "default": "",
           "description": "ChatGPT API Key"
         },
         "wingman.openai.model": {
+          "order": 4,
           "type": "string",
           "default": "gpt-3.5-turbo",
           "description": "Model (a fallback if the command does not specify, e.g. 'gpt-3.5-turbo', 'gpt-4', 'ggml-gpt4all-j', 'wizard-mega-13B.ggml.q4.bin')"
         },
         "wingman.openai.apiBaseUrl": {
+          "order": 3,
           "type": "string",
           "default": "https://api.openai.com/v1",
           "description": "API base URL (without trailing slash, for local LLaMa-based inference use something like github.com/go-skynet/LocalAI)"
         },
         "wingman.openai.temperature": {
+          "order": 5,
           "type": "number",
           "default": 0.8,
           "description": "Temperature (a fallback if the command does not specify)"
         },
         "wingman.showProviderLogo": {
+          "order": 6,
           "type": "boolean",
           "default": false,
           "description": "Show the provider logo for each command in the command list"
         },
         "wingmain.context.ignore.useGitignore": {
+          "order": 8,
           "type": "boolean",
           "default": true,
           "description": "Ignore paths defined in .gitignore when calculating context"
         },
         "wingman.context.ignore.additionalIgnorePaths": {
+          "order": 9,
           "type": "array",
           "default": [
             "**/node_modules/**",
@@ -130,11 +137,13 @@
           "description": "Filepaths to ignore when calculating context, in addition to .gitignore (if useGitignore is enabled)"
         },
         "wingman.showBuiltinCommands": {
+          "order": 7,
           "type": "boolean",
           "default": true,
           "description": "Show the built-in commands in the command list"
         },
         "wingman.userCommands": {
+          "order": 1,
           "type": "array",
           "default": [
             {

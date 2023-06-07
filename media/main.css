@@ -1,103 +1,104 @@
-body {
-}
+body {}
 
 .command-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .command-list li {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
-.command-button {
-}
+.command-button {}
 
-.command-list li button:hover {
+.command-list li button:hover,
+.command-list li button:focus,
+.command-list li button:active {
+  outline: none;
+  background: var(--vscode-button-hoverBackground);
 }
 
 .command-list li:hover .template-type-indicator {
-	opacity: 1;
+  opacity: 1;
 }
 
 .muted {
-	opacity: 0.5;
+  opacity: 0.5;
 }
 
 #help-container svg,
-.command-list svg {
-	width: 18px;
-	height: 18px;
-	fill: var(--vscode-foreground);
-	background: transparent;
+.command-list svg,
+.collapse-arrow svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--vscode-foreground);
+  background: transparent;
 }
 
 .command-list svg {
-	margin-left: 5px;
+  /* margin-left: 5px; */
 }
 
 .category {
-	background: var(--vscode-panelSectionHeader-background);
+  background: var(--vscode-panelSectionHeader-background);
 }
 
 .category.collapsed {
-	opacity: 0.5;
+  opacity: 0.5;
 }
 
 .collapse-arrow svg {
-	width: 15px;
-	height: 15px;
-	fill: var(--vscode-foreground);
-	background: transparent;
+  width: 15px;
+  height: 15px;
 }
 
-#help-panel ul {
-	padding: 0;
-	margin: 0;
-}
-
+#help-panel ul,
 #help-panel li {
-	list-style: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 #help-panel .help-item {
-	background: var(--vscode-panelSectionHeader-background);
+  background: var(--vscode-panelSectionHeader-background);
 }
 
-#help-panel .help-item .help-item-text {
-	opacity: 0.5;
-}
-
+#help-panel .help-item .help-item-text,
 .template-type-indicator {
-	opacity: 0.5;
+  opacity: 0.5;
 }
 
-.provider .logo svg {
-	background: white;
-	margin: 0;
-	padding: 0;
-	border-radius: 30%;
+.provider .logo svg,
+.provider {
+  opacity: 0.75;
+  background: white;
+  border-radius: 30%;
+  height: 18px;
+  width: 18px;
 }
 
 .provider {
-	width: 20px;
-	height: 20px;
-	background: white;
-	border-radius: 30%;
-	color: black;
-	padding: 1px;
-	margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.provider .text {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-weight: 700;
+.provider .text,
+.template-type-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .template-type-indicator {
-	width: 20px;
+  width: 20px;
+}
+
+.provider, .template-type-indicator {
+  margin-left: 3px;
 }

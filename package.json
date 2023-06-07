@@ -102,7 +102,7 @@
         },
         "wingman.showProviderLogo": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Show the provider logo for each command in the command list"
         },
         "wingmain.context.ignore.useGitignore": {

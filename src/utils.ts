@@ -53,8 +53,7 @@ export function addTextBeforeSelection(editor: vscode.TextEditor, { startLine }:
 }
 
 export async function putTextInNewBuffer(editor: vscode.TextEditor, newText: string) {
-  const { languageId } = editor.document;
-  const doc = await vscode.workspace.openTextDocument({ language: languageId });
+  const doc = await vscode.workspace.openTextDocument({ language: "markdown" });
   const newEditor = await vscode.window.showTextDocument(doc);
   await newEditor.edit((edit) => {
     edit.insert(new vscode.Position(0, 0), newText);

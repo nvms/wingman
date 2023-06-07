@@ -110,13 +110,13 @@
           "default": false,
           "description": "Show the provider logo for each command in the command list"
         },
-        "wingmain.context.ignore.useGitignore": {
+        "wingman.context.ignore.useGitignore": {
           "order": 8,
           "type": "boolean",
           "default": true,
           "description": "Ignore paths defined in .gitignore when calculating context"
         },
-        "wingmain.context.include.permittedFileExtensions": {
+        "wingman.context.include.permittedFileExtensions": {
           "type": "array",
           "description": "File extensions to find when calculating context. Empty array means all extensions are matched.",
           "default": [

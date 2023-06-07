@@ -66,6 +66,7 @@ _Please note that this extension is currently under active development and its f
 | `{{language}}`              | The language identifier of the current file.                                                                                             |
 | `{{command_args}}`          | The arguments passed to the command. When this is present, you will be prompted for additional input when the command button is clicked. |
 | `{{text_selection}}`        | The selected text.                                                                                                                       |
+| `{{project_text}}`          | Contents of all files in the opened project (all vscode workspace roots), using `.gitigore` and `.wmignore` as ignore patterns.          |
 | `{{filetype}}`              | The file type of the current file. Not the extension name. Currently will have the same value as `{{language}}`.                         |
 | `{{language_instructions}}` | The language-specific instructions for more generic commands, like the `doc` example above.                                              |
 
@@ -121,20 +122,20 @@ When you create your own command, you can override any of these properties. The 
 
 ## Command properties
 
-| Property                | Description                                                                                                                                                                  |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `model`                 | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported.                                                                                                 |
-| `maxTokens`             | See OpenAI API docs.                                                                                                                                                         |
-| `numberOfChoices`       | See OpenAI API docs.                                                                                                                                                         |
-| `temperature`           | See OpenAI API docs.                                                                                                                                                         |
-| `command`               | The command name. This value is used to register the command with vscode: `wingman.<command>`.                                                                               |
-| `label`                 | The label for the command to show in the UI.                                                                                                                                 |
-| `systemMessageTemplate` | See OpenAI API docs.                                                                                                                                                         |
-| `userMessageTemplate`   | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}`. |
-| `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                     |
-| `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                           |
-| `category`              | The category to place the command under in the UI.                                                                                                                           |
-| `provider`              | The provider to use for the generation of this command. Currently, only `openai` is supported, but `anthropic` support is in the works.                                      |
+| Property                | Description                                                                                                                                                                                      |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `model`                 | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported.                                                                                                                     |
+| `maxTokens`             | See OpenAI API docs.                                                                                                                                                                             |
+| `numberOfChoices`       | See OpenAI API docs.                                                                                                                                                                             |
+| `temperature`           | See OpenAI API docs.                                                                                                                                                                             |
+| `command`               | The command name. This value is used to register the command with vscode: `wingman.<command>`.                                                                                                   |
+| `label`                 | The label for the command to show in the UI.                                                                                                                                                     |
+| `systemMessageTemplate` | See OpenAI API docs.                                                                                                                                                                             |
+| `userMessageTemplate`   | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{project_text}}`, `{{filetype}}`, and `{{language_instructions}}`. |
+| `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                                         |
+| `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                                               |
+| `category`              | The category to place the command under in the UI.                                                                                                                                               |
+| `provider`              | The provider to use for the generation of this command. Currently, only `openai` is supported, but `anthropic` support is in the works.                                                          |
 
 ## Default commands
 

@@ -129,6 +129,11 @@
           ],
           "description": "Filepaths to ignore when calculating context, in addition to .gitignore (if useGitignore is enabled)"
         },
+        "wingman.showBuiltinCommands": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the built-in commands in the command list"
+        },
         "wingman.userCommands": {
           "type": "array",
           "default": [

@@ -171,12 +171,8 @@ const mapFileExtensionToLanguageId = (fileExtension: string): string => {
 };
 
 /**
- * This function calls getFilesForContext, and for each file path, it reads the file and returns an array of strings.
- * Each string is formatted like this:
- * ```{{filetype}}\n{{file_contents}}\n```
- * {{filetype}} is the file extension, and {{file_contents}} is the file contents.
- * The function MUST return the string with leading backticks followed by the filetype, a newline character, the file contents as utf8, and a newline character, followed by a closing backtick.
- * Returns an array of strings, each formatted as mentioned above.
+ * Retrieves files for context and formats them as code blocks with the file name
+ * as a comment at the top of each code block.
  */
 export const getFilesForContextFormatted = () => {
   const files = getFilesForContext();

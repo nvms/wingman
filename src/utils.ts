@@ -142,7 +142,7 @@ const getFilesForContext = () => {
   const permittedFileExtensions = getConfig<string[]>("context.include.permittedFileExtensions", []);
 
   return Glob.sync(
-    workspaceFolders.map((folder) => `${folder.uri.fsPath}/**/*${permittedFileExtensions.length > 0 ? `.+{${permittedFileExtensions.join("|")}}` : ""}`),
+    workspaceFolders.map((folder) => `${folder.uri.fsPath}/**/*${permittedFileExtensions.length > 0 ? `.+(${permittedFileExtensions.join("|")})` : ""}`),
     {
       ignore: [...ignorePaths],
     },

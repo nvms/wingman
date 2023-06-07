@@ -29,10 +29,10 @@ export class OpenAIProvider implements Provider {
       model = "gpt-3.5-turbo",
       temperature = 0.8,
     } = {
-      apiKey: (getConfig("openai.apiKey") as string) ?? (getConfig("apiKey") as string),
-      apiBaseUrl: (getConfig("openai.apiBaseUrl") as string) ?? (getConfig("apiBaseUrl") as string),
-      model: template?.model ?? (getConfig("openai.model") as string) ?? (getConfig("model") as string),
-      temperature: template?.temperature ?? (getConfig("openai.temperature") as number) ?? (getConfig("temperature") as number),
+      apiKey: getConfig<string>("openai.apiKey") ?? getConfig<string>("apiKey"),
+      apiBaseUrl: getConfig<string>("openai.apiBaseUrl") ?? getConfig<string>("apiBaseUrl"),
+      model: template?.model ?? getConfig<string>("openai.model") ?? getConfig<string>("model"),
+      temperature: template?.temperature ?? getConfig<number>("openai.temperature") ?? getConfig<number>("temperature"),
     };
     this.viewProvider = provider;
     this.instance = new ChatGPTAPI({

@@ -64,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
     };
 
     const builtinTemplates = [...defaultCommands];
-    const userTemplates = getConfig("userCommands", []) as Command[];
+    const userTemplates = getConfig<Command[]>("userCommands", []);
     const allTemplates = [];
 
     if (getConfig<boolean>("showBuiltinCommands", true)) {

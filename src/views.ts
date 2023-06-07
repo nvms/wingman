@@ -82,7 +82,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
       '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h6v2H5v14h14v-6h2v6q0 .825-.588 1.413T19 21H5Zm11-10V8h-3V6h3V3h2v3h3v2h-3v3h-2Z"/></svg>';
 
     const builtinTemplates = [...defaultCommands];
-    const userTemplates = getConfig("userCommands", []) as Command[];
+    const userTemplates = getConfig<Command[]>("userCommands", []);
     const allTemplates = [...builtinTemplates, ...userTemplates].map((t) => buildCommandTemplate(t.command));
     const categories = [...new Set(allTemplates.map((template) => template.category))];
 

@@ -139,9 +139,10 @@ const getIgnoredPaths = (): string[] => {
 const getFilesForContext = () => {
   const ignorePaths = getIgnoredPaths();
   const workspaceFolders = vscode.workspace.workspaceFolders || [];
+  const permittedFileExtensions = getConfig<string[]>("context.include.permittedFileExtensions", []);
 
   return Glob.sync(
-    workspaceFolders.map((folder) => `${folder.uri.fsPath}/**/*`),
+    workspaceFolders.map((folder) => `${folder.uri.fsPath}/**/*${permittedFileExtensions.length > 0 ? `.+{${permittedFileExtensions.join("|")}}` : ""}`),
     {
       ignore: [...ignorePaths],
     },

@@ -1,7 +1,7 @@
 {
   "name": "ai-wingman",
   "displayName": "Wingman",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Your pair programming wingman, powered by ChatGPT or your local LLaMa.",
   "publisher": "nvms",
   "private": true,

@@ -1,5 +1,16 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.2.2 - 2023-06-08
+
+### Changed
+
+- Use `marked-highlight`.
+- When highlight language cannot be determined, fallback to `javascript`.
+
+### Fixed
+
+- `marked` doesn't throw an error when it encounters an unknown language now that we're using `marked-highlight`. This error resulted in the entire panel being blank.
+
 ## 1.2.0 - 2023-06-06
 
 ### Changed

@@ -31,19 +31,16 @@ function formatCodeBlockResponse(text: string) {
 export function handleResponseCallbackType(template: Command, editor: vscode.TextEditor, selection: { startLine: number; endLine: number }, text: string) {
   switch (template.callbackType) {
     case CallbackType.Replace: {
-      const formattedText = formatCodeBlockResponse(text);
-      replaceLinesWithText(editor, selection, formattedText);
+      replaceLinesWithText(editor, selection, formatCodeBlockResponse(text));
       break;
     }
     case CallbackType.BeforeSelected: {
-      const formattedText = formatCodeBlockResponse(text);
-      const newRange = addTextBeforeSelection(editor, selection, formattedText);
+      const newRange = addTextBeforeSelection(editor, selection, formatCodeBlockResponse(text));
       editor.selection = new vscode.Selection(newRange.start, newRange.end);
       break;
     }
     case CallbackType.AfterSelected: {
-      const formattedText = formatCodeBlockResponse(text);
-      const newRange = addTextAfterSelection(editor, selection, formattedText);
+      const newRange = addTextAfterSelection(editor, selection, formatCodeBlockResponse(text));
       editor.selection = new vscode.Selection(newRange.start, newRange.end);
       break;
     }

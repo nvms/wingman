@@ -151,3 +151,67 @@ When you create your own command, you can override any of these properties. The 
 | Modify                   | Makes changes to the selected code                                                                          |
 | Chat                     | Chat with only the selected code as context.                                                                |
 | Question                 | Asks a question about the selected code                                                                     |
+
+## Context
+
+### Interpolations
+
+#### Selected text
+
+`{{text_selection}}` is a string interpolation that includes the currently selected text.
+
+If you selected `const x = 1;` and your prompt was written as:
+
+`I have the following code:\n\n{{text_selection}}\n\nWhat's wrong with it? `
+
+Your final prompt would be:
+
+`I have the following code:\n\nconst x = 1;\n\nWhat's wrong with it? `
+
+#### Project text
+
+`{{project_text}}` is a string interpolation that includes the contents of all files in the current vscode workspace root. Each file is stringified and formatted as:
+
+` // <filename>\n```<filetype>\n<file contents>\n```  `
+
+If you had a file named `index.js` with the contents:
+
+```javascript
+import { add } from "./utils.js";
+```
+
+And a file named `utils.js` with the contents:
+
+```javascript
+export const add = (a, b) => a + b;
+```
+
+And your command prompt was:
+
+`Suggest improvements to my {{language}} project:\n\n{{project_text}}`
+
+Your final prompt would be:
+
+```
+Suggest improvements to my javascript project:
+
+// index.js
+\`\`\`javascript     <-- only escaped for the purposes of this README
+import { add } from "./utils.js";
+\`\`\`
+
+// utils.js
+\`\`\`javascript
+export const add = (a, b) => a + b;
+\`\`\`
+```
+
+### Configuring context inclusion and exclusion
+
+| Config property                                   | Default                                                                                                                                                                                                              | Description                                                                            |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `wingman.context.ignore.useGitignore`             | `true`                                                                                                                                                                                                               | Whether or not to use the `.gitignore` file to determine which files to ignore.        |
+| `wingman.context.ignore.additionalIgnorePaths`    | `[ "**/node_modules/**", "**/dist/**", "**/out/**", "**/build/**", "**/media/**", "**/assets/**", "**/.github/**", "**/.vscode/**", "**/.vscode-test/**", "**/", "**/package.json", "**/.gitignore", "**/.git/**" ]` | Files matching any of these patterns in your workspace are also excluded from context. |
+| `wingman.context.include.permittedFileExtensions` | `[ "js", "ts", "jsx", "tsx", "cpp", "py", "go", "java", "html", "css", "php", "rb", "cs", "swift", "kt", "scala", "h", "m", "mm", "c", "cc", "cxx", "hxx", "hpp", "hh", "s", "asm", "pl", "pm", "t", "r", "sh" ]`    | Only files with these extensions are included in context.                              |
+
+If a `.wmignore` file is discovered, it's treated the same as a `.gitignore` file.

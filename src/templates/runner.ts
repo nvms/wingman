@@ -48,8 +48,7 @@ export function handleResponseCallbackType(template: Command, editor: vscode.Tex
       break;
     }
     case CallbackType.Buffer: {
-      const formattedText = formatCodeBlockResponse(text);
-      putTextInNewBuffer(editor, formattedText);
+      putTextInNewBuffer(editor, text);
       break;
     }
   }

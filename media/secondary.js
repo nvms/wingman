@@ -1,8 +1,17 @@
-/* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable no-undef */
 
 (() => {
   const vscode = acquireVsCodeApi();
+
+  marked.use(
+    markedHighlight({
+      langPrefix: "hljs language-",
+      highlight(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : "javascript";
+        return hljs.highlight(code, { language }).value;
+      },
+    }),
+  );
 
   let chatId = 0;
   let responseId = 0;
@@ -220,14 +229,7 @@
 
     const options = {
       renderer: new marked.Renderer(),
-      highlight: (code, language) => {
-        if (fixed.language) {
-          return hljs.highlight(code, { language: fixed.language, ignoreIllegals: true }).value;
-        }
-
-        return hljs.highlightAuto(code).value;
-      },
-      langPrefix: "hljs language-",
+      silent: true,
       breaks: false,
       pedantic: false,
       gfm: true,

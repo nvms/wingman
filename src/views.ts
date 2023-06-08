@@ -257,6 +257,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
     const tailwindJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "tailwind.min.js"));
     const tailwindCssUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "tailwind.min.css"));
     const markedJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "marked.min.js"));
+    const markedHighlightJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "marked.highlight.js"));
     const highlightJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "highlight.min.js"));
     const highlightVscodeCssUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "highlight-vscode.min.css"));
     const jqueryJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "jquery.min.js"));
@@ -269,6 +270,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
       .replace("{{tailwindJsUri}}", tailwindJsUri.toString())
       .replace("{{tailwindCssUri}}", tailwindCssUri.toString())
       .replace("{{markedJsUri}}", markedJsUri.toString())
+      .replace("{{markedHighlightJsUri}}", markedHighlightJsUri.toString())
       .replace("{{highlightJsUri}}", highlightJsUri.toString())
       .replace("{{highlightCssUri}}", highlightVscodeCssUri.toString())
       .replace("{{jqueryJsUri}}", jqueryJsUri.toString());

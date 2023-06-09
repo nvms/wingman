@@ -183,9 +183,10 @@ export const getFilesForContextFormatted = () => {
     const workspaceFolder = workspaceFolderPaths.find((folder) => file.startsWith(folder));
     if (!workspaceFolder) continue;
     const fileName = file.replace(workspaceFolder, "");
+    const fileNameWithoutLeadingPathSep = fileName.startsWith(path.sep) ? fileName.slice(1) : fileName;
     const fileType = mapFileExtensionToLanguageId(path.extname(file).replace(".", ""));
     const fileContents = fs.readFileSync(file, "utf8");
-    results.push(`// file: ${fileName}\n\`\`\`${fileType}\n${fileContents}\n\`\`\``);
+    results.push(`// file: ${fileNameWithoutLeadingPathSep}\n\`\`\`${fileType}\n${fileContents}\n\`\`\``);
   }
 
   return results;

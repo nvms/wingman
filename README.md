@@ -8,7 +8,7 @@ _Please note that this extension is currently under active development and its f
 
 <center>
 
-![example image](.github/example1.png)
+![example video](.github/demo-06-09-2023.mp4)
 
 </center>
 

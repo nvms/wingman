@@ -143,21 +143,6 @@ When you create your own command, you can override any of these properties. The 
 | `category`              | The category to place the command under in the UI.                                                                                                                                               |
 | `provider`              | The provider to use for the generation of this command. Currently, only `openai` is supported, but `anthropic` support is in the works.                                                          |
 
-## Default commands
-
-| Command                  | Description                                                                                                 |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Completion               | Completes the selected text                                                                                 |
-| Write documentation      | Writes documentation for the selected text                                                                  |
-| Write unit tests         | Writes unit tests for the selected text                                                                     |
-| Refactor                 | Refactors the selected code without changing its functionality, focusing on readability and maintainability |
-| Analyze for bugs         | Examines the selected code to alert you of possible bugs                                                    |
-| Explain                  | Provides an explanation of the code                                                                         |
-| Optimize for performance | Attempt to optimize the selected code, considering performance, readability, etc.                           |
-| Modify                   | Makes changes to the selected code                                                                          |
-| Chat                     | Chat with only the selected code as context.                                                                |
-| Question                 | Asks a question about the selected code                                                                     |
-
 ## Context
 
 ### Interpolations

@@ -13,15 +13,25 @@ body {}
 
 .command-button {}
 
+.command-list li button {
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
 .command-list li button:hover,
 .command-list li button:focus,
 .command-list li button:active {
   outline: none;
-  background: var(--vscode-button-hoverBackground);
+  background: var(--vscode-panelSectionHeader-background);
+  transition: background 0.15s ease;
 }
 
-.command-list li:hover .template-type-indicator {
+.command-list li:hover .template-type-indicator,
+.command-list li:hover .provider {
   opacity: 1;
+}
+
+.command-description {
+  opacity: 0.7;
 }
 
 .muted {
@@ -38,6 +48,11 @@ body {}
 }
 
 .category {
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.category:hover {
   background: var(--vscode-panelSectionHeader-background);
 }
 

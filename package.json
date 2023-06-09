@@ -111,7 +111,7 @@
           "description": "Show the provider logo for each command in the command list"
         },
         "wingman.context.ignore.useGitignore": {
-          "order": 8,
+          "order": 9,
           "type": "boolean",
           "default": true,
           "description": "Ignore paths defined in .gitignore when calculating context"
@@ -155,7 +155,7 @@
           ]
         },
         "wingman.context.ignore.additionalIgnorePaths": {
-          "order": 9,
+          "order": 10,
           "type": "array",
           "default": [
             "**/node_modules/**",
@@ -179,6 +179,12 @@
           "type": "boolean",
           "default": true,
           "description": "Show the built-in commands in the command list"
+        },
+        "wingman.showCommandDescriptions": {
+          "order": 8,
+          "type": "boolean",
+          "default": true,
+          "description": "Show command descriptions in the command list"
         },
         "wingman.userCommands": {
           "order": 1,

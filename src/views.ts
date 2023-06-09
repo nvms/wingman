@@ -110,17 +110,28 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
             class="command-button flex flex-col justify-between items-start py-1 px-2 text-left"
             data-provider="${template.provider}"
             data-command="${template.command}">
-            <div class="pointer-events-none flex flex-1 w-full justify-between">
-              <span>${template.label}</span>
-              <div class="flex">
-                <span class="template-type-indicator">${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>
-                <span class="template-type-indicator">${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
-                <span class="template-type-indicator">${template.userMessageTemplate.includes("{{project_text}}") ? checklistSvg : ""}</span>
-                <span class="template-type-indicator">${getCallbackTypeSVG(template.callbackType)}</span>
+            <div class="pointer-events-none flex flex-1 w-full flex-col">
+              <div class="flex justify-between flex-1 w-full">
+                <span>${template.label}</span>
+                <div class="flex">
+                  <span class="template-type-indicator">${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>
+                  <span class="template-type-indicator">${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
+                  <span class="template-type-indicator">${template.userMessageTemplate.includes("{{project_text}}") ? checklistSvg : ""}</span>
+                  <span class="template-type-indicator">${getCallbackTypeSVG(template.callbackType)}</span>
+                  ${
+                    getConfig("showProviderLogo")
+                      ? `<span class="provider">
+                        ${template.provider === AIProvider.OpenAI ? `<span class="logo">${openAiSvg}</span>` : '<span class="text">A\\</span>'}
+                      </span>`
+                      : ""
+                  }
+                </div>
+              </div>
+              <div class="w-full">
                 ${
-                  getConfig("showProviderLogo")
-                    ? `<span class="provider">
-                      ${template.provider === AIProvider.OpenAI ? `<span class="logo">${openAiSvg}</span>` : '<span class="text">A\\</span>'}
+                  getConfig("showCommandDescriptions") && template.description
+                    ? `<span class="command-description text-sm">
+                      ${template.description}
                     </span>`
                     : ""
                 }
@@ -137,16 +148,16 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
         const categoryCommandsHTML = templatesWithThisCategory.map(buttonHtml).join("");
         const isCategoryCollapsed = ExtensionState.get(`category-${category}-collapsed`) ?? false;
         return `
-            <div>
+            <div class="m-0">
               <div
-                class="category select-none p-1 flex flex-row justify-between items-center cursor-pointer"
+                class="category select-none p-2 flex flex-row justify-between items-center cursor-pointer"
                 data-collapse-category="${category}"
                 data-collapsed="${isCategoryCollapsed ? "true" : "false"}"
               >
                 <div class="collapse-arrow flex-0 mr-2">
                   ${caretDownLightSvg}
                 </div>
-                <h2 class="flex-1 text-sm font-semibold px-1 inline-flex">${category}</h2>
+                <h2 class="flex-1 font-semibold px-1 inline-flex">${category}</h2>
               </div>
               <ul class="command-list">
                 ${categoryCommandsHTML}

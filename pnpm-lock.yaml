@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@vscode/webview-ui-toolkit':
+    specifier: ^1.2.2
+    version: 1.2.2(react@18.2.0)
   chatgpt:
     specifier: ^5.2.5
     version: 5.2.5
@@ -460,6 +463,35 @@ packages:
       type-detect: 4.0.8
     dev: true
 
+  /@microsoft/fast-element@1.12.0:
+    resolution: {integrity: sha512-gQutuDHPKNxUEcQ4pypZT4Wmrbapus+P9s3bR/SEOLsMbNqNoXigGImITygI5zhb+aA5rzflM6O8YWkmRbGkPA==}
+    dev: false
+
+  /@microsoft/fast-foundation@2.49.0:
+    resolution: {integrity: sha512-Wk4e4QXFVtT5hPwhMfHyGY30kixM0td8aDs7bAD6NM2z2SCBNvpTTWp+FCjx0I0lpUMlMenb6wsw7pMWQreRkQ==}
+    dependencies:
+      '@microsoft/fast-element': 1.12.0
+      '@microsoft/fast-web-utilities': 5.4.1
+      tabbable: 5.3.3
+      tslib: 1.14.1
+    dev: false
+
+  /@microsoft/fast-react-wrapper@0.1.48(react@18.2.0):
+    resolution: {integrity: sha512-9NvEjru9Kn5ZKjomAMX6v+eF0DR+eDkxKDwDfi+Wb73kTbrNzcnmlwd4diN15ygH97kldgj2+lpvI4CKLQQWLg==}
+    peerDependencies:
+      react: '>=16.9.0'
+    dependencies:
+      '@microsoft/fast-element': 1.12.0
+      '@microsoft/fast-foundation': 2.49.0
+      react: 18.2.0
+    dev: false
+
+  /@microsoft/fast-web-utilities@5.4.1:
+    resolution: {integrity: sha512-ReWYncndjV3c8D8iq9tp7NcFNc1vbVHvcBFPME2nNFKNbS1XCesYZGlIlf3ot5EmuOXPlrzUHOWzQ2vFpIkqDg==}
+    dependencies:
+      exenv-es6: 1.1.1
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -782,6 +814,17 @@ packages:
     optionalDependencies:
       keytar: 7.9.0
     dev: true
+
+  /@vscode/webview-ui-toolkit@1.2.2(react@18.2.0):
+    resolution: {integrity: sha512-xIQoF4FC3Xh6d7KNKIoIezSiFWYFuf6gQMdDyKueKBFGeKwaHWEn+dY2g3makvvEsNMEDji/woEwvg9QSbuUsw==}
+    peerDependencies:
+      react: '>=16.9.0'
+    dependencies:
+      '@microsoft/fast-element': 1.12.0
+      '@microsoft/fast-foundation': 2.49.0
+      '@microsoft/fast-react-wrapper': 0.1.48(react@18.2.0)
+      react: 18.2.0
+    dev: false
 
   /@webassemblyjs/ast@1.11.6:
     resolution: {integrity: sha512-IN1xI7PwOvLPgjcf180gC1bqn3q/QaOCwYUahIOhbYUu8KA/3tw2RT/T0Gidi1l7Hhj5D/INhJxiICObqpMu4Q==}
@@ -2433,6 +2476,10 @@ packages:
       strip-final-newline: 3.0.0
     dev: true
 
+  /exenv-es6@1.1.1:
+    resolution: {integrity: sha512-vlVu3N8d6yEMpMsEm+7sUBAI81aqYYuEvfK0jNqmdb/OPXzzH7QWDDnVjMvDSY47JdHEqx/dfC/q8WkfoTmpGQ==}
+    dev: false
+
   /expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
     engines: {node: '>=6'}
@@ -3470,6 +3517,13 @@ packages:
       wrap-ansi: 6.2.0
     dev: true
 
+  /loose-envify@1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
+    dependencies:
+      js-tokens: 4.0.0
+    dev: false
+
   /lowercase-keys@3.0.0:
     resolution: {integrity: sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -4244,6 +4298,13 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
+  /react@18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
+
   /read-pkg-up@7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
     engines: {node: '>=8'}
@@ -4825,6 +4886,10 @@ packages:
       tslib: 2.5.2
     dev: true
 
+  /tabbable@5.3.3:
+    resolution: {integrity: sha512-QD9qKY3StfbZqWOPLp0++pOrAVb/HbUi5xCc8cUo4XjP19808oaMiDzn0leBY5mCespIBM0CIZePzZjgzR83kA==}
+    dev: false
+
   /tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
@@ -4959,7 +5024,6 @@ packages:
 
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
-    dev: true
 
   /tslib@2.5.2:
     resolution: {integrity: sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA==}

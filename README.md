@@ -12,6 +12,12 @@ _Please note that this extension is currently under active development and its f
 
 </center>
 
+## Feedback
+
+If you're enjoying the extension and find value in it, please let me know by leaving a review on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=nvms.ai-wingman&ssr=false#review-details). It helps with the motivation to keep working on it.
+
+If you have any feedback or suggestions for improvement, please open an issue. The extension is mostly built to cater to my own needs and workflow, but I'm trying to keep it as extensible as possible and may not have considered your use case.
+
 ## Quickstart
 
 1. Install the extension.

@@ -110,7 +110,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
             class="command-button flex flex-col justify-between items-start py-1 px-2 text-left"
             data-provider="${template.provider}"
             data-command="${template.command}">
-            <div class="text-sm pointer-events-none flex flex-1 w-full justify-between">
+            <div class="pointer-events-none flex flex-1 w-full justify-between">
               <span>${template.label}</span>
               <div class="flex">
                 <span class="template-type-indicator">${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>

@@ -273,7 +273,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
       markedJsUri: generateUri("marked.min.js"),
       markedHighlightJsUri: generateUri("marked.highlight.js"),
       highlightJsUri: generateUri("highlight.min.js"),
-      hightlightCssUri: generateUri("highlight-vscode.min.css"),
+      highlightCssUri: generateUri("highlight-vscode.min.css"),
       jqueryJsUri: generateUri("jquery.min.js"),
     };
 

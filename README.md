@@ -177,10 +177,10 @@ Your final prompt would be:
 If you had a file named `index.js` with the contents:
 
 ```javascript
-import { add } from "./utils.js";
+import { add } from "./common/utils.js";
 ```
 
-And a file named `utils.js` with the contents:
+And a file named `common/utils.js` with the contents:
 
 ```javascript
 export const add = (a, b) => a + b;
@@ -195,12 +195,12 @@ Your final prompt would be:
 ```
 Suggest improvements to my javascript project:
 
-// index.js
+// file: src/index.js
 \`\`\`javascript     <-- only escaped for the purposes of this README
 import { add } from "./utils.js";
 \`\`\`
 
-// utils.js
+// file: src/common/utils.js
 \`\`\`javascript
 export const add = (a, b) => a + b;
 \`\`\`

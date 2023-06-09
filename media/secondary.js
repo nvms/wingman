@@ -229,7 +229,7 @@ function formatDiv(div, text) {
   const options = {
     renderer: new marked.Renderer(),
     silent: true,
-    breaks: false,
+    breaks: true,
     pedantic: false,
     gfm: true,
     sanitize: false,

@@ -8,7 +8,9 @@ _Please note that this extension is currently under active development and its f
 
 <center>
 
-https://pye.rs/media/wingman-06-09-2023.mp4
+
+https://github.com/nvms/wingman/assets/17074357/c96a162d-7c56-4bac-9681-0873f77f387f
+
 
 </center>
 

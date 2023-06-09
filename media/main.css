@@ -31,14 +31,10 @@ body {}
 #help-container svg,
 .command-list svg,
 .collapse-arrow svg {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   fill: var(--vscode-foreground);
   background: transparent;
-}
-
-.command-list svg {
-  /* margin-left: 5px; */
 }
 
 .category {
@@ -70,19 +66,15 @@ body {}
   opacity: 0.5;
 }
 
-.provider .logo svg,
-.provider {
-  opacity: 0.75;
-  background: white;
-  border-radius: 30%;
-  height: 18px;
-  width: 18px;
+.provider svg {
+  height: 14px;
+  width: 14px;
 }
 
 .provider {
-  width: 20px;
-  height: 20px;
-  color: black;
+  opacity: 0.5;
+  margin-left: 2px;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,9 +88,6 @@ body {}
 }
 
 .template-type-indicator {
-  width: 20px;
-}
-
-.provider, .template-type-indicator {
-  margin-left: 3px;
+  width: 14px;
+  margin-left: 2px;
 }

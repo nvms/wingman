@@ -250,29 +250,22 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
     const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
     const $ = cheerio.load(indexHtml);
 
-    const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "secondary.js"));
-    const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "reset.css"));
-    const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css"));
-    const styleSecondaryUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "secondary.css"));
-    const tailwindJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "tailwind.min.js"));
-    const tailwindCssUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "tailwind.min.css"));
-    const markedJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "marked.min.js"));
-    const markedHighlightJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "marked.highlight.js"));
-    const highlightJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "highlight.min.js"));
-    const highlightVscodeCssUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "highlight-vscode.min.css"));
-    const jqueryJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "jquery.min.js"));
+    const generateUri = (uri: string) => webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", uri)).toString();
 
-    return $.html()
-      .replace("{{scriptUri}}", scriptUri.toString())
-      .replace("{{styleResetUri}}", styleResetUri.toString())
-      .replace("{{styleVSCodeUri}}", styleVSCodeUri.toString())
-      .replace("{{styleSecondaryUri}}", styleSecondaryUri.toString())
-      .replace("{{tailwindJsUri}}", tailwindJsUri.toString())
-      .replace("{{tailwindCssUri}}", tailwindCssUri.toString())
-      .replace("{{markedJsUri}}", markedJsUri.toString())
-      .replace("{{markedHighlightJsUri}}", markedHighlightJsUri.toString())
-      .replace("{{highlightJsUri}}", highlightJsUri.toString())
-      .replace("{{highlightCssUri}}", highlightVscodeCssUri.toString())
-      .replace("{{jqueryJsUri}}", jqueryJsUri.toString());
+    const uris = {
+      scriptUri: generateUri("secondary.js"),
+      styleResetUri: generateUri("reset.css"),
+      styleVSCodeUri: generateUri("vscode.css"),
+      styleSecondaryUri: generateUri("secondary.css"),
+      tailwindJsUri: generateUri("tailwind.min.js"),
+      tailwindCssUri: generateUri("tailwind.min.css"),
+      markedJsUri: generateUri("marked.min.js"),
+      markedHighlightJsUri: generateUri("marked.highlight.js"),
+      highlightJsUri: generateUri("highlight.min.js"),
+      hightlightCssUri: generateUri("highlight-vscode.min.css"),
+      jqueryJsUri: generateUri("jquery.min.js"),
+    };
+
+    return Object.entries(uris).reduce((html, [key, value]) => html.replace(`{{${key}}}`, value), $.html());
   }
 }

@@ -6,11 +6,11 @@ To use a local LLaMa model for completely offline generation, set `wingman.opena
 
 _Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
 
+## Demo video
+
 <center>
 
-
 https://github.com/nvms/wingman/assets/17074357/c96a162d-7c56-4bac-9681-0873f77f387f
-
 
 </center>
 

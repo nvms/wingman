@@ -133,7 +133,7 @@ export const defaultCommands: Command[] = [
     description: "Using the selected code, writes inline comments.",
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite inline comments describing the code where appropriate. Do not write comments for code that should be extremely obvious, like variable assignments for example. IMPORTANT: Return the code inside of a code fence and nothing else. Do not explain your response.",
-    callbackType: CallbackType.BeforeSelected,
+    callbackType: CallbackType.Replace,
     category: BuiltinCategory.DocumentationComments,
   },
 

@@ -179,10 +179,13 @@ export const getFilesForContextFormatted = () => {
   const results: string[] = [];
 
   for (const file of files) {
-    const filename = path.basename(file);
+    const workspaceFolderPaths = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ?? [];
+    const workspaceFolder = workspaceFolderPaths.find((folder) => file.startsWith(folder));
+    if (!workspaceFolder) continue;
+    const fileName = file.replace(workspaceFolder, "");
     const fileType = mapFileExtensionToLanguageId(path.extname(file).replace(".", ""));
     const fileContents = fs.readFileSync(file, "utf8");
-    results.push(`// ${filename}\n\`\`\`${fileType}\n${fileContents}\n\`\`\``);
+    results.push(`// file: ${fileName}\n\`\`\`${fileType}\n${fileContents}\n\`\`\``);
   }
 
   return results;

@@ -70,11 +70,13 @@ export const baseCommand: Command = {
   userMessageTemplate: "",
   callbackType: CallbackType.None,
   languageInstructions: {
-    javascript: "Use modern JavaScript syntax.",
-    typescript: "Use modern TypeScript syntax.",
-    cpp: "Use modern C++ features.",
-    html: "Use modern HTML syntax.",
-    csharp: "Use modern C# syntax.",
+    javascript: "Use modern JavaScript syntax and features.",
+    typescript: "Use modern TypeScript syntax and features.",
+    javascriptreact: "Use modern JavaScript syntax and features.",
+    typescriptreact: "Use modern TypeScript syntax and features.",
+    cpp: "Use modern C++ syntax and features.",
+    html: "Use modern HTML syntax and features.",
+    csharp: "Use modern C# syntax and features.",
   },
   category: BuiltinCategory.Misc,
   provider: AIProvider.OpenAI,
@@ -87,10 +89,8 @@ export const defaultCommands: Command[] = [
     label: "Complete selected",
     description: "Complete the code, using selection as guidance.",
     userMessageTemplate:
-      "I have the following {{language}} code snippet:\n```{{filetype}}\n{{text_selection}}\n```\n\nComplete the rest.\n{{command_args}}. Use best practices and do not write documentation. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your solution in any way.",
+      "I have the following {{language}} code snippet:\n```{{filetype}}\n{{text_selection}}\n```\n\nComplete the rest. Use best practices and do not write any comments. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your solution in any way.",
     languageInstructions: {
-      typescript: "Use modern TypeScript features.",
-      cpp: "Use modern C++ features.",
       vue: "Use the modern Vue 3 composition API.",
     },
     callbackType: CallbackType.Replace,
@@ -103,8 +103,6 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nGiven the related comment strings, please generate the required code. You may define helper functions if it is necessary. Please ensure that the generated code does exactly what the comments say it does. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way. IMPORTANT: If I have given you additional code that does not have a comment, then I have included it only for context - do not include it in your response, only use it to better understand the code you need to generate.",
     languageInstructions: {
-      typescript: "Use modern TypeScript features.",
-      cpp: "Use modern C++ features.",
       vue: "Use the modern Vue 3 composition API.",
     },
     callbackType: CallbackType.Replace,
@@ -147,8 +145,9 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good unit tests using best practices for the given language. {{language_instructions}} Only return the unit tests. IMPORTANT: Only return the code inside of a code fence and nothing else.",
     languageInstructions: {
-      cpp: "Use modern C++ syntax. Generate unit tests using the gtest framework.",
+      cpp: "Generate unit tests using the gtest framework.",
       java: "Generate unit tests using the JUnit framework.",
+      go: "Generate unit tests using the testify framework.",
     },
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.Tests,
@@ -161,12 +160,6 @@ export const defaultCommands: Command[] = [
     description: "Prompts for guidance on how to refactor the selected code.",
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.\nRefactor the code to be more readable and maintainable. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
-    languageInstructions: {
-      cpp: "Use modern C++ syntax.",
-      java: "Use modern Java syntax.",
-      typescript: "Use modern TypeScript syntax.",
-      javascript: "Use modern JavaScript syntax.",
-    },
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },

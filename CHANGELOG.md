@@ -1,5 +1,18 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.2.4 - 2023-06-09
+
+### Added
+
+- Optional command descriptions.
+- Optionally hide command descriptions.
+- Added a number of builtin commands.
+
+### Changed
+
+- Improved default command category labels.
+- Command list styling.
+
 ## 1.2.3 - 2023-06-08
 
 ### Changed

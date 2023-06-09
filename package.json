@@ -1,7 +1,7 @@
 {
   "name": "ai-wingman",
   "displayName": "Wingman",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Your pair programming wingman, powered by ChatGPT or your local LLaMa.",
   "publisher": "nvms",
   "private": true,
@@ -319,6 +319,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@vscode/webview-ui-toolkit": "^1.2.2",
     "chatgpt": "^5.2.5",
     "cheerio": "1.0.0-rc.12",
     "fast-glob": "^3.2.12",

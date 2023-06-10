@@ -28,7 +28,6 @@ function toggleCollapse(node, category, collapsed) {
   const arrow = $(node).find(".collapse-arrow");
   arrow.toggleClass("rotate-90", collapsed);
   vscode.postMessage({ type: "collapseCategory", value: { category, collapsed } });
-  console.log("toggleCollapsed", category, collapsed);
 }
 
 document.querySelectorAll("[data-collapse-category]").forEach((node) => {

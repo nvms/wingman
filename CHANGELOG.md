@@ -1,5 +1,17 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.2.8 - 2023-06-10
+
+### Added
+
+- Added a "Translate" default prompt category.
+
+### Changed
+
+- Changed some of the default command prompts.
+- Updated list styles a bit.
+- When a response is received or aborted, the input field is now automatically focused.
+
 ## 1.2.4 - 2023-06-09
 
 ### Added

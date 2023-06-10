@@ -144,7 +144,7 @@ function responseFinished(message) {
   responseId++;
   $("#abort").addClass("hidden");
   $("#repeat-last").removeClass("hidden");
-  $("#input").prop("disabled", false);
+  $("#input").prop("disabled", false).focus();
   scrollToBottom();
 }
 
@@ -155,7 +155,7 @@ function responseAborted() {
   const div = $(`#ai-${responseId}`);
   formatDiv(div[0], message.value.text);
   responseId++;
-  $("#input").prop("disabled", false);
+  $("#input").prop("disabled", false).focus();
   scrollToBottom();
 }
 

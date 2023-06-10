@@ -1,5 +1,12 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.2.9 - 2023-06-10
+
+### Changed
+
+- Default prompt example has changed, because the previous one has been baked into the default list.
+- Category expansion behaves like an accordion now.
+
 ## 1.2.8 - 2023-06-10
 
 ### Added

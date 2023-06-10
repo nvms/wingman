@@ -25,13 +25,17 @@ body {}
   transition: background 0.15s ease;
 }
 
+.command-list li button:active {
+  opacity: 0.6;
+}
+
 .command-list li:hover .template-type-indicator,
 .command-list li:hover .provider {
   opacity: 1;
 }
 
 .command-description {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .muted {

@@ -191,11 +191,12 @@
           "type": "array",
           "default": [
             {
-              "command": "complexity",
-              "label": "Calculate time complexity",
-              "userMessageTemplate": "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nPlease answer the following two questions and nothing else.\n1) What is the time complexity of this code? 2) How did you come to this conclusion?",
-              "systemMessageTemplate": "You are an assistant to a software developer.",
-              "callbackType": "none"
+              "command": "exImprove",
+              "label": "Suggest improvements",
+              "userMessageTemplate": "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nPlease provide a list of suggestions for improving the code in markdown format. Consider aspects such as readability, performance, maintainability, and best coding practices. Explain each suggestion briefly, highlighting the specific areas that could be enhanced. Your suggestions should aim to improve the code without changing its behavior.",
+              "systemMessageTemplate": "You are an assistant to a {{language}} developer.",
+              "callbackType": "none",
+              "category": "My prompts"
             }
           ],
           "items": {

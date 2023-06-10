@@ -6,17 +6,6 @@
 
 const vscode = acquireVsCodeApi();
 
-// provideVSCodeDesignSystem().register(allComponents);
-
-document.querySelectorAll("[data-command]").forEach((node) => {
-  node.addEventListener("click", (e) => {
-    const command = e.target?.dataset?.command;
-    if (command) {
-      vscode.postMessage({ type: "command", value: command });
-    }
-  });
-});
-
 function toggleCollapse(node, category, collapsed) {
   collapsed = !collapsed;
   node.dataset.collapsed = collapsed;
@@ -30,10 +19,7 @@ function toggleCollapse(node, category, collapsed) {
   vscode.postMessage({ type: "collapseCategory", value: { category, collapsed } });
 }
 
-document.querySelectorAll("[data-collapse-category]").forEach((node) => {
-  const category = node.dataset.collapseCategory;
-  let collapsed = node.dataset.collapsed === "true";
-
+function addClickHandler(node, category, collapsed) {
   function handleClick() {
     toggleCollapse(node, category, collapsed);
     collapsed = !collapsed;
@@ -46,6 +32,22 @@ document.querySelectorAll("[data-collapse-category]").forEach((node) => {
   node.addEventListener("click", handleClick);
 
   $(node).find(".collapse-arrow").toggleClass("rotate-90", collapsed);
+}
+
+document.querySelectorAll("[data-command]").forEach((node) => {
+  node.addEventListener("click", (e) => {
+    const command = e.target?.dataset?.command;
+    if (command) {
+      vscode.postMessage({ type: "command", value: command });
+    }
+  });
+});
+
+document.querySelectorAll("[data-collapse-category]").forEach((node) => {
+  const category = node.dataset.collapseCategory;
+  const collapsed = node.dataset.collapsed === "true";
+
+  addClickHandler(node, category, collapsed);
 });
 
 $("#command-help").on("click", () => {

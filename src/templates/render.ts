@@ -26,6 +26,7 @@ enum BuiltinCategory {
   Analysis = "Analysis",
   PullRequests = "Pull requests",
   Misc = "Misc",
+  Translate = "Translate",
 }
 
 export enum CallbackType {
@@ -164,6 +165,15 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
+    command: "modify",
+    label: "Modify",
+    description: "Modifies the selected code, using your input as guidance.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nYour task is to modify the code as instructed.\n\nInstructions: {{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
+    callbackType: CallbackType.Replace,
+    category: BuiltinCategory.Refactor,
+  },
+  {
     command: "refactorPerformance",
     label: "Optimize for performance",
     description: "Refactors the selected code, prioritizing performance.",
@@ -191,11 +201,20 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "modify",
-    label: "Modify",
-    description: "Modifies the selected code, using your input as guidance.",
+    command: "refactorDecompose",
+    label: "Decompose",
+    description: "Decomposes monoliths, splits functions, reduces responsibiltiy, enhances modularity.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nModify the code in the following way:\n\n{{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose the existing monolithic codebase by splitting functions and reducing responsibilities to enhance modularity. Identify logical components within the code and separate them appropriately. Your goal is to achieve a more modular and maintainable code structure while preserving the overall behavior. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+    callbackType: CallbackType.Replace,
+    category: BuiltinCategory.Refactor,
+  },
+  {
+    command: "refactorRemoveDeadCode",
+    label: "Remove dead code",
+    description: "Removes dead code, unused variables, etc.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nPerform a thorough analysis of the code to identify and remove any dead code, unused variables, or any other unnecessary artifacts. Your goal is to streamline the codebase and improve its clarity and maintainability.\n\nMake sure to review all sections of the code carefully, including function definitions, variable declarations, and conditionals. Identify any code segments that are no longer used or serve no purpose. Remove them to simplify the codebase while preserving its functionality.\n{{language_instructions}}\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -260,7 +279,7 @@ export const defaultCommands: Command[] = [
     label: "Review selected git diff",
     description: "Provides feedback on the selected git diff.",
     userMessageTemplate:
-      "You are performing a {{language}} PR review. Be concise and provide constructive feedback. You are tasked with briefly answering the following questions about the diff below:\nAre there any obvious bugs? Are there any ways to rewrite this such that it is significantly improved? Can we optimize this without a major refactor?\nIMPORTANT: Respond in markdown style, with each question as a heading. Do not mention the lack of a PR description. If you have suggestions to code, include your suggestion in a code block with the filename in a comment at the top of the block.\n\n{{text_selection}}",
+      "You are performing a {{language}} PR review. Be concise and provide constructive feedback. Briefly answer the following questions about the diff below:\nAre there any potential bugs or error-prone areas of this code? Are there any ways to rewrite this such that it is significantly improved? Can we optimize this without a major refactor?\nIMPORTANT: Respond in markdown style, with each question as a heading. Do not mention the lack of a PR description. If you have suggestions to code, include your suggestion in a code block with the filename in a comment at the top of the block.\n\n{{text_selection}}",
     systemMessageTemplate: "You are an assistant to a {{language}} developer and you are currently performing a pull request review.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.PullRequests,
@@ -270,7 +289,7 @@ export const defaultCommands: Command[] = [
     label: "Review selected code",
     description: "Provides feedback on the selected code.",
     userMessageTemplate:
-      "You are performing a {{language}} PR review. Be concise and provide constructive feedback. You are tasked with briefly answering the following questions about the code below:\nAre there any obvious bugs? Are there any ways to rewrite this such that it is significantly improved? Can we optimize this without a major refactor?\nIMPORTANT: Respond in markdown style, with each question as a heading. Do not mention the lack of a PR description. If you have suggestions to code, include your suggestion in a code block with the filename in a comment at the top of the block.\n\n{{text_selection}}",
+      "You are performing a {{language}} PR review. Be concise and provide constructive feedback. Briefly answer the following questions about the code below:\nAre there any potential bugs or error-prone areas of this code? Are there any ways to rewrite this such that it is significantly improved? Can we optimize this without a major refactor?\nIMPORTANT: Respond in markdown style, with each question as a heading. Do not mention the lack of a PR description. If you have suggestions to modify the code, include your suggestion in a code block.\n\n{{text_selection}}",
     systemMessageTemplate: "You are an assistant to a {{language}} developer and you are currently performing a pull request review.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.PullRequests,
@@ -278,10 +297,11 @@ export const defaultCommands: Command[] = [
 
   // Misc
   {
-    command: "chat_no_context",
+    command: "chatNoContext",
     label: "Chat",
     description: "Chat about anything.",
     userMessageTemplate: "{{command_args}}.",
+    systemMessageTemplate: "You are a helpful assistant.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Misc,
   },
@@ -294,6 +314,17 @@ export const defaultCommands: Command[] = [
     systemMessageTemplate: "You are a technical writer, grammar expert, and {{language}} coding assistant.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Misc,
+  },
+
+  // Translate
+  {
+    command: "translate",
+    label: "Translate to another language",
+    description: "Translates the selected code to another language, enter a language when prompted.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nTranslate it to {{command_args}}.\n\nThe translated code must behave the same as the original code. IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+    callbackType: CallbackType.Buffer,
+    category: BuiltinCategory.Translate,
   },
 ];
 

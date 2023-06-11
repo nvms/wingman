@@ -15,6 +15,7 @@ body {}
 
 .command-list li button {
   border-bottom: 1px solid var(--vscode-panel-border);
+  color: var(--vscode-foreground);
 }
 
 .command-list li button:hover,

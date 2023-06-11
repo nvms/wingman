@@ -244,15 +244,6 @@
                 ],
                 "description": "This defines what wingman does when the model finishes replying with a block of code. 'buffer' (currently not implemented), 'replace' (replaces the selected text with the model's response), 'beforeSelected' (inserts the model's response before the selected text), 'afterSelected' (inserts the model's response after the selected text on the next line)."
               },
-              "contextType": {
-                "type": "string",
-                "default": "selection",
-                "enum": [
-                  "selection",
-                  "none"
-                ],
-                "description": "When this is 'selection', '{{text_selection}}' will be replaced in your prompt with the selected text."
-              },
               "category": {
                 "type": "string",
                 "default": "Default",

@@ -64,7 +64,7 @@ export const baseCommand: Command = {
   maxTokens: 4096,
   numberOfChoices: 1,
   model: "gpt-3.5-turbo",
-  temperature: 0.8,
+  temperature: 0.3,
   command: "default",
   label: "Unnamed command",
   systemMessageTemplate: "You are a {{language}} coding assistant.",
@@ -340,8 +340,12 @@ export const buildCommandTemplate = (commandName: string): Command => {
 
   const template: Command = userTemplates.find((t) => t.command === commandName) || builtinTemplate || base;
 
+  // If a user-defined command does not specify a value for model or temperature,
+  // we want to fallback to the value defined in settings.json, NOT the value
+  // defined in baseCommand. Otherwise, the settings.json value will be ignored.
   const provider = template.provider ?? "openai";
   const model = template.model ?? getConfig<string>(`${provider}.model`);
+  const temperature = template.temperature ?? getConfig<number>(`${provider}.temperature`);
 
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();
@@ -350,6 +354,7 @@ export const buildCommandTemplate = (commandName: string): Command => {
   return {
     ...base,
     model,
+    temperature,
     category: template.category || BuiltinCategory.Misc,
     ...template,
     languageInstructions,

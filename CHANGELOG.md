@@ -1,5 +1,11 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.2.10 - 2023-06-10
+
+### Changed
+
+- Really minor CSS change.
+
 ## 1.2.9 - 2023-06-10
 
 ### Changed

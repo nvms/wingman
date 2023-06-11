@@ -1,5 +1,11 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.3.0 - 2023-06-11
+
+### Added
+
+- Anthroic support!
+
 ## 1.2.10 - 2023-06-10
 
 ### Changed

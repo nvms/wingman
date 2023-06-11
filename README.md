@@ -30,6 +30,41 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 6. Explore all of the other commands.
 7. Write your other commands in your settings under `wingman.userCommands`. See the [Command interface](#command-interface) section for more details.
 
+## Example commands
+
+To really get the most out of this extension, you'll probably want to create your own commands. Here are some examples to get you started:
+
+````javascript
+// settings.json
+
+"wingman.userCommands": [
+  {
+    "command": "variableNames",
+    "label": "Meaningful variable names",
+    "userMessageTemplate":
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nGive the variables more meaningful names based on their usage. Return the refactored code inside of a code block and nothing else.",
+    "callbackType": "replace",
+    "category": "Refactoring"
+  },
+  {
+    "command": "decompose",
+    "label": "Decompose, modularize",
+    "userMessageTemplate":
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose it by splitting functions, reducing responsibilities and enhancing modularity. Return the refactored code inside of a code block and nothing else.",
+    "callbackType": "replace",
+    "category": "Refactoring"
+  },
+  {
+    "command": "comment",
+    "label": "Comment",
+    "userMessageTemplate":
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good comments using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. Return only the comment inside of a code block and nothing else.",
+    "callbackType": "beforeSelected",
+    "category": "Comments"
+  }
+]
+````
+
 ## Features
 
 - **User-defined commands** - Easily create your own commands with custom prompt templates.
@@ -40,7 +75,7 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 
 </center>
 
-- **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration. Add `{{language_instructions}}` to your templates:
+- **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration for your prompts. Add `{{language_instructions}}` to your templates, and then define the instructions for each language in your command's `languageInstructions` property. Here's an example:
 
   ````json
   {

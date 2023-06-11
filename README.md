@@ -24,10 +24,10 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 
 1. Install the extension.
 2. Create an OpenAI account and get an API key (if you're using ChatGPT for generation).
-3. Add your OpenAI API key to your settings under `wingman.openai.apiKey`: open Settings, search for "wingman", and paste your API key into the input field labeled "Api key".
-4. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
-5. Highlight a block of code and click "Refactor" in the Wingman tab to refactor the selected code. The generated code will automatically replace the selected text.
-6. Explore all of the other commands.
+3. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
+4. In the Wingman panel, expand "Analysis", highlight a block of code and click "Analyze for bugs".
+5. You will be prompted for your OpenAI API key. Paste it in and press <kbd>Enter</kbd>.
+6. Explore all of the other builtin commands.
 7. Write your other commands in your settings under `wingman.userCommands`. See the [Command interface](#command-interface) section for more details.
 
 ## Features

@@ -5,7 +5,7 @@ import { type PostableViewProvider, type ProviderResponse, type Provider } from 
 import { Client, type CompletionResponse, type SamplingParameters, AI_PROMPT, HUMAN_PROMPT } from "./sdks/anthropic";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getOrCreateSecret, getSelectionInfo } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
@@ -17,9 +17,10 @@ export class AnthropicProvider implements Provider {
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
-  create(provider: PostableViewProvider, template?: Command) {
-    const { apiKey = "", apiBaseUrl } = {
-      apiKey: getConfig("anthropic.apiKey") as string,
+  async create(provider: PostableViewProvider, template?: Command) {
+    const apiKey = await getOrCreateSecret<string>("anthropic.apiKey", "Anthropic API Key");
+
+    const { apiBaseUrl } = {
       apiBaseUrl: getConfig("anthropic.apiBaseUrl") as string | undefined,
     };
 

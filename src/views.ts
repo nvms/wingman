@@ -193,7 +193,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly _extensionPath: string, private readonly _extensionUri: vscode.Uri) {}
 
-  public static runCommand(command: Command) {
+  public static async runCommand(command: Command) {
     const { provider, command: cmd } = command;
 
     if (!provider) {
@@ -212,7 +212,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
 
     // Every command run should instantiate a new provider, which is why we call destroy here.
     getProviderInstance()?.destroy();
-    getProviderInstance()?.create(this as any, command);
+    await getProviderInstance()?.create(this as any, command);
 
     vscode.commands.executeCommand(`wingman.${cmd}`);
   }

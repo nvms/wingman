@@ -80,21 +80,10 @@
     "configuration": {
       "title": "Wingman",
       "properties": {
-        "wingman.anthropic.apiKey": {
-          "type": "string",
-          "default": "",
-          "description": "Anthropic API Key"
-        },
         "wingman.anthropic.model": {
           "type": "string",
           "default": "claude-instant-v1",
           "description": "Model (a fallback if the command does not specify, e.g. 'claude-instant-v1', 'claude-v1-100k')"
-        },
-        "wingman.openai.apiKey": {
-          "order": 2,
-          "type": "string",
-          "default": "",
-          "description": "ChatGPT API Key"
         },
         "wingman.openai.model": {
           "order": 4,

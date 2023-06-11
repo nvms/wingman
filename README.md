@@ -1,6 +1,6 @@
 # wingman
 
-A Visual Studio Code extension with ChatGPT (3.5 and 4) or LLaMa integration with _**highly extensible and COMPLETELY CUSTOMIZABLE PROMPTING**_ templates. No magic. No shenanigans. These are your prompts, with a few built-in defaults to get you started.
+A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integration with _**highly extensible and COMPLETELY CUSTOMIZABLE PROMPTING**_ templates. No magic. No shenanigans. These are your prompts, with a few built-in defaults to get you started.
 
 To use a local LLaMa model for completely offline generation, set `wingman.openai.apiBaseUrl` to your local API URL and `wingman.openai.model` to your desired model. This works best with something like [https://github.com/go-skynet/LocalAI](LocalAI). Whatever API you choose to use just has to implement the same REST interface as the OpenAI API - _this is exactly what LocalAI does_.
 
@@ -97,7 +97,7 @@ export interface Command {
   };
   callbackType?: CallbackType;
   category?: string;
-  provider?: "openai" | "anthropic"; // anthropic support still a WIP, defaults to "openai"
+  provider?: "openai" | "anthropic";
 }
 ```
 
@@ -143,7 +143,7 @@ When you create your own command, you can override any of these properties. The 
 | `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                                         |
 | `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                                               |
 | `category`              | The category to place the command under in the UI.                                                                                                                                               |
-| `provider`              | The provider to use for the generation of this command. Currently, only `openai` is supported, but `anthropic` support is in the works.                                                          |
+| `provider`              | The provider to use for the generation of this command.                                                                                                                                          |
 
 ## Context
 

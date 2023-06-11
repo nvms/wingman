@@ -111,7 +111,7 @@
         "wingman.openai.temperature": {
           "order": 5,
           "type": "number",
-          "default": 0.8,
+          "default": 0.3,
           "description": "Temperature (a fallback if the command does not specify)"
         },
         "wingman.showProviderLogo": {

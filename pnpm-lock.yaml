@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ai-zen/node-fetch-event-source':
+    specifier: ^2.1.0
+    version: 2.1.0
   '@vscode/webview-ui-toolkit':
     specifier: ^1.2.2
     version: 1.2.2(react@18.2.0)
@@ -96,6 +99,13 @@ devDependencies:
     version: 5.0.4
 
 packages:
+
+  /@ai-zen/node-fetch-event-source@2.1.0:
+    resolution: {integrity: sha512-yst+6bV3JjLy6/cfc5y65L3Ha3oO6w4qsOXR4rBkTOqvyPQL6HLFb6KN1OR8wdgtZZ6piEj3W6ccgQcbnJzdZA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      node-fetch: 3.3.1
+    dev: false
 
   /@babel/code-frame@7.21.4:
     resolution: {integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==}

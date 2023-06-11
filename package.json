@@ -80,6 +80,16 @@
     "configuration": {
       "title": "Wingman",
       "properties": {
+        "wingman.anthropic.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API Key"
+        },
+        "wingman.anthropic.model": {
+          "type": "string",
+          "default": "claude-instant-v1",
+          "description": "Model (a fallback if the command does not specify, e.g. 'claude-instant-v1', 'claude-v1-100k')"
+        },
         "wingman.openai.apiKey": {
           "order": 2,
           "type": "string",
@@ -320,6 +330,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@ai-zen/node-fetch-event-source": "^2.1.0",
     "@vscode/webview-ui-toolkit": "^1.2.2",
     "chatgpt": "^5.2.5",
     "cheerio": "1.0.0-rc.12",

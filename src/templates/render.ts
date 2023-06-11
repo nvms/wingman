@@ -340,12 +340,16 @@ export const buildCommandTemplate = (commandName: string): Command => {
 
   const template: Command = userTemplates.find((t) => t.command === commandName) || builtinTemplate || base;
 
+  const provider = template.provider ?? "openai";
+  const model = template.model ?? getConfig<string>(`${provider}.model`);
+
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();
   const systemMessageTemplate = template.systemMessageTemplate?.trim();
 
   return {
     ...base,
+    model,
     category: template.category || BuiltinCategory.Misc,
     ...template,
     languageInstructions,

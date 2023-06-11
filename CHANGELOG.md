@@ -6,6 +6,10 @@
 
 - Anthroic support!
 
+### Fixed
+
+- A bug where the model specified in settings.json wasn't used because the base command was always overriding it.
+
 ## 1.2.10 - 2023-06-10
 
 ### Changed

@@ -1,5 +1,11 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.3.1 - 2023-06-11
+
+### Changed
+
+- Remove `contextType` from `wingman.userCommands` `items` definition as it's no longer needed.
+
 ## 1.3.0 - 2023-06-11
 
 ### Added

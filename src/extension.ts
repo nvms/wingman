@@ -30,6 +30,14 @@ export class ExtensionState {
   public static set(key: string, value: any) {
     ExtensionState.context.globalState.update(key, value);
   }
+
+  public static async getSecret<T>(key: string): Promise<T> {
+    return ExtensionState.context.secrets.get(key) as Promise<T>;
+  }
+
+  public static createSecret(key: string, value: string) {
+    ExtensionState.context.secrets.store(key, value);
+  }
 }
 
 export function activate(context: vscode.ExtensionContext) {

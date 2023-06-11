@@ -4,6 +4,8 @@ import path from "node:path";
 import Glob from "fast-glob";
 import * as vscode from "vscode";
 
+import { ExtensionState } from "./extension";
+
 export function getSelectionInfo(editor: vscode.TextEditor): { selectedText: string; startLine: number; endLine: number } {
   const { selection } = editor;
   const startLine = selection.start.line;
@@ -69,12 +71,28 @@ function indentText(text: string, line: vscode.TextLine): string {
     .join("\n");
 }
 
-export const getConfig = <T>(key: string, fallback?: unknown | undefined): T => {
+export const getConfig = <T>(key: string, fallback?: T | undefined): T => {
   const config = vscode.workspace.getConfiguration("wingman");
   if (fallback) {
     return config.get(key, fallback) as T;
   }
   return config.get(key) as T;
+};
+
+export const getOrCreateSecret = async <T>(key: string, humanReadable: string, fallback?: T | undefined): Promise<T> => {
+  const found = (await ExtensionState.getSecret<T>(key)) ?? (fallback as T);
+
+  if (found) return found;
+
+  const value = await vscode.window.showInputBox({
+    prompt: `Enter a value for: ${humanReadable}`,
+    value: "",
+  });
+
+  if (!value) throw new Error("No value entered");
+
+  ExtensionState.createSecret(key, value);
+  return value as T;
 };
 
 export const updateGlobalConfig = <T>(key: string, value: T): void => {

@@ -1,9 +1,28 @@
 # wingman
 
-A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integration with _**highly extensible and COMPLETELY CUSTOMIZABLE PROMPTING**_ templates. No magic. No shenanigans. These are your prompts, with a few built-in defaults to get you started.
+A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integration with _**highly extensible and completely customizable prompting**_ templates. These are your prompts, with a few built-in defaults to get you started.
 
-To use a local LLaMa model for completely offline generation, set `wingman.openai.apiBaseUrl` to your local API URL and `wingman.openai.model` to your desired model. This works best with something like [https://github.com/go-skynet/LocalAI](LocalAI). Whatever API you choose to use just has to implement the same REST interface as the OpenAI API - _this is exactly what LocalAI does_.
+Wingman is and always will be free and open source. If you're enjoying it and find value in it, please consider [leaving a review](https://marketplace.visualstudio.com/items?itemName=nvms.ai-wingman&ssr=false#review-details) on the VSCode Marketplace to help give it exposure.
 
+The extension is an attempt at delivering a modular tool that supports a broad spectrum of use cases. If you have a use case that isn't supported, and you think it might be a good fit for wingman, please let me know by opening an issue.
+
+---
+
+_**A quick note on using LLaMa-based models as a completion source:**_
+
+Support for LLaMa-based models assumes that you're using an endpoint that mimics the OpenAI API. [https://github.com/go-skynet/LocalAI](LocalAI) is a good example of a tool that does this. Set `wingman.openai.apiBaseUrl` to your API URL (e.g. `http://localhost:1234/v1`) and `wingman.openai.model` to your desired model (e.g. `ggml-gpt4all-j`). Make sure your command's `provider` is set to `openai` (it is by default), and you're all set.
+
+---
+
+- [Demonstration](#demonstration)
+  - [Comment-drive completion](#comment-drive-completion)
+  - [Add documentation to what's selected](#add-documentation-to-whats-selected)
+  - [Refactor: decompose and modularize](#refactor-decompose-and-modularize)
+  - [Refactor: make it more functional](#refactor-make-it-more-functional)
+  - [Refactor: input-driven modifications](#refactor-input-driven-modifications)
+  - [Analysis: ask questions about your code](#analysis-ask-questions-about-your-code)
+  - [Translations](#translations)
+  - [Custom prompts](#custom-prompts)
 - [Feedback](#feedback)
 - [Quickstart](#quickstart)
 - [Features](#features)
@@ -16,13 +35,90 @@ To use a local LLaMa model for completely offline generation, set `wingman.opena
   - [Project text](#project-text)
     - [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
 
-_Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
+---
 
-## Demo video
+⚠️ _Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
+
+## Demonstration
+
+The majority of the prompts below are built-in, and can be used out-of-the-box. You can disable all of these by setting `wingman.showBuiltinCommands` to `false` in your settings.
+
+It's really easy to create your own, and you are encouraged to do so.
+
+#### Comment-drive completion
 
 <center>
 
-https://github.com/nvms/wingman/assets/17074357/c96a162d-7c56-4bac-9681-0873f77f387f
+![completion_comment_xl](.github/completion_comment_xl.gif)
+
+</center>
+
+#### Add documentation to what's selected
+
+<center>
+
+![function_comment_xl](.github/function_comment_xl.gif)
+
+</center>
+
+#### Refactor: decompose and modularize
+
+<center>
+
+![decompose_xl](.github/decompose_xl.gif)
+
+</center>
+
+#### Refactor: make it more functional
+
+<center>
+
+![refactor_functional_xl](.github/refactor_functional_xl.gif)
+
+</center>
+
+#### Refactor: input-driven modifications
+
+Select some code, click "Modify", and when prompted, enter the desired modifications. Wingman will replace the selected code with the newly generated code.
+
+<center>
+
+![modify_xl](.github/modify_xl.gif)
+
+</center>
+
+#### Analysis: ask questions about your code
+
+<center>
+
+![question_xl](.github/question_xl.gif)
+
+</center>
+
+#### Translations
+
+Decide what language, framework, etc you want to translate the selected code into. In the below example, "python, using flask" is typed into the input field when prompted.
+
+Try these:
+
+- "typescript, using react and redux"
+- "javascript, using vue and pinia"
+- "go, using gin"
+- "go, using martini and gorm"
+
+<center>
+
+![translate_xl](.github/translate_xl.gif)
+
+</center>
+
+#### Custom prompts
+
+This is a custom prompt called "Reword README text". I use it when I'm drawing blanks. Like right now.
+
+<center>
+
+![custom_prompts_1_xl](.github/custom_prompts_1_xl.gif)
 
 </center>
 
@@ -106,6 +202,8 @@ You can create your own commands by adding them to your settings under `wingman.
   model: "gpt-3.5-turbo",
   // Optional.
   temperature: 0.3,
+  // Optional.
+  maxTokens: 4096,
   // Optional.
   // Possible values: "none", "buffer", "replace", "afterSelected", "beforeSelected"
   callbackType: CallbackType.None,

@@ -120,7 +120,6 @@ You can create your own commands by adding them to your settings under `wingman.
 ```typescript
 export interface Command {
   model?: string;
-  maxTokens?: number;
   temperature?: number;
   numberOfChoices?: number;
   command: string;
@@ -140,7 +139,6 @@ This is what the default, base command looks like:
 
 ```typescript
 export const baseCommand: Command = {
-  maxTokens: 4096,
   numberOfChoices: 1,
   model: "gpt-3.5-turbo",
   temperature: 0.8,

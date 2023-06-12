@@ -1,12 +1,18 @@
 # wingman
 
-A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integration with _**highly extensible and COMPLETELY CUSTOMIZABLE PROMPTING**_ templates. No magic. No shenanigans. These are your prompts, with a few built-in defaults to get you started.
+A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integration with _**highly extensible and completely customizable prompting**_ templates. These are your prompts, with a few built-in defaults to get you started.
 
-You can think of this as a free, open-source alternative to GitHub's Copilot Labs, but where Copilot Labs is a closed-source black box, Wingman is completely open and transparent. You can see exactly how it works and customize it to your heart's content.
+Wingman is and always will be free and open source. If you're enjoying it and find value in it, please consider [leaving a review](https://marketplace.visualstudio.com/items?itemName=nvms.ai-wingman&ssr=false#review-details) on the VSCode Marketplace to help give it exposure.
 
-_**A note on using LLaMa-based models as a completion source:**_
+The extension is an attempt at delivering a modular tool that supports a broad spectrum of use cases. If you have a use case that isn't supported, and you think it might be a good fit for wingman, please let me know by opening an issue.
 
-To use a local LLaMa model for completely offline generation, set `wingman.openai.apiBaseUrl` to your local API URL and `wingman.openai.model` to your desired model. This works best with something like [https://github.com/go-skynet/LocalAI](LocalAI). Whatever API you choose to use just has to implement the same REST interface as the OpenAI API - _this is exactly what LocalAI does_.
+---
+
+_**A quick note on using LLaMa-based models as a completion source:**_
+
+Support for LLaMa-based models assumes that you're using an endpoint that mimics the OpenAI API. [https://github.com/go-skynet/LocalAI](LocalAI) is a good example of a tool that does this. Set `wingman.openai.apiBaseUrl` to your API URL (e.g. `http://localhost:1234/v1`) and `wingman.openai.model` to your desired model (e.g. `ggml-gpt4all-j`). Make sure your command's `provider` is set to `openai` (it is by default), and you're all set.
+
+---
 
 - [Demonstration](#demonstration)
   - [Comment-drive completion](#comment-drive-completion)
@@ -26,9 +32,12 @@ To use a local LLaMa model for completely offline generation, set `wingman.opena
     - [Example commands](#example-commands)
 - [Context](#context)
   - [Text selection](#text-selection)
-  - [Project text](#project-text) \* [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
+  - [Project text](#project-text)
+    - [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
 
-_Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
+---
+
+⚠️ _Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
 
 ## Demonstration
 

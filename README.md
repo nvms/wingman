@@ -194,6 +194,8 @@ You can create your own commands by adding them to your settings under `wingman.
   // Optional.
   temperature: 0.3,
   // Optional.
+  maxTokens: 4096,
+  // Optional.
   // Possible values: "none", "buffer", "replace", "afterSelected", "beforeSelected"
   callbackType: CallbackType.None,
   // Optional. Used to replace {{language_instructions}} interpolation.

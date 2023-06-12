@@ -44,6 +44,7 @@ export class OpenAIProvider implements Provider {
       completionParams: {
         model,
         temperature,
+        max_tokens: template?.maxTokens ?? getConfig<number>("openai.maxTokens") ?? 4096,
       },
     });
   }

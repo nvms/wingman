@@ -29,7 +29,10 @@
     "localai",
     "wingman",
     "copilot",
-    "pair programming"
+    "generation",
+    "code generation",
+    "refactoring",
+    "debugging"
   ],
   "categories": [
     "Other"

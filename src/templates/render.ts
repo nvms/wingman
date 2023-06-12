@@ -205,7 +205,7 @@ export const defaultCommands: Command[] = [
     label: "Decompose",
     description: "Decomposes monoliths, splits functions, reduces responsibiltiy, enhances modularity.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose the existing monolithic codebase by splitting functions and reducing responsibilities to enhance modularity. Identify logical components within the code and separate them appropriately. Your goal is to achieve a more modular and maintainable code structure while preserving the overall behavior. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nRefactor the code to improve its modularity and reduce function responsibility. Decompose monoliths into smaller, more manageable components while adhering to the single responsibility methodology. However, do not create an excessive number of functions; use your best judgement to determine when a new function is necessary. {{language_instructions}} IMPORTANT: Only return the refactored code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },

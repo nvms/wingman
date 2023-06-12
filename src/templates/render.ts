@@ -44,6 +44,7 @@ export enum AIProvider {
 
 export interface Command {
   model?: string;
+  maxTokens?: number;
   temperature?: number;
   numberOfChoices?: number;
   command: string;
@@ -60,6 +61,7 @@ export interface Command {
 }
 
 export const baseCommand: Command = {
+  maxTokens: 4096,
   numberOfChoices: 1,
   model: "gpt-3.5-turbo",
   temperature: 0.3,

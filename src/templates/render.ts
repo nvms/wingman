@@ -187,7 +187,7 @@ export const defaultCommands: Command[] = [
     label: "Make it more functional",
     description: "Refactors the selected code, prioritizing a more functional programming style.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nRefactor the code to be more readable and maintainable. Make it much more functional. Do not change the behavior of the code in any way. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nRefactor the code to be more readable and maintainable. Prioritize a more functional programming style. This may include using higher-order functions, pure functions, and immutability. Do not change the behavior of the code in any way. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },

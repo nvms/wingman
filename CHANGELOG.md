@@ -1,5 +1,12 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.3.2 - 2023-06-11
+
+### Changed
+
+- Small style changes.
+- Add avatars.
+
 ## 1.3.1 - 2023-06-11
 
 ### Changed

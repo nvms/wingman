@@ -44,7 +44,6 @@ export enum AIProvider {
 
 export interface Command {
   model?: string;
-  maxTokens?: number;
   temperature?: number;
   numberOfChoices?: number;
   command: string;
@@ -61,7 +60,6 @@ export interface Command {
 }
 
 export const baseCommand: Command = {
-  maxTokens: 4096,
   numberOfChoices: 1,
   model: "gpt-3.5-turbo",
   temperature: 0.3,
@@ -187,7 +185,7 @@ export const defaultCommands: Command[] = [
     label: "Make it more functional",
     description: "Refactors the selected code, prioritizing a more functional programming style.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nRefactor the code to be more readable and maintainable. Make it much more functional. Do not change the behavior of the code in any way. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nRefactor the code to be more readable and maintainable. Prioritize a more functional programming style. This may include using higher-order functions, pure functions, and immutability. Do not change the behavior of the code in any way. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -205,7 +203,7 @@ export const defaultCommands: Command[] = [
     label: "Decompose",
     description: "Decomposes monoliths, splits functions, reduces responsibiltiy, enhances modularity.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose the existing monolithic codebase by splitting functions and reducing responsibilities to enhance modularity. Identify logical components within the code and separate them appropriately. Your goal is to achieve a more modular and maintainable code structure while preserving the overall behavior. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nRefactor the code to improve its modularity and reduce function responsibility. Decompose monoliths into smaller, more manageable components while adhering to the single responsibility methodology. However, do not create an excessive number of functions; use your best judgement to determine when a new function is necessary. {{language_instructions}} IMPORTANT: Only return the refactored code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },

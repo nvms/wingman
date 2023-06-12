@@ -17,18 +17,6 @@ let responseId = 0;
 let aiIsResponding = false;
 let autoScroll = false;
 
-const getUserBoxClasses = () => {
-  return "user-text p-4 overflow-x-auto";
-};
-
-const getAiBoxClasses = () => {
-  return "ai-text p-4 overflow-x-auto in-progress-response";
-};
-
-const getAiBoxClassesFinished = () => {
-  return "ai-text p-4 overflow-x-auto finished-response";
-};
-
 window.addEventListener("message", (e) => {
   const message = e.data;
 
@@ -112,35 +100,17 @@ function newChat() {
   showInput();
 }
 
-function createUserTextDiv(question) {
-  const div = $("<div></div>").addClass(getUserBoxClasses()).text(question);
-  const domDiv = div[0];
-  formatDiv(domDiv, div.text());
-  return domDiv;
-}
-
 function scrollToBottom() {
   if (!autoScroll) return;
   const output = $("#scroll");
   output.scrollTop(output[0].scrollHeight);
 }
 
-function requestMessage(text) {
-  autoScroll = true;
-  const div = document.querySelector(`#chat-${chatId}`);
-  const userTextDiv = createUserTextDiv(text);
-  div.append(userTextDiv);
-  $("#abort").removeClass("hidden");
-  $("#repeat-last").addClass("hidden");
-  scrollToBottom();
-}
-
 function responseFinished(message) {
   aiIsResponding = false;
   const div = $(`#ai-${responseId}`);
-  div.removeClass();
-  div.addClass(getAiBoxClassesFinished());
-  formatDiv(div[0], message.value.text);
+  const responseContainer = div[0].querySelector(".response-container");
+  formatDiv(responseContainer, message.value.text);
   responseId++;
   $("#abort").addClass("hidden");
   $("#repeat-last").removeClass("hidden");
@@ -159,23 +129,78 @@ function responseAborted() {
   scrollToBottom();
 }
 
+const createUserTextDiv = (question) => {
+  const wrapper = $("<div>").addClass("user-text p-4 overflow-x-auto flex");
+  const avatarWrapper = $("<div>").addClass("mr-4 flex-0 flex flex-col justify-start items-start align-middle");
+  const avatarBox = $("<div>").addClass("p-2 user-avatar rounded-md h-10 w-10 flex justify-center items-center align-middle");
+  const textDiv = $("<div>").addClass("flex-1").text(question);
+
+  const formatTarget = textDiv[0];
+  formatDiv(formatTarget, textDiv.text());
+
+  const avatar = $("#avatar-user-template").children().clone()[0];
+
+  avatarBox.prepend(avatar);
+  avatarWrapper.append(avatarBox);
+  wrapper.append(avatarWrapper, textDiv);
+
+  return wrapper[0];
+};
+
 function partialResponse(message) {
   aiIsResponding = true;
   const existing = document.querySelector(`#ai-${responseId}`);
   const chatBox = $(`#chat-${chatId}`);
-  const div = $("<div>").addClass(getAiBoxClasses()).attr("id", `ai-${responseId}`).text(message.value.text);
-  formatDiv(div[0], message.value.text);
 
-  if (!existing) {
-    chatBox.append(div);
-  } else {
-    existing.textContent = message.value.text;
-    formatDiv(existing, message.value.text);
+  function createAiTextDiv() {
+    const wrapper = $("<div></div>").addClass("ai-text p-4 overflow-x-auto flex").attr("id", `ai-${responseId}`);
+    const avatarWrapper = $("<div></div>").addClass("mr-4 flex-0 flex flex-col justify-start items-start align-middle");
+    const avatarBox = $("<div></div>").addClass("p-2 ai-avatar rounded-md h-10 w-10 flex justify-center items-center align-middle");
+    const textDiv = $("<div></div>").addClass("flex-1 response-container").text(message.value.text);
+    const avatar = $("#avatar-ai-template").children().clone()[0];
+    avatarBox.prepend(avatar);
+    avatarWrapper.append(avatarBox);
+    wrapper.append(avatarWrapper, textDiv);
+
+    return wrapper[0];
   }
 
+  function updateExistingAiTextDiv(existing, message) {
+    const responseConatiner = existing.querySelector(".response-container");
+    responseConatiner.textContent = message.value.text;
+    formatDiv(responseConatiner, message.value.text);
+  }
+
+  function addNewAiTextDiv(chatBox, message) {
+    const div = createAiTextDiv();
+    const responseConatiner = div.querySelector(".response-container");
+    formatDiv(responseConatiner, message.value.text);
+    chatBox.append(div);
+  }
+
+  function toggleButtonsAndInput() {
+    $("#abort").removeClass("hidden");
+    $("#repeat-last").addClass("hidden");
+    $("#input").prop("disabled", true);
+  }
+
+  if (!existing) {
+    addNewAiTextDiv(chatBox, message);
+  } else {
+    updateExistingAiTextDiv(existing, message);
+  }
+
+  toggleButtonsAndInput();
+  scrollToBottom();
+}
+
+function requestMessage(text) {
+  autoScroll = true;
+  const div = document.querySelector(`#chat-${chatId}`);
+  const userTextDiv = createUserTextDiv(text);
+  div.append(userTextDiv);
   $("#abort").removeClass("hidden");
   $("#repeat-last").addClass("hidden");
-  $("#input").prop("disabled", true);
   scrollToBottom();
 }
 

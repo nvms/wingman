@@ -4,6 +4,18 @@ A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integra
 
 To use a local LLaMa model for completely offline generation, set `wingman.openai.apiBaseUrl` to your local API URL and `wingman.openai.model` to your desired model. This works best with something like [https://github.com/go-skynet/LocalAI](LocalAI). Whatever API you choose to use just has to implement the same REST interface as the OpenAI API - _this is exactly what LocalAI does_.
 
+- [Feedback](#feedback)
+- [Quickstart](#quickstart)
+- [Features](#features)
+  - [String interpolations](#string-interpolations)
+  - [Command](#command)
+    - [Command properties](#command-properties)
+    - [Example commands](#example-commands)
+- [Context](#context)
+  - [Text selection](#text-selection)
+  - [Project text](#project-text)
+    - [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
+
 _Please note that this extension is currently under active development and its feature set is slowly evolving. As this happens, config property names may also be changed, and the way that commands are defined may also slightly change. I'll do my best to minimize this and preserve backward compatibility as much as possible._
 
 ## Demo video
@@ -28,19 +40,12 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 4. Open the bottom panel (<kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd>) and select the `Wingman` tab (pictured above).
 5. In the Wingman panel, expand "Analysis", highlight a block of code and click "Analyze for bugs".
 6. Explore all of the other builtin commands.
-7. Create your own commands that compliment your workflow in settings under `wingman.userCommands`. See the [Command interface](#command-interface) section for more details.
+7. Create your own commands that compliment your workflow in settings under `wingman.userCommands`. See the [Command](#command) section for more details.
 
 ## Features
 
 - **User-defined commands** - Easily create your own commands with custom prompt templates.
-
-<center>
-
-![example configuration](.github/example2.png)
-
-</center>
-
-- **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration. Add `{{language_instructions}}` to your templates:
+- **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration for your prompts. Add `{{language_instructions}}` to your templates, and then define the instructions for each language in your command's `languageInstructions` property. Here's an example:
 
   ````json
   {
@@ -65,9 +70,11 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 - **Configurable API url** - This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
 - **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available for ChatGPT. `gpt-3.5-turbo` is the default. This is a `string` field to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
 - **Cancel requests** - Cancel an in-progress request.
-- **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
+- **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{project_text}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
 
-## String interpolations
+### String interpolations
+
+The table below lists some of the interpolations that you may have noticed in the example above. Wingman automatically replaces these interpolations for you, and the values they are replaced with are outlined in the table below. These interpolations can be utilized in both `userMessageTemplate` and `systemMessageTemplate`.
 
 | Interpolation               | Description                                                                                                                              |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -78,42 +85,31 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 | `{{filetype}}`              | The file type of the current file. Not the extension name. Currently will have the same value as `{{language}}`.                         |
 | `{{language_instructions}}` | The language-specific instructions for more generic commands, like the `doc` example above.                                              |
 
-## Command interface
+### Command
 
-You can create your own commands by adding them to your settings under `wingman.userCommands`. Your commands need to implement the `Command` interface:
-
-```typescript
-export interface Command {
-  model?: string;
-  maxTokens?: number;
-  temperature?: number;
-  numberOfChoices?: number;
-  command: string;
-  label: string;
-  userMessageTemplate: string;
-  systemMessageTemplate?: string;
-  languageInstructions?: {
-    [languageId: string]: string;
-  };
-  callbackType?: CallbackType;
-  category?: string;
-  provider?: "openai" | "anthropic";
-}
-```
-
-This is what the default, base command looks like:
+You can create your own commands by adding them to your settings under `wingman.userCommands`. Your commands need to implement the `Command` interface. Here's what the default, base command looks like:
 
 ```typescript
-export const baseCommand: Command = {
-  maxTokens: 4096,
-  numberOfChoices: 1,
-  model: "gpt-3.5-turbo",
-  temperature: 0.8,
+{
+  // Required. Must be a unique string. Registers a vscode command as `wingman.<commandName>`.
   command: "default",
+  // Required. Human readable label that appears in the UI.
   label: "Default",
-  systemMessageTemplate: "You are a {{language}} coding assistant.",
+  // Required. Your prompt, including any interpolations you need.
   userMessageTemplate: "",
-  callbackType: CallbackType.Buffer,
+
+  // Optional.
+  systemMessageTemplate: "You are a {{language}} coding assistant.",
+  // Optional.
+  numberOfChoices: 1,
+  // Optional.
+  model: "gpt-3.5-turbo",
+  // Optional.
+  temperature: 0.3,
+  // Optional.
+  // Possible values: "none", "buffer", "replace", "afterSelected", "beforeSelected"
+  callbackType: CallbackType.None,
+  // Optional. Used to replace {{language_instructions}} interpolation.
   languageInstructions: {
     javascript: "Use modern JavaScript syntax.",
     typescript: "Use modern TypeScript syntax.",
@@ -121,19 +117,21 @@ export const baseCommand: Command = {
     html: "Use modern HTML syntax.",
     csharp: "Use modern C# syntax.",
   },
+  // Optional. Decides what category in the UI that this should appear under.
   category: "Default",
+  // Optional.
+  // Possible values: "openai", "anthropic"
   provider: "openai",
 };
 ```
 
 When you create your own command, you can override any of these properties. The only required properties are `command`, `label`, and `userMessageTemplate`.
 
-## Command properties
+#### Command properties
 
 | Property                | Description                                                                                                                                                                                      |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `model`                 | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported.                                                                                                                     |
-| `maxTokens`             | See OpenAI API docs.                                                                                                                                                                             |
 | `numberOfChoices`       | See OpenAI API docs.                                                                                                                                                                             |
 | `temperature`           | See OpenAI API docs.                                                                                                                                                                             |
 | `command`               | The command name. This value is used to register the command with vscode: `wingman.<command>`.                                                                                                   |
@@ -143,13 +141,56 @@ When you create your own command, you can override any of these properties. The 
 | `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                                         |
 | `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                                               |
 | `category`              | The category to place the command under in the UI.                                                                                                                                               |
-| `provider`              | The provider to use for the generation of this command.                                                                                                                                          |
+| `provider`              | The provider used to handle this command request. `openai` or `anthropic`                                                                                                                        |
+
+#### Example commands
+
+Here are some more example commands.
+
+````javascript
+// settings.json
+
+"wingman.userCommands": [
+  {
+    "command": "variableNames",
+    "label": "Meaningful variable names",
+    "userMessageTemplate":
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nGive the variables more meaningful names based on their usage. Return the refactored code inside of a code block and nothing else.",
+    "callbackType": "replace",
+    "category": "Refactoring"
+  },
+  {
+    "command": "decompose",
+    "label": "Decompose, modularize",
+    "userMessageTemplate":
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose it by splitting functions, reducing responsibilities and enhancing modularity. Return the refactored code inside of a code block and nothing else.",
+    "callbackType": "replace",
+    "category": "Refactoring"
+  },
+  {
+    "command": "comment",
+    "label": "Comment",
+    "userMessageTemplate":
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good comments using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. Return only the comment inside of a code block and nothing else.",
+    "callbackType": "beforeSelected",
+    "category": "Comments"
+  }
+]
+````
+
+Ideally you'll create many commands that support your individual workflow, with prompts that are personalized to you and how you want to work.
+
+<center>
+
+![example configuration](.github/example2.png)
+
+</center>
 
 ## Context
 
-### Interpolations
+Context is included in a `userMessageTemplate` by using either `{{text_selection}}` or `{{project_text}}`.
 
-#### Selected text
+### Text selection
 
 `{{text_selection}}` is a string interpolation that includes the currently selected text.
 
@@ -161,7 +202,7 @@ Your final prompt would be:
 
 `I have the following code:\n\nconst x = 1;\n\nWhat's wrong with it? `
 
-#### Project text
+### Project text
 
 `{{project_text}}` is a string interpolation that includes the contents of all files in the current vscode workspace root. Each file is stringified and formatted as:
 
@@ -199,7 +240,15 @@ export const add = (a, b) => a + b;
 \`\`\`
 ```
 
-### Configuring context inclusion and exclusion
+This type of context inclusion can very quickly get out of hand, and you likely don't want to send tens of thousands of lines of code to whatever model you're using (at least not yet in 2023). For this reason, you are _highly encouraged_ to smartly configure the options below with values that make sense _for the project you are working on_.
+
+Sensible defaults are provided for each of these configuration options, but these may not be applicable to all.
+
+In most cases, the only option you'll be changing is `wingman.context.include.permittedFileExtensions`, as the other two likely won't change project-to-project.
+
+If you wanted to ask your project a question only about the CSS styling of your app, then you might want to set `wingman.context.include.permittedFileExtensions` to `["css"]` before running your `projectQuestion` command. To set it back to its default value, just remove the entry from your `settings.json` entirely.
+
+##### Configuring context inclusion and exclusion
 
 | Config property                                   | Default                                                                                                                                                                                                              | Description                                                                            |
 | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |

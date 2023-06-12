@@ -23,7 +23,7 @@ export class OpenAIProvider implements Provider {
   _abort: AbortController = new AbortController();
 
   async create(provider: PostableViewProvider, template?: Command) {
-    const apiKey = await getSecret<string>("openai.apiKey", "");
+    const apiKey = await getSecret<string>("openai.apiKey", "llama");
 
     const {
       apiBaseUrl = "https://api.openai.com/v1",

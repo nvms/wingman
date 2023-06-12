@@ -165,20 +165,32 @@ function partialResponse(message) {
     return wrapper[0];
   }
 
-  if (!existing) {
-    const div = createAiTextDiv();
-    const responseConatiner = div.querySelector(".response-container");
-    formatDiv(responseConatiner, message.value.text);
-    chatBox.append(div);
-  } else {
+  function updateExistingAiTextDiv(existing, message) {
     const responseConatiner = existing.querySelector(".response-container");
     responseConatiner.textContent = message.value.text;
     formatDiv(responseConatiner, message.value.text);
   }
 
-  $("#abort").removeClass("hidden");
-  $("#repeat-last").addClass("hidden");
-  $("#input").prop("disabled", true);
+  function addNewAiTextDiv(chatBox, message) {
+    const div = createAiTextDiv();
+    const responseConatiner = div.querySelector(".response-container");
+    formatDiv(responseConatiner, message.value.text);
+    chatBox.append(div);
+  }
+
+  function toggleButtonsAndInput() {
+    $("#abort").removeClass("hidden");
+    $("#repeat-last").addClass("hidden");
+    $("#input").prop("disabled", true);
+  }
+
+  if (!existing) {
+    addNewAiTextDiv(chatBox, message);
+  } else {
+    updateExistingAiTextDiv(existing, message);
+  }
+
+  toggleButtonsAndInput();
   scrollToBottom();
 }
 

@@ -208,3 +208,8 @@ export const add = (a, b) => a + b;
 | `wingman.context.include.permittedFileExtensions` | `[ "js", "ts", "jsx", "tsx", "cpp", "py", "go", "java", "html", "css", "php", "rb", "cs", "swift", "kt", "scala", "h", "m", "mm", "c", "cc", "cxx", "hxx", "hpp", "hh", "s", "asm", "pl", "pm", "t", "r", "sh" ]`    | Only files with these extensions are included in context.                              |
 
 If a `.wmignore` file is discovered, it's treated the same as a `.gitignore` file.
+
+## FAQ
+
+Q: How do I remove or change my API key?
+A: Run the `Wingman: Set API key` command again, select the relevant provider. Paste in your new key, or leave it blank to remove it. Press enter.

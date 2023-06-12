@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 
-import { type Provider } from "./providers";
+import { providers, type Provider } from "./providers";
 import { defaultCommands, buildCommandTemplate, type Command } from "./templates/render";
 import { commandHandler } from "./templates/runner";
-import { display, displayWarning, getConfig } from "./utils";
+import { display, getConfig } from "./utils";
 import { MainViewProvider, SecondaryViewProvider } from "./views";
 
 let providerInstance: Provider | undefined;
@@ -30,11 +30,18 @@ export class ExtensionState {
   public static set(key: string, value: any) {
     ExtensionState.context.globalState.update(key, value);
   }
+
+  public static async getSecret<T>(key: string): Promise<T> {
+    return ExtensionState.context.secrets.get(key) as Promise<T>;
+  }
+
+  public static createSecret(key: string, value: string) {
+    ExtensionState.context.secrets.store(key, value);
+  }
 }
 
 export function activate(context: vscode.ExtensionContext) {
   ExtensionState.create(context);
-  warnDeprecations();
 
   try {
     const mainViewProvider = new MainViewProvider(context.extensionPath, context.extensionUri);
@@ -52,6 +59,25 @@ export function activate(context: vscode.ExtensionContext) {
         webviewOptions: { retainContextWhenHidden: true },
       }),
     );
+
+    const setApiKeyCommand = vscode.commands.registerCommand("wingman.setApiKey", async () => {
+      const selectedProvider = await vscode.window.showQuickPick(
+        Object.keys(providers).map((key) => ({ label: key })),
+        { placeHolder: "Select the provider you want to set the API key for" },
+      );
+
+      if (!selectedProvider) return;
+
+      const apiKey = await vscode.window.showInputBox({
+        placeHolder: `Enter your ${selectedProvider.label} API key`,
+      });
+
+      if (!apiKey) return;
+
+      ExtensionState.createSecret(`${selectedProvider.label}.apiKey`, apiKey);
+    });
+
+    context.subscriptions.push(setApiKeyCommand);
 
     const registerCommand = (template: Command & { command: string }) => {
       if (!template.command) return;
@@ -82,21 +108,3 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {}
-
-// Introduced in 1.0.21. Should be removed after a short while.
-function warnDeprecations() {
-  const deprecatedConfigSettings = ["apiKey", "apiBaseUrl", "model", "temperature"];
-
-  const warnings = deprecatedConfigSettings
-    .map((setting) => ({ key: `wingman.${setting}`, value: getConfig(setting) }))
-    .filter(({ value }) => value !== undefined)
-    .map(({ key }) => `${key} (now wingman.openai.${key})`);
-
-  if (warnings.length > 0) {
-    displayWarning(`
-      The following deprecated config settings were found in your settings.json: ${warnings.join(", ")}.
-      The values for these keys will still be used, but in the future they will be completely deprecated.
-      Please remove these old settings to avoid this warning on startup.
-    `);
-  }
-}

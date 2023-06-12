@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
 
 interface ConversationState {
   conversationId: string;
@@ -22,14 +22,14 @@ export class OpenAIProvider implements Provider {
   conversationState: ConversationState = { conversationId: "", parentMessageId: "" };
   _abort: AbortController = new AbortController();
 
-  create(provider: PostableViewProvider, template?: Command) {
+  async create(provider: PostableViewProvider, template?: Command) {
+    const apiKey = await getSecret<string>("openai.apiKey", "llama");
+
     const {
-      apiKey = "",
       apiBaseUrl = "https://api.openai.com/v1",
       model = "gpt-3.5-turbo",
       temperature = 0.8,
     } = {
-      apiKey: getConfig<string>("openai.apiKey") ?? getConfig<string>("apiKey"),
       apiBaseUrl: getConfig<string>("openai.apiBaseUrl") ?? getConfig<string>("apiBaseUrl"),
       model: template?.model ?? getConfig<string>("openai.model") ?? getConfig<string>("model"),
       temperature: template?.temperature ?? getConfig<number>("openai.temperature") ?? getConfig<number>("temperature"),

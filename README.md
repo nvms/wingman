@@ -132,11 +132,11 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 
 1. Install the extension.
 2. Create an OpenAI account and get an API key (if you're using ChatGPT for generation).
-3. Add your OpenAI API key to your settings under `wingman.openai.apiKey`: open Settings, search for "wingman", and paste your API key into the input field labeled "Api key".
-4. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
-5. Highlight a block of code and click "Refactor" in the Wingman tab to refactor the selected code. The generated code will automatically replace the selected text.
-6. Explore all of the other commands.
-7. Write your other commands in your settings under `wingman.userCommands`. See the [Command](#command) section for more details.
+3. Open the command palette (<kbd>CTRL + SHIFT + P</kbd> or <kbd>CMD + SHIFT + P</kbd>) and run `Wingman: Set API key`. Select `openai` as the provider and paste in your API key.
+4. Open the bottom panel (<kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd>) and select the `Wingman` tab (pictured above).
+5. In the Wingman panel, expand "Analysis", highlight a block of code and click "Analyze for bugs".
+6. Explore all of the other builtin commands.
+7. Create your own commands that compliment your workflow in settings under `wingman.userCommands`. See the [Command](#command) section for more details.
 
 ## Features
 
@@ -355,3 +355,8 @@ If you wanted to ask your project a question only about the CSS styling of your 
 | `wingman.context.include.permittedFileExtensions` | `[ "js", "ts", "jsx", "tsx", "cpp", "py", "go", "java", "html", "css", "php", "rb", "cs", "swift", "kt", "scala", "h", "m", "mm", "c", "cc", "cxx", "hxx", "hpp", "hh", "s", "asm", "pl", "pm", "t", "r", "sh" ]`    | Only files with these extensions are included in context.                              |
 
 If a `.wmignore` file is discovered, it's treated the same as a `.gitignore` file.
+
+## FAQ
+
+Q: How do I remove or change my API key?
+A: Run the `Wingman: Set API key` command again, select the relevant provider. Paste in your new key, or leave it blank to remove it. Press enter.

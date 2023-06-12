@@ -71,12 +71,6 @@
         }
       ]
     },
-    "commands": [
-      {
-        "command": "wingman.replaceLines",
-        "title": "Replace Lines"
-      }
-    ],
     "configuration": {
       "title": "Wingman",
       "properties": {

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { type Provider } from "./providers";
+import { providers, type Provider } from "./providers";
 import { defaultCommands, buildCommandTemplate, type Command } from "./templates/render";
 import { commandHandler } from "./templates/runner";
 import { display, getConfig } from "./utils";
@@ -59,6 +59,25 @@ export function activate(context: vscode.ExtensionContext) {
         webviewOptions: { retainContextWhenHidden: true },
       }),
     );
+
+    const setApiKeyCommand = vscode.commands.registerCommand("wingman.setApiKey", async () => {
+      const selectedProvider = await vscode.window.showQuickPick(
+        Object.keys(providers).map((key) => ({ label: key })),
+        { placeHolder: "Select the provider you want to set the API key for" },
+      );
+
+      if (!selectedProvider) return;
+
+      const apiKey = await vscode.window.showInputBox({
+        placeHolder: `Enter your ${selectedProvider.label} API key`,
+      });
+
+      if (!apiKey) return;
+
+      ExtensionState.createSecret(`${selectedProvider.label}.apiKey`, apiKey);
+    });
+
+    context.subscriptions.push(setApiKeyCommand);
 
     const registerCommand = (template: Command & { command: string }) => {
       if (!template.command) return;

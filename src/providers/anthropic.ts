@@ -5,7 +5,7 @@ import { type PostableViewProvider, type ProviderResponse, type Provider } from 
 import { Client, type CompletionResponse, type SamplingParameters, AI_PROMPT, HUMAN_PROMPT } from "./sdks/anthropic";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getOrCreateSecret, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
@@ -18,7 +18,7 @@ export class AnthropicProvider implements Provider {
   _abort: AbortController = new AbortController();
 
   async create(provider: PostableViewProvider, template?: Command) {
-    const apiKey = await getOrCreateSecret<string>("anthropic.apiKey", "Anthropic API Key");
+    const apiKey = await getSecret<string>("openai.apiKey", "");
 
     const { apiBaseUrl } = {
       apiBaseUrl: getConfig("anthropic.apiBaseUrl") as string | undefined,

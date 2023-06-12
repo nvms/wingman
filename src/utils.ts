@@ -79,20 +79,8 @@ export const getConfig = <T>(key: string, fallback?: T | undefined): T => {
   return config.get(key) as T;
 };
 
-export const getOrCreateSecret = async <T>(key: string, humanReadable: string, fallback?: T | undefined): Promise<T> => {
-  const found = (await ExtensionState.getSecret<T>(key)) ?? (fallback as T);
-
-  if (found) return found;
-
-  const value = await vscode.window.showInputBox({
-    prompt: `Enter a value for: ${humanReadable}`,
-    value: "",
-  });
-
-  if (!value) throw new Error("No value entered");
-
-  ExtensionState.createSecret(key, value);
-  return value as T;
+export const getSecret = async <T>(key: string, fallback?: T | undefined): Promise<T> => {
+  return (await ExtensionState.getSecret<T>(key)) ?? (fallback as T);
 };
 
 export const updateGlobalConfig = <T>(key: string, value: T): void => {

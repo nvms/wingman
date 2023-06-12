@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getOrCreateSecret, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
 
 interface ConversationState {
   conversationId: string;
@@ -23,7 +23,7 @@ export class OpenAIProvider implements Provider {
   _abort: AbortController = new AbortController();
 
   async create(provider: PostableViewProvider, template?: Command) {
-    const apiKey = await getOrCreateSecret<string>("openai.apiKey", "OpenAI API Key");
+    const apiKey = await getSecret<string>("openai.apiKey", "");
 
     const {
       apiBaseUrl = "https://api.openai.com/v1",

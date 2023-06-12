@@ -73,8 +73,8 @@
     },
     "commands": [
       {
-        "command": "wingman.replaceLines",
-        "title": "Replace Lines"
+        "command": "wingman.setApiKey",
+        "title": "Wingman: Set API key"
       }
     ],
     "configuration": {

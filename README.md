@@ -24,11 +24,11 @@ If you have any feedback or suggestions for improvement, please open an issue. T
 
 1. Install the extension.
 2. Create an OpenAI account and get an API key (if you're using ChatGPT for generation).
-3. Open VScode's bottom panel by pressing <kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd> and select the `Wingman` tab (pictured above).
-4. In the Wingman panel, expand "Analysis", highlight a block of code and click "Analyze for bugs".
-5. You will be prompted for your OpenAI API key. Paste it in and press <kbd>Enter</kbd>.
+3. Open the command palette (<kbd>CTRL + SHIFT + P</kbd> or <kbd>CMD + SHIFT + P</kbd>) and run `Wingman: Set API key`. Select `openai` as the provider and paste in your API key.
+4. Open the bottom panel (<kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd>) and select the `Wingman` tab (pictured above).
+5. In the Wingman panel, expand "Analysis", highlight a block of code and click "Analyze for bugs".
 6. Explore all of the other builtin commands.
-7. Write your other commands in your settings under `wingman.userCommands`. See the [Command interface](#command-interface) section for more details.
+7. Create your own commands that compliment your workflow in settings under `wingman.userCommands`. See the [Command interface](#command-interface) section for more details.
 
 ## Features
 

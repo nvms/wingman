@@ -27,11 +27,11 @@ Support for LLaMa-based models assumes that you're using an endpoint that mimics
 - [Features](#features)
   - [String interpolations](#string-interpolations)
   - [Command](#command)
-    - [Command properties](#command-properties)
     - [Example commands](#example-commands)
 - [Context](#context)
   - [Text selection](#text-selection)
-  - [Project text](#project-text) \* [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
+  - [Project text](#project-text)
+    - [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
 - [FAQ](#faq)
 
 ---
@@ -166,12 +166,10 @@ This is a custom prompt called "Reword README text". I use it when I'm drawing b
   }
   ````
 
-- **Automatically replaces selected text** - OPTIONAL. If you have text selected, it will automatically replace it with the generated code block. This can be disabled or enabled per-command.
-- **Continue the conversation** - After the model replies to your request, you can continue the conversation by using the input field below. Conversation context is preserved until you start a new request. This gives you the opportunity to follow-up on the models' response, e.g., "What happens if the second parameter is null or undefined?" or "Can you also add a test that ensures the method throws expectedly when given bad input?".
-- **Elaboration/additional context** - OPTIONAL. If your command defines a `{{command_args}}` in its template, it will prompt you for elaboration on the command. This can be disabled or enabled per-command.
-- **Configurable API url** - This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
-- **Configurable model** - `gpt-3.5-turbo` or `gpt-4` are the two options currently available for ChatGPT. `gpt-3.5-turbo` is the default. This is a `string` field to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
-- **Cancel requests** - Cancel an in-progress request.
+- **Continue the conversation** - Conversation state is preserved by default until a new command is issued. This gives you the opportunity to ask follow-up questions or fine-tune a reply.
+- **Elaboration/additional context** - If your command includes `{{command_args}}` in its template, you will be prompted for elaboration on the command, and `{{command_args}}` will be replaced with your input. This is useful for commands that require additional input, e.g. the included "Modify" or "Translate" commands.
+- **Configurable API url** - Set either `openai.apiBaseUrl` or `anthropic.apiBaseUrl` to an atlernative base URL. This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
+- **Configurable model** - Set either `openai.model` or `anthropic.model` to your desired model. These are `string` fields to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
 - **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{project_text}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
 
 ### String interpolations
@@ -211,9 +209,18 @@ You can create your own commands by adding them to your settings under `wingman.
   // Optional.
   maxTokens: 4096,
   // Optional.
-  // Possible values: "none", "buffer", "replace", "afterSelected", "beforeSelected"
-  callbackType: CallbackType.None,
-  // Optional. Used to replace {{language_instructions}} interpolation.
+  // This determins what to do with the code that the model generates.
+  // Possible values:
+  // - "none": Do nothing - just show the reply in the conversation window.
+  // - "buffer": Put the entire reply in a new window.
+  // - "replace": Replace the originally selected text with the first code block of the reply.
+  // - "beforeSelected": Places the text from the first code block of the reply before the originally selected text.
+  // - "afterSelected": Places the text from the first code block of the reply after the originally selected text.
+  callbackType: "none",
+  // Optional.
+  // Used to replace {{language_instructions}} interpolation.
+  // e.g. If the language ID of the active editor is "typescript",
+  // then {{language_instructions}} is replaced with languageInstructions.typescript
   languageInstructions: {
     javascript: "Use modern JavaScript syntax.",
     typescript: "Use modern TypeScript syntax.",
@@ -222,7 +229,7 @@ You can create your own commands by adding them to your settings under `wingman.
     csharp: "Use modern C# syntax.",
   },
   // Optional. Decides what category in the UI that this should appear under.
-  category: "Default",
+  category: "Misc",
   // Optional.
   // Possible values: "openai", "anthropic"
   provider: "openai",
@@ -230,22 +237,6 @@ You can create your own commands by adding them to your settings under `wingman.
 ```
 
 When you create your own command, you can override any of these properties. The only required properties are `command`, `label`, and `userMessageTemplate`.
-
-#### Command properties
-
-| Property                | Description                                                                                                                                                                                      |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `model`                 | The model to use. Currently, only `gpt-3.5-turbo` and `gpt-4` are supported.                                                                                                                     |
-| `numberOfChoices`       | See OpenAI API docs.                                                                                                                                                                             |
-| `temperature`           | See OpenAI API docs.                                                                                                                                                                             |
-| `command`               | The command name. This value is used to register the command with vscode: `wingman.<command>`.                                                                                                   |
-| `label`                 | The label for the command to show in the UI.                                                                                                                                                     |
-| `systemMessageTemplate` | See OpenAI API docs.                                                                                                                                                                             |
-| `userMessageTemplate`   | The template for the user message. Automatically fills values for `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{project_text}}`, `{{filetype}}`, and `{{language_instructions}}`. |
-| `callbackType`          | The type of callback to use: `CallbackType.Buffer`, `CallbackType.Replace`, `CallbackType.AfterSelected`                                                                                         |
-| `languageInstructions`  | A map of language identifiers to instructions for the given `userMessageTemplate`.                                                                                                               |
-| `category`              | The category to place the command under in the UI.                                                                                                                                               |
-| `provider`              | The provider used to handle this command request. `openai` or `anthropic`                                                                                                                        |
 
 #### Example commands
 

@@ -240,6 +240,15 @@
                 "type": "string",
                 "default": "Default",
                 "description": "What UI category should this command button live under?"
+              },
+              "provider": {
+                "type": "string",
+                "default": "anthropic",
+                "enum": [
+                  "anthropic",
+                  "openai"
+                ],
+                "description": "Which provider should this command use?"
               }
             }
           },

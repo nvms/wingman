@@ -273,14 +273,6 @@ Here are some more example commands.
 ]
 ````
 
-Ideally you'll create many commands that support your individual workflow, with prompts that are personalized to you and how you want to work.
-
-<center>
-
-![example configuration](.github/example2.png)
-
-</center>
-
 ## Context
 
 Context is included in a `userMessageTemplate` by using either `{{text_selection}}` or `{{project_text}}`.

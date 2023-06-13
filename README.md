@@ -23,7 +23,6 @@ Support for LLaMa-based models assumes that you're using an endpoint that mimics
   - [Analysis: ask questions about your code](#analysis-ask-questions-about-your-code)
   - [Translations](#translations)
   - [Custom prompts](#custom-prompts)
-- [Feedback](#feedback)
 - [Quickstart](#quickstart)
 - [Features](#features)
   - [String interpolations](#string-interpolations)
@@ -32,8 +31,8 @@ Support for LLaMa-based models assumes that you're using an endpoint that mimics
     - [Example commands](#example-commands)
 - [Context](#context)
   - [Text selection](#text-selection)
-  - [Project text](#project-text)
-    - [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
+  - [Project text](#project-text) \* [Configuring context inclusion and exclusion](#configuring-context-inclusion-and-exclusion)
+- [FAQ](#faq)
 
 ---
 
@@ -121,12 +120,6 @@ This is a custom prompt called "Reword README text". I use it when I'm drawing b
 ![custom_prompts_1_xl](.github/custom_prompts_1_xl.gif)
 
 </center>
-
-## Feedback
-
-If you're enjoying the extension and find value in it, please let me know by leaving a review on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=nvms.ai-wingman&ssr=false#review-details). It helps with the motivation to keep working on it.
-
-If you have any feedback or suggestions for improvement, please open an issue. The extension is mostly built to cater to my own needs and workflow, but I'm trying to keep it as extensible as possible and may not have considered your use case.
 
 ## Quickstart
 

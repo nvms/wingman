@@ -126,10 +126,23 @@ This is a custom prompt called "Reword README text". I use it when I'm drawing b
 1. Install the extension.
 2. Create an OpenAI account and get an API key (if you're using ChatGPT for generation).
 3. Open the command palette (<kbd>CTRL + SHIFT + P</kbd> or <kbd>CMD + SHIFT + P</kbd>) and run `Wingman: Set API key`. Select `openai` as the provider and paste in your API key.
-4. Open the bottom panel (<kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd>) and select the `Wingman` tab (pictured above).
-5. In the Wingman panel, expand "Analysis", highlight a block of code and click "Analyze for bugs".
+
+<center>
+
+![api_key_xl](.github/api_key_xl.gif)
+
+</center>
+
+4. Open the bottom panel (<kbd>CTRL + J</kbd> or <kbd>CMD + J</kbd>) and select the `Wingman` tab.
+5. In the Wingman panel, expand the "Analysis" category, highlight a block of code and click "Analyze for bugs".
 6. Explore all of the other builtin commands.
 7. Create your own commands that compliment your workflow in settings under `wingman.userCommands`. See the [Command](#command) section for more details.
+
+<center>
+
+![create_cmd_example_xl](.github/create_cmd_example_xl.gif)
+
+</center>
 
 ## Features
 

@@ -252,7 +252,8 @@ Here are some more example commands.
     "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nGive the variables more meaningful names based on their usage. Return the refactored code inside of a code block and nothing else.",
     "callbackType": "replace",
-    "category": "Refactoring"
+    "category": "Refactoring",
+    "provider": "anthropic",
   },
   {
     "command": "decompose",
@@ -260,7 +261,8 @@ Here are some more example commands.
     "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose it by splitting functions, reducing responsibilities and enhancing modularity. Return the refactored code inside of a code block and nothing else.",
     "callbackType": "replace",
-    "category": "Refactoring"
+    "category": "Refactoring",
+    "provider": "openai",
   },
   {
     "command": "comment",
@@ -268,7 +270,8 @@ Here are some more example commands.
     "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good comments using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. Return only the comment inside of a code block and nothing else.",
     "callbackType": "beforeSelected",
-    "category": "Comments"
+    "category": "Comments",
+    "provider": "anthropic",
   }
 ]
 ````

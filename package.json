@@ -243,7 +243,7 @@
               },
               "provider": {
                 "type": "string",
-                "default": "anthropic",
+                "default": "openai",
                 "enum": [
                   "anthropic",
                   "openai"

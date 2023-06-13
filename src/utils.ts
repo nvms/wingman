@@ -79,8 +79,16 @@ export const getConfig = <T>(key: string, fallback?: T | undefined): T => {
   return config.get(key) as T;
 };
 
+export const unsetConfig = (key: string) => {
+  vscode.workspace.getConfiguration("wingman").update(key, undefined, true);
+};
+
 export const getSecret = async <T>(key: string, fallback?: T | undefined): Promise<T> => {
   return (await ExtensionState.getSecret<T>(key)) ?? (fallback as T);
+};
+
+export const setSecret = (key: string, value: string) => {
+  ExtensionState.createSecret(key, value);
 };
 
 export const updateGlobalConfig = <T>(key: string, value: T): void => {

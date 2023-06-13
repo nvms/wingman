@@ -5,7 +5,7 @@ import { type PostableViewProvider, type ProviderResponse, type Provider } from 
 import { Client, type CompletionResponse, type SamplingParameters, AI_PROMPT, HUMAN_PROMPT } from "./sdks/anthropic";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo, setSecret, unsetConfig } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
@@ -18,7 +18,14 @@ export class AnthropicProvider implements Provider {
   _abort: AbortController = new AbortController();
 
   async create(provider: PostableViewProvider, template?: Command) {
-    const apiKey = await getSecret<string>("openai.apiKey", "");
+    const apiKey = await getSecret<string>("anthropic.apiKey", "");
+
+    // If the user still uses the now deprecated anthropic.apiKey config, move it to the secrets store
+    // and unset the config.
+    if (getConfig<string>("anthropic.apiKey")) {
+      setSecret("anthropic.apiKey", getConfig<string>("anthropic.apiKey"));
+      unsetConfig("anthropic.apiKey");
+    }
 
     const { apiBaseUrl } = {
       apiBaseUrl: getConfig("anthropic.apiBaseUrl") as string | undefined,

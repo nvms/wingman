@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo, setSecret, unsetConfig } from "../utils";
 
 interface ConversationState {
   conversationId: string;
@@ -23,7 +23,14 @@ export class OpenAIProvider implements Provider {
   _abort: AbortController = new AbortController();
 
   async create(provider: PostableViewProvider, template?: Command) {
-    const apiKey = await getSecret<string>("openai.apiKey", "llama");
+    const apiKey = getConfig<string>("openai.apiKey") ?? (await getSecret<string>("openai.apiKey", "llama"));
+
+    // If the user still uses the now deprecated openai.apiKey config, move it to the secrets store
+    // and unset the config.
+    if (getConfig<string>("openai.apiKey")) {
+      setSecret("openai.apiKey", getConfig<string>("openai.apiKey"));
+      unsetConfig("openai.apiKey");
+    }
 
     const {
       apiBaseUrl = "https://api.openai.com/v1",

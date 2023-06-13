@@ -214,6 +214,11 @@
                 "default": "",
                 "description": "The label of the command is what shows up in the button text in the UI."
               },
+              "description": {
+                "type": "string",
+                "default": "",
+                "description": "The description of the command. Shows up in the command list in the UI, under the label, when `wingman.showCommandDescriptions` is true."
+              },
               "userMessageTemplate": {
                 "type": "string",
                 "default": "",
@@ -240,6 +245,15 @@
                 "type": "string",
                 "default": "Default",
                 "description": "What UI category should this command button live under?"
+              },
+              "temperature": {
+                "type": "number",
+                "default": 0.3,
+                "description": "Temperature."
+              },
+              "languageInstructions": {
+                "type": "object",
+                "description": "A map of languageId to instruction. Replaces {{language_instructions}} in userMessaageTemplate and systemMessageTemplate"
               },
               "provider": {
                 "type": "string",

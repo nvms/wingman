@@ -130,10 +130,10 @@ function responseAborted() {
 }
 
 const createUserTextDiv = (question) => {
-  const wrapper = $("<div>").addClass("user-text p-4 overflow-x-auto flex");
+  const wrapper = $("<div>").addClass("user-text p-4 overflow-hidden flex");
   const avatarWrapper = $("<div>").addClass("mr-4 flex-0 flex flex-col justify-start items-start align-middle");
   const avatarBox = $("<div>").addClass("p-2 user-avatar rounded-md h-10 w-10 flex justify-center items-center align-middle");
-  const textDiv = $("<div>").addClass("flex-1").text(question);
+  const textDiv = $("<div>").addClass("flex-1 overflow-hidden").text(question);
 
   const formatTarget = textDiv[0];
   formatDiv(formatTarget, textDiv.text());

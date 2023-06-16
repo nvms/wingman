@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(setApiKeyCommand);
 
-    const registerCommand = (template: Command & { command: string }) => {
+    const registerCommand = (template: Command) => {
       if (!template.command) return;
 
       const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {

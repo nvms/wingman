@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
-import { CallbackType, render, type Command } from "./render";
+import { CallbackType, substitute, type Command } from "./render";
 import { getProviderInstance } from "../extension";
-import { addTextAfterSelection, addTextBeforeSelection, displayWarning, getSelectionInfo, putTextInNewBuffer, replaceLinesWithText } from "../utils";
+import { addTextAfterSelection, addTextBeforeSelection, displayWarning, putTextInNewBuffer, replaceLinesWithText } from "../utils";
 
 export async function repeatLast() {
   await getProviderInstance()?.repeatLast();
@@ -59,30 +59,17 @@ export const commandHandler = async (template: Command) => {
   try {
     const { languageId } = activeTextEditor.document;
 
-    let commandArgs;
+    const userMessage = await substitute(template.userMessageTemplate, activeTextEditor, template.languageInstructions?.[languageId] ?? "");
 
-    if (template.userMessageTemplate.includes("{{command_args}}")) {
-      commandArgs = await vscode.window.showInputBox({
-        prompt: "Elaborate, or leave blank.",
-        value: "",
-      });
-
-      if (commandArgs === undefined) {
-        return;
-      }
-    }
-
-    const { selectedText } = getSelectionInfo(activeTextEditor);
-
-    const userMessage = render(template.userMessageTemplate, languageId, selectedText, commandArgs, template.languageInstructions?.[languageId] ?? "");
-
-    const systemMessage = render(
+    const systemMessage = await substitute(
       template.systemMessageTemplate ?? "You are an assistant to a {{language}} programmer.",
-      languageId,
-      selectedText,
-      commandArgs,
+      activeTextEditor,
       template.languageInstructions?.[languageId] ?? "",
     );
+
+    if (!userMessage || !systemMessage) {
+      return;
+    }
 
     await send(userMessage, systemMessage, template);
   } catch (error) {

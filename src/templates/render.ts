@@ -1,16 +1,65 @@
-import { getConfig, getFilesForContextFormatted } from "../utils";
+import * as vscode from "vscode";
 
-export function render(templateString: string, languageId: string, textSelection: string, commandArgs: string | undefined, languageInstructions: string) {
+import { displayWarning, getConfig, getFilesForContextFormatted, getSelectionInfo } from "../utils";
+
+const DEFAULT_PROMPT = "Elaborate, or leave blank.";
+
+export async function substitute(templateString: string, editor: vscode.TextEditor, languageInstructions: string) {
+  const { languageId } = editor.document;
+  const { selectedText } = getSelectionInfo(editor);
+
   templateString = templateString.replace("{{filetype}}", languageId);
   templateString = templateString.replace("{{language}}", languageId);
-  templateString = templateString.replace("{{text_selection}}", textSelection);
+  templateString = templateString.replace("{{text_selection}}", selectedText);
 
-  if (commandArgs) {
-    templateString = templateString.replace("{{command_args}}.", `${commandArgs}`);
-    templateString = templateString.replace("{{command_args}}", `${commandArgs}`);
-  } else {
-    templateString = templateString.replace("{{command_args}}.", "");
-    templateString = templateString.replace("{{command_args}}", "");
+  // TODO: As of 1.3.6. Remove eventually in favor of {{input}}.
+  // For now, warn the user so that they update their custom commands.
+  if (templateString.includes("{{command_args")) {
+    displayWarning("Heads up! {{command_args}} is deprecated and will be removed soon. Please use {{input}} instead.");
+
+    const input = await vscode.window.showInputBox({
+      prompt: DEFAULT_PROMPT,
+      value: "",
+    });
+
+    if (input === undefined) {
+      return;
+    }
+
+    templateString = templateString.replace("{{command_args}}.", input);
+    templateString = templateString.replace("{{command_args}}", input);
+  }
+
+  if (templateString.includes("{{input}}")) {
+    const input = await vscode.window.showInputBox({
+      prompt: DEFAULT_PROMPT,
+      value: "",
+    });
+
+    if (input === undefined) {
+      return;
+    }
+
+    templateString = templateString.replace("{{input}}.", input);
+    templateString = templateString.replace("{{input}}", input);
+  }
+
+  const inputRegex = /\{\{input:.*?\}\}/g;
+  const inputMatches = templateString.match(inputRegex);
+
+  if (inputMatches) {
+    for (const match of inputMatches) {
+      const input = await vscode.window.showInputBox({
+        prompt: match.replace("{{input:", "").replace("}}", ""),
+        value: "",
+      });
+
+      if (input === undefined) {
+        return;
+      }
+
+      templateString = templateString.replace(match, input);
+    }
   }
 
   templateString = templateString.replace("{{project_text}}", getFilesForContextFormatted().join("\n\n"));
@@ -160,7 +209,7 @@ export const defaultCommands: Command[] = [
     label: "Refactor",
     description: "Prompts for guidance on how to refactor the selected code.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.\nRefactor the code to be more readable and maintainable. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{input:How do you want to refactor this?}}.\nRefactor the code to be more readable and maintainable. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -169,7 +218,7 @@ export const defaultCommands: Command[] = [
     label: "Modify",
     description: "Modifies the selected code, using your input as guidance.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nYour task is to modify the code as instructed.\n\nInstructions: {{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nYour task is to modify the code as instructed.\n\nInstructions: {{input:Provide instructions for how to modify this.}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -178,7 +227,7 @@ export const defaultCommands: Command[] = [
     label: "Optimize for performance",
     description: "Refactors the selected code, prioritizing performance.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nOptimize it for performance.\n\n{{command_args}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nOptimize it for performance.\n\n{{input:Elaborate on what specifically to optimize, or leave blank to attempt general optimization.}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -234,7 +283,7 @@ export const defaultCommands: Command[] = [
     label: "Explain",
     description: "Explains the selected code.",
     userMessageTemplate:
-      "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{command_args}}.",
+      "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{input:What specifically do you need explained? Leave blank for general explaination.}}.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Analysis,
   },
@@ -242,7 +291,7 @@ export const defaultCommands: Command[] = [
     command: "question",
     label: "Question",
     description: "Ask a question about the selected code.",
-    userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{command_args}}.",
+    userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{input:What is your question?}}.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Analysis,
   },
@@ -251,7 +300,7 @@ export const defaultCommands: Command[] = [
     label: "Question about project",
     description: "Ask a question about your entire project.",
     userMessageTemplate:
-      "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question to, considering the project code in your answer.\n\nQuestion: {{command_args}}.\n\nProject code:\n\n{{project_text}}",
+      "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question to, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}.\n\nProject code:\n\n{{project_text}}",
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.Analysis,
   },
@@ -259,7 +308,7 @@ export const defaultCommands: Command[] = [
     command: "chatSelectionContext",
     label: "Chat",
     description: "Chat about the selected code.",
-    userMessageTemplate: "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{command_args}}.",
+    userMessageTemplate: "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{input}}.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Analysis,
   },
@@ -300,7 +349,7 @@ export const defaultCommands: Command[] = [
     command: "chatNoContext",
     label: "Chat",
     description: "Chat about anything.",
-    userMessageTemplate: "{{command_args}}.",
+    userMessageTemplate: "{{input}}.",
     systemMessageTemplate: "You are a helpful assistant.",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Misc,
@@ -322,7 +371,7 @@ export const defaultCommands: Command[] = [
     label: "Translate to another language",
     description: "Translates the selected code to another language, enter a language when prompted.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nTranslate it to {{command_args}}.\n\nThe translated code must behave the same as the original code. IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nTranslate it to {{input:What language do you want to translate this to? Add details such as framework if you like, e.g., 'node, using express'}}.\n\nThe translated code must behave the same as the original code. IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.Translate,
   },

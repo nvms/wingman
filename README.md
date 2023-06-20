@@ -167,10 +167,17 @@ This is a custom prompt called "Reword README text". I use it when I'm drawing b
   ````
 
 - **Continue the conversation** - Conversation state is preserved by default until a new command is issued. This gives you the opportunity to ask follow-up questions or fine-tune a reply.
-- **Elaboration/additional context** - If your command includes `{{command_args}}` in its template, you will be prompted for elaboration on the command, and `{{command_args}}` will be replaced with your input. This is useful for commands that require additional input, e.g. the included "Modify" or "Translate" commands.
+- **Elaboration/additional context** - If your command includes `{{input}}` in its template, you will be prompted for elaboration on the command, and `{{input}}` will be replaced with your input. This is useful for commands that require additional input, e.g. the included "Modify" or "Translate" commands. You can specify additional text for the prompt using the syntax: `{{input:Text for the prompt}}`. For example, the "Translate" command:
+
+<center>
+
+![input_text](.github/input_text.png)
+
+</center>
+
 - **Configurable API url** - Set either `openai.apiBaseUrl` or `anthropic.apiBaseUrl` to an atlernative base URL. This is particularly useful if you're using something like [https://github.com/go-skynet/LocalAI](LocalAI), i.e. you want your wingman to be driven by a local LLaMa model.
 - **Configurable model** - Set either `openai.model` or `anthropic.model` to your desired model. These are `string` fields to allow for more flexibility, e.g. if you're using `LocalAI` and want to use a custom model like `ggml-gpt4all-j`.
-- **String interpolation** - Use `{{language}}`, `{{command_args}}`, `{{text_selection}}`, `{{project_text}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
+- **String interpolation** - Use `{{language}}`, `{{input}}`, `{{text_selection}}`, `{{project_text}}`, `{{filetype}}`, and `{{language_instructions}}` in your templates (`userMessageTemplate` and `systemMessageTemplate` supported) to automatically fill in values.
 
 ### String interpolations
 
@@ -179,7 +186,7 @@ The table below lists some of the interpolations that you may have noticed in th
 | Interpolation               | Description                                                                                                                              |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `{{language}}`              | The language identifier of the current file.                                                                                             |
-| `{{command_args}}`          | The arguments passed to the command. When this is present, you will be prompted for additional input when the command button is clicked. |
+| `{{input}}`                 | The arguments passed to the command. When this is present, you will be prompted for additional input when the command button is clicked. |
 | `{{text_selection}}`        | The selected text.                                                                                                                       |
 | `{{project_text}}`          | Contents of all files in the opened project (all vscode workspace roots), using `.gitigore` and `.wmignore` as ignore patterns.          |
 | `{{filetype}}`              | The file type of the current file. Not the extension name. Currently will have the same value as `{{language}}`.                         |

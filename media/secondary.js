@@ -188,10 +188,25 @@ function partialResponse(message) {
     addNewAiTextDiv(chatBox, message);
   } else {
     updateExistingAiTextDiv(existing, message);
+
+    if (existing.querySelector("#spinner")) {
+      existing.querySelector("#spinner").remove();
+    }
   }
 
   toggleButtonsAndInput();
   scrollToBottom();
+}
+
+function createReplySpinner() {
+  partialResponse({ value: { text: "" } });
+  const spinner = $("<div></div>")
+    .addClass(
+      "inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-foreground border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]",
+    )
+    .attr("id", "spinner");
+  const responseContainer = document.querySelector(`#ai-${responseId} .response-container`);
+  responseContainer.append(spinner[0]);
 }
 
 function requestMessage(text) {
@@ -201,6 +216,7 @@ function requestMessage(text) {
   div.append(userTextDiv);
   $("#abort").removeClass("hidden");
   $("#repeat-last").addClass("hidden");
+  createReplySpinner();
   scrollToBottom();
 }
 

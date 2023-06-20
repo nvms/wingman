@@ -7,6 +7,10 @@ body {
 	color: var(--vscode-foreground);
 }
 
+.border-foreground {
+	border-color: var(--vscode-foreground);
+}
+
 .ai-text {
 	/* background: #3c3f4e; */
 	color: var(--vscode-foreground);

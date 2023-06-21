@@ -326,9 +326,10 @@ export const defaultCommands: Command[] = [
     label: "Question about project",
     description: "Ask a question about your entire project.",
     userMessageTemplate:
-      "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question to, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}\n\nProject code:\n\n{{project_text}}",
+      "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}\n\nProject code:\n\n{{project_text}}",
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.AnalysisDebugging,
+    provider: AIProvider.Anthropic,
   },
   {
     command: "chatSelectionContext",

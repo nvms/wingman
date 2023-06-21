@@ -284,6 +284,15 @@ export const defaultCommands: Command[] = [
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
+  {
+    command: "variableNames",
+    label: "More meaningful variable names",
+    description: "Gives more meaningful variable names to those defined in the selected code.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nUsing best practices for the given language, improve the variable names to be more meaningful.\n\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+    callbackType: CallbackType.Replace,
+    category: BuiltinCategory.Refactor,
+  },
 
   // Analysis
   {
@@ -336,6 +345,15 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nPlease answer the following two questions and nothing else.\n1) What is the time complexity of this code? 2) How did you come to this conclusion?",
     callbackType: CallbackType.None,
+    category: BuiltinCategory.Analysis,
+  },
+  {
+    command: "logVariables",
+    label: "Log variables",
+    description: "Logs the selected variables.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nAdd debug statements throughout the code, logging to the console any variables that have been assigned therein.\n\nIMPORTANT: Only return the code, including the log statements, inside of a code fence and nothing else. Do not explain your changes in any way.",
+    callbackType: CallbackType.Replace,
     category: BuiltinCategory.Analysis,
   },
 

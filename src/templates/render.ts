@@ -209,7 +209,7 @@ export const defaultCommands: Command[] = [
     label: "Refactor",
     description: "Prompts for guidance on how to refactor the selected code.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{input:How do you want to refactor this?}}.\nRefactor the code to be more readable and maintainable. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{input:How do you want to refactor this?}}\nRefactor the code to be more readable and maintainable. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -218,7 +218,7 @@ export const defaultCommands: Command[] = [
     label: "Modify",
     description: "Modifies the selected code, using your input as guidance.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nYour task is to modify the code as instructed.\n\nInstructions: {{input:Provide instructions for how to modify this.}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nYour task is to modify the code as instructed.\n\nInstructions: {{input:Provide instructions for how to modify this.}}\nIMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -227,7 +227,7 @@ export const defaultCommands: Command[] = [
     label: "Optimize for performance",
     description: "Refactors the selected code, prioritizing performance.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nOptimize it for performance.\n\n{{input:Elaborate on what specifically to optimize, or leave blank to attempt general optimization.}}.\nIMPORTANT: Only return the code inside of a code fence and nothing else.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nOptimize it for performance.\n\n{{input:Elaborate on what specifically to optimize, or leave blank to attempt general optimization.}}\nIMPORTANT: Only return the code inside of a code fence and nothing else.",
     callbackType: CallbackType.Replace,
     category: BuiltinCategory.Refactor,
   },
@@ -283,7 +283,7 @@ export const defaultCommands: Command[] = [
     label: "Explain",
     description: "Explains the selected code.",
     userMessageTemplate:
-      "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{input:What specifically do you need explained? Leave blank for general explaination.}}.",
+      "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{input:What specifically do you need explained? Leave blank for general explaination.}}",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Analysis,
   },
@@ -291,7 +291,7 @@ export const defaultCommands: Command[] = [
     command: "question",
     label: "Question",
     description: "Ask a question about the selected code.",
-    userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{input:What is your question?}}.",
+    userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{input:What is your question?}}",
     callbackType: CallbackType.None,
     category: BuiltinCategory.Analysis,
   },
@@ -300,7 +300,7 @@ export const defaultCommands: Command[] = [
     label: "Question about project",
     description: "Ask a question about your entire project.",
     userMessageTemplate:
-      "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question to, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}.\n\nProject code:\n\n{{project_text}}",
+      "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question to, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}\n\nProject code:\n\n{{project_text}}",
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.Analysis,
   },
@@ -371,7 +371,7 @@ export const defaultCommands: Command[] = [
     label: "Translate to another language",
     description: "Translates the selected code to another language, enter a language when prompted.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nTranslate it to {{input:What language do you want to translate this to? Add details such as framework if you like, e.g., 'node, using express'}}.\n\nThe translated code must behave the same as the original code. IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nTranslate it to {{input:What language do you want to translate this to? Add details such as framework if you like, e.g., 'node, using express'}}\n\nThe translated code must behave the same as the original code. IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.Translate,
   },

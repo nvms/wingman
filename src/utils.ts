@@ -5,6 +5,7 @@ import Glob from "fast-glob";
 import * as vscode from "vscode";
 
 import { ExtensionState } from "./extension";
+import { type Command } from "./templates/render";
 
 export function getSelectionInfo(editor: vscode.TextEditor): { selectedText: string; startLine: number; endLine: number } {
   const { selection } = editor;
@@ -204,4 +205,29 @@ export const getFilesForContextFormatted = () => {
   }
 
   return results;
+};
+
+/**
+ * Takes a command object and returns a string generated from its label property.
+ * @param {Command} command - The command object to generate the name from.
+ * @returns {string} - The generated command name.
+ */
+export const generateCommandName = ({ label }: Command): string => {
+  const slugifiedLabel = label.toLowerCase().replaceAll(/[^a-zA-Z\d]+/g, "_");
+  const words = slugifiedLabel.split("_").filter(Boolean);
+  return words.reduce((camelCaseLabel, word, index) => {
+    if (index === 0) {
+      return camelCaseLabel + word;
+    }
+    return camelCaseLabel + word.charAt(0).toUpperCase() + word.slice(1);
+  }, "");
+};
+
+export const randomString = (): string => {
+  const characters = "abcdefghijklmnopqrstuvwxyz";
+  let result = "";
+  for (let i = 0; i < 8; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 };

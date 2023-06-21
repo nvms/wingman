@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import { providers, type Provider } from "./providers";
 import { defaultCommands, buildCommandTemplate, type Command } from "./templates/render";
 import { commandHandler } from "./templates/runner";
-import { display, getConfig } from "./utils";
+import { display, generateCommandName, getConfig, randomString } from "./utils";
 import { MainViewProvider, SecondaryViewProvider } from "./views";
 
 let providerInstance: Provider | undefined;
@@ -40,8 +40,35 @@ export class ExtensionState {
   }
 }
 
+export const commandMap = new Map<string, Command>();
+
+function createCommandMap(templates: Command[]) {
+  const allCommands = templates.map((template) => {
+    return {
+      ...template,
+      command: template.command ? `wingman.command.${template.command}` : `wingman.command.${generateCommandName(template)}-${randomString()}`,
+    };
+  });
+
+  allCommands.forEach((template) => {
+    commandMap.set(template.command, template);
+  });
+}
+
 export function activate(context: vscode.ExtensionContext) {
   ExtensionState.create(context);
+
+  const builtinTemplates = [...defaultCommands];
+  const userTemplates = getConfig<Command[]>("userCommands", []);
+  const allTemplates: Command[] = [];
+
+  if (getConfig<boolean>("showBuiltinCommands", true)) {
+    allTemplates.push(...builtinTemplates);
+  }
+
+  allTemplates.push(...userTemplates);
+
+  createCommandMap(allTemplates);
 
   try {
     const mainViewProvider = new MainViewProvider(context.extensionPath, context.extensionUri);
@@ -84,8 +111,8 @@ export function activate(context: vscode.ExtensionContext) {
     const registerCommand = (template: Command) => {
       if (!template.command) return;
 
-      const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {
-        commandHandler(buildCommandTemplate(template.command));
+      const command = vscode.commands.registerCommand(template.command, () => {
+        commandHandler(buildCommandTemplate(template.command!));
       });
 
       if (firstCollapse) {
@@ -95,17 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
       context.subscriptions.push(command);
     };
 
-    const builtinTemplates = [...defaultCommands];
-    const userTemplates = getConfig<Command[]>("userCommands", []);
-    const allTemplates = [];
-
-    if (getConfig<boolean>("showBuiltinCommands", true)) {
-      allTemplates.push(...builtinTemplates);
-    }
-
-    allTemplates.push(...userTemplates);
-
-    allTemplates.forEach((template: Command) => {
+    commandMap.forEach((template: Command) => {
       registerCommand(template);
     });
 

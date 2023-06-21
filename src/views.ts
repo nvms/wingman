@@ -4,9 +4,9 @@ import path from "node:path";
 import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
-import { ExtensionState, getProviderInstance, setProviderInstance } from "./extension";
+import { commandMap, ExtensionState, getProviderInstance, setProviderInstance } from "./extension";
 import { providers } from "./providers";
-import { buildCommandTemplate, CallbackType, type Command, defaultCommands, AIProvider } from "./templates/render";
+import { buildCommandTemplate, CallbackType, type Command, AIProvider } from "./templates/render";
 import { repeatLast, send } from "./templates/runner";
 import { display, displayWarning, getConfig } from "./utils";
 
@@ -81,10 +81,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
     const cbtBuffer =
       '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h6v2H5v14h14v-6h2v6q0 .825-.588 1.413T19 21H5Zm11-10V8h-3V6h3V3h2v3h3v2h-3v3h-2Z"/></svg>';
 
-    const builtinTemplates = [...defaultCommands];
-    const userTemplates = getConfig<Command[]>("userCommands", []);
-    const allTemplates = [...builtinTemplates, ...userTemplates].map((t) => buildCommandTemplate(t.command));
-    const categories = [...new Set(allTemplates.map((template) => template.category))];
+    const categories = [...new Set(Array.from(commandMap.values()).map((template) => template.category))];
 
     const getCallbackTypeSVG = (callbackType?: CallbackType) => {
       if (!callbackType) return "";
@@ -144,7 +141,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
 
     const commands = categories
       .map((category) => {
-        const templatesWithThisCategory = allTemplates.filter((template) => template.category === category);
+        const templatesWithThisCategory = Array.from(commandMap.values()).filter((template) => template.category === category);
         const categoryCommandsHTML = templatesWithThisCategory.map(buttonHtml).join("");
         const isCategoryCollapsed = ExtensionState.get(`category-${category}-collapsed`) ?? false;
         return `
@@ -214,7 +211,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
     getProviderInstance()?.destroy();
     await getProviderInstance()?.create(this as any, command);
 
-    vscode.commands.executeCommand(`wingman.${cmd}`);
+    vscode.commands.executeCommand(cmd!);
   }
 
   public static postMessage(message: any) {

@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 
+import { commandMap } from "../extension";
 import { displayWarning, getConfig, getFilesForContextFormatted, getSelectionInfo } from "../utils";
 
 const DEFAULT_PROMPT = "Elaborate, or leave blank.";
@@ -96,7 +97,7 @@ export interface Command {
   maxTokens?: number;
   temperature?: number;
   numberOfChoices?: number;
-  command: string;
+  command?: string;
   label: string;
   description?: string;
   userMessageTemplate: string;
@@ -114,7 +115,6 @@ export const baseCommand: Command = {
   numberOfChoices: 1,
   model: "gpt-3.5-turbo",
   temperature: 0.3,
-  command: "default",
   label: "Unnamed command",
   systemMessageTemplate: "You are a {{language}} coding assistant.",
   userMessageTemplate: "",
@@ -135,7 +135,6 @@ export const baseCommand: Command = {
 export const defaultCommands: Command[] = [
   // Completion
   {
-    command: "completion",
     label: "Complete selected",
     description: "Complete the code, using selection as guidance.",
     userMessageTemplate:
@@ -147,7 +146,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Completion,
   },
   {
-    command: "completionComment",
     label: "Complete using comment",
     description: "Complete the code, using selected comment as guidance.",
     userMessageTemplate:
@@ -161,7 +159,6 @@ export const defaultCommands: Command[] = [
 
   // Documentation & comments
   {
-    command: "docFunctionComment",
     label: "Write function comment",
     description: "Using the selected function, writes a language-specific comment for the function.",
     userMessageTemplate:
@@ -178,7 +175,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.DocumentationComments,
   },
   {
-    command: "docInline",
     label: "Write inline comments",
     description: "Using the selected code, writes inline comments.",
     userMessageTemplate:
@@ -187,7 +183,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.DocumentationComments,
   },
   {
-    command: "docFunctionAndInlineComments",
     label: "Write function and inline comments",
     description: "Using the selected code, writes function and inline comments.",
     userMessageTemplate:
@@ -206,11 +201,18 @@ export const defaultCommands: Command[] = [
 
   // Tests
   {
-    command: "tests",
     label: "Write unit tests",
-    description: "Using the selected code, writes unit tests using language-specific testing frameworks.",
+    description: "Using the selected code, writes unit tests for all selected code. Prompts for the name of the testing framework.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good unit tests using best practices for the given language. {{language_instructions}} Only return the unit tests. IMPORTANT: Only return the code inside of a code fence and nothing else.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good unit tests using best practices for the given language. Generate tests using the {{input:What test framework? (e.g. jest, testify, gtest)}} testing framework. Only return the unit tests. IMPORTANT: Only return the code inside of a code fence and nothing else.",
+    callbackType: CallbackType.Buffer,
+    category: BuiltinCategory.Tests,
+  },
+  {
+    label: "Write a single test case",
+    description: "Using the selected code, writes a single unit test case. Prompts for the name of the testing framework and the method to test.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nImportant: Only write unit tests for the {{input:Provide the name of the method you want to write tests for.}} method. Use best practices for the given language. Generate tests using the {{input:What test framework? (e.g. jest, testify, gtest)}} testing framework. Only return the unit tests. IMPORTANT: Only return the code inside of a code fence and nothing else.",
     languageInstructions: {
       cpp: "Generate unit tests using the gtest framework.",
       java: "Generate unit tests using the JUnit framework.",
@@ -222,7 +224,6 @@ export const defaultCommands: Command[] = [
 
   // Refactor
   {
-    command: "refactor",
     label: "Refactor",
     description: "Prompts for guidance on how to refactor the selected code.",
     userMessageTemplate:
@@ -231,7 +232,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "modify",
     label: "Modify",
     description: "Modifies the selected code, using your input as guidance.",
     userMessageTemplate:
@@ -240,7 +240,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "refactorPerformance",
     label: "Optimize for performance",
     description: "Refactors the selected code, prioritizing performance.",
     userMessageTemplate:
@@ -249,7 +248,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "refactorFunctional",
     label: "Make it more functional",
     description: "Refactors the selected code, prioritizing a more functional programming style.",
     userMessageTemplate:
@@ -258,7 +256,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "refactorDRY",
     label: "Make it more DRY",
     description: "Refactors the selected code, reducing code duplication as much as possible.",
     userMessageTemplate:
@@ -267,7 +264,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "refactorDecompose",
     label: "Decompose",
     description: "Decomposes monoliths, splits functions, reduces responsibiltiy, enhances modularity.",
     userMessageTemplate:
@@ -276,7 +272,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "refactorRemoveDeadCode",
     label: "Remove dead code",
     description: "Removes dead code, unused variables, etc.",
     userMessageTemplate:
@@ -285,7 +280,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Refactor,
   },
   {
-    command: "variableNames",
     label: "More meaningful variable names",
     description: "Gives more meaningful variable names to those defined in the selected code.",
     userMessageTemplate:
@@ -296,7 +290,6 @@ export const defaultCommands: Command[] = [
 
   // Analysis
   {
-    command: "debug",
     label: "Analyze for bugs",
     description: "Lists discovered bugs and attempts to provide a solution for each.",
     userMessageTemplate:
@@ -305,7 +298,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.AnalysisDebugging,
   },
   {
-    command: "explain",
     label: "Explain",
     description: "Explains the selected code.",
     userMessageTemplate:
@@ -314,7 +306,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.AnalysisDebugging,
   },
   {
-    command: "question",
     label: "Question",
     description: "Ask a question about the selected code.",
     userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{input:What is your question?}}",
@@ -322,7 +313,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.AnalysisDebugging,
   },
   {
-    command: "project_question",
     label: "Question about project",
     description: "Ask a question about your entire project.",
     userMessageTemplate:
@@ -332,7 +322,6 @@ export const defaultCommands: Command[] = [
     provider: AIProvider.Anthropic,
   },
   {
-    command: "chatSelectionContext",
     label: "Chat",
     description: "Chat about the selected code.",
     userMessageTemplate: "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{input}}.",
@@ -340,7 +329,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.AnalysisDebugging,
   },
   {
-    command: "complexity",
     label: "Time complexity",
     description: "Estimate the time complexity of the selected code.",
     userMessageTemplate:
@@ -349,7 +337,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.AnalysisDebugging,
   },
   {
-    command: "logVariables",
     label: "Log variables",
     description: "Logs the selected variables.",
     userMessageTemplate:
@@ -360,7 +347,6 @@ export const defaultCommands: Command[] = [
 
   // Pull requests
   {
-    command: "prReviewDiff",
     label: "Review selected git diff",
     description: "Provides feedback on the selected git diff.",
     userMessageTemplate:
@@ -370,7 +356,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.PullRequests,
   },
   {
-    command: "prReviewCode",
     label: "Review selected code",
     description: "Provides feedback on the selected code.",
     userMessageTemplate:
@@ -382,7 +367,6 @@ export const defaultCommands: Command[] = [
 
   // Misc
   {
-    command: "chatNoContext",
     label: "Chat",
     description: "Chat about anything.",
     userMessageTemplate: "{{input}}.",
@@ -391,7 +375,6 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.Misc,
   },
   {
-    command: "grammar",
     label: "Fix grammar",
     description: "Fix grammar mistakes in the selected text.",
     userMessageTemplate:
@@ -403,7 +386,6 @@ export const defaultCommands: Command[] = [
 
   // Translate
   {
-    command: "translate",
     label: "Translate to another language",
     description: "Translates the selected code to another language, enter a language when prompted.",
     userMessageTemplate:
@@ -415,15 +397,12 @@ export const defaultCommands: Command[] = [
 
 /**
  * Ensures that the template is merged into the base template.
- * @param commandName The name of either a builtin command or a user-defined command.
+ * @param commandName The name of either a builtin command or a user-defined command. (e.g. wingman.command.decompose)
  * @returns
  */
 export const buildCommandTemplate = (commandName: string): Command => {
-  const builtinTemplate = defaultCommands.find((t) => t.command === commandName);
-  const userTemplates = getConfig<Command[]>("userCommands", []);
   const base = { ...baseCommand };
-
-  const template: Command = userTemplates.find((t) => t.command === commandName) || builtinTemplate || base;
+  const template: Command = commandMap.get(commandName) || base;
 
   // If a user-defined command does not specify a value for model or temperature,
   // we want to fallback to the value defined in settings.json, NOT the value

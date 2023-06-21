@@ -79,12 +79,18 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(setApiKeyCommand);
 
+    const firstCollapse = ExtensionState.get("firstCollapse") ?? true;
+
     const registerCommand = (template: Command) => {
       if (!template.command) return;
 
       const command = vscode.commands.registerCommand(`wingman.${template.command}`, () => {
         commandHandler(buildCommandTemplate(template.command));
       });
+
+      if (firstCollapse) {
+        ExtensionState.set(`category-${template.category}-collapsed`, true);
+      }
 
       context.subscriptions.push(command);
     };
@@ -102,6 +108,10 @@ export function activate(context: vscode.ExtensionContext) {
     allTemplates.forEach((template: Command) => {
       registerCommand(template);
     });
+
+    if (firstCollapse) {
+      ExtensionState.set("firstCollapse", false);
+    }
   } catch (error) {
     display(String(error));
   }

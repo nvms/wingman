@@ -1,5 +1,18 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.3.8 - 2023-06-21
+
+### Added
+
+- Added a "Write function and inline comments" command under the "Documentation & comments" category.
+- Added a "Log variables" command under the "Analysis" category.
+- Added a "More meaningful variable names" command under the "Refactor" category.
+
+### Changed
+
+- Don't require a `command` property to be defined.
+- Renamed the default "Analysis" category to "Analysis & debugging"
+
 ## 1.3.7 - 2023-06-20
 
 ### Changed

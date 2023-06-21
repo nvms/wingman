@@ -1,5 +1,15 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## 1.3.7 - 2023-06-20
+
+### Changed
+
+- `{{command_args}}` is now `{{input}}`.
+
+### Added
+
+- Spinner while waiting for initial response to request.
+
 ## 1.3.2 - 2023-06-11
 
 ### Changed

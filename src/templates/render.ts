@@ -161,7 +161,7 @@ export const defaultCommands: Command[] = [
 
   // Documentation & comments
   {
-    command: "doc",
+    command: "docFunctionComment",
     label: "Write function comment",
     description: "Using the selected function, writes a language-specific comment for the function.",
     userMessageTemplate:
@@ -178,12 +178,29 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.DocumentationComments,
   },
   {
-    command: "docWithComments",
+    command: "docInline",
     label: "Write inline comments",
     description: "Using the selected code, writes inline comments.",
     userMessageTemplate:
-      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite inline comments describing the code where appropriate. Do not write comments for code that should be extremely obvious, like variable assignments for example. IMPORTANT: Return the code inside of a code fence and nothing else. Do not explain your response.",
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite inline comments describing the code where appropriate. Do not write comments for self-explanatory code, such as variable assignments or log statements. IMPORTANT: Return the code inside of a code fence and nothing else. Do not explain your response.",
     callbackType: CallbackType.Replace,
+    category: BuiltinCategory.DocumentationComments,
+  },
+  {
+    command: "docFunctionAndInlineComments",
+    label: "Write function and inline comments",
+    description: "Using the selected code, writes function and inline comments.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite inline comments describing the code where appropriate. Inline comments shoould be placed above the relevant code, and not at the end of the line. Do not write comments for self-explanatory code, such as variable assignments or log statements. Write a comment for the function using best practices. {{language_instructions}} IMPORTANT: Return the code with the new comments inside of a code fence and nothing else. Do not explain your response.",
+    callbackType: CallbackType.Replace,
+    languageInstructions: {
+      cpp: "Write a doxygen style comments for the function using best practices.",
+      java: "Write a javadoc style comments for the function using best practices.",
+      typescript: "Write a TSDoc style comments for the function using best practices.",
+      javascript: "Write a JSDoc style comments for the function using best practices.",
+      typescriptreact: "Write a TSDoc style comments for the function using best practices.",
+      javascriptreact: "Write a JSDoc style comments for the function using best practices.",
+    },
     category: BuiltinCategory.DocumentationComments,
   },
 

@@ -72,7 +72,7 @@ enum BuiltinCategory {
   DocumentationComments = "Documentation & comments",
   Tests = "Tests",
   Refactor = "Refactor",
-  Analysis = "Analysis",
+  AnalysisDebugging = "Analysis & debugging",
   PullRequests = "Pull requests",
   Misc = "Misc",
   Translate = "Translate",
@@ -302,7 +302,7 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "Analyze the following {{language}} code for bugs:\n```{{filetype}}\n{{text_selection}}\n```\n\nList each discovered bug as a list item. If you have a solution for a bug, include it as a code block underneath the bug's list item.",
     callbackType: CallbackType.None,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
   {
     command: "explain",
@@ -311,7 +311,7 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "Explain the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nExplain as if you were explaining to another developer.\n\n{{input:What specifically do you need explained? Leave blank for general explaination.}}",
     callbackType: CallbackType.None,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
   {
     command: "question",
@@ -319,7 +319,7 @@ export const defaultCommands: Command[] = [
     description: "Ask a question about the selected code.",
     userMessageTemplate: "I have a question about the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nQuestion: {{input:What is your question?}}",
     callbackType: CallbackType.None,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
   {
     command: "project_question",
@@ -328,7 +328,7 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question to, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}\n\nProject code:\n\n{{project_text}}",
     callbackType: CallbackType.Buffer,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
   {
     command: "chatSelectionContext",
@@ -336,7 +336,7 @@ export const defaultCommands: Command[] = [
     description: "Chat about the selected code.",
     userMessageTemplate: "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\n{{input}}.",
     callbackType: CallbackType.None,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
   {
     command: "complexity",
@@ -345,7 +345,7 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nPlease answer the following two questions and nothing else.\n1) What is the time complexity of this code? 2) How did you come to this conclusion?",
     callbackType: CallbackType.None,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
   {
     command: "logVariables",
@@ -354,7 +354,7 @@ export const defaultCommands: Command[] = [
     userMessageTemplate:
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\nAdd debug statements throughout the code, logging to the console any variables that have been assigned therein.\n\nIMPORTANT: Only return the code, including the log statements, inside of a code fence and nothing else. Do not explain your changes in any way.",
     callbackType: CallbackType.Replace,
-    category: BuiltinCategory.Analysis,
+    category: BuiltinCategory.AnalysisDebugging,
   },
 
   // Pull requests

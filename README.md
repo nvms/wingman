@@ -151,7 +151,6 @@ This is a custom prompt called "Reword README text". I use it when I'm drawing b
 
   ````json
   {
-    "command": "doc",
     "label": "Write documentation",
     "userMessageTemplate": "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good documentation using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else.",
     "languageInstructions": {
@@ -198,8 +197,6 @@ You can create your own commands by adding them to your settings under `wingman.
 
 ```typescript
 {
-  // Required. Must be a unique string. Registers a vscode command as `wingman.<commandName>`.
-  command: "default",
   // Required. Human readable label that appears in the UI.
   label: "Default",
   // Required. Your prompt, including any interpolations you need.
@@ -254,7 +251,6 @@ Here are some more example commands.
 
 "wingman.userCommands": [
   {
-    "command": "variableNames",
     "label": "Meaningful variable names",
     "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nGive the variables more meaningful names based on their usage. Return the refactored code inside of a code block and nothing else.",
@@ -263,7 +259,6 @@ Here are some more example commands.
     "provider": "anthropic",
   },
   {
-    "command": "decompose",
     "label": "Decompose, modularize",
     "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nDecompose it by splitting functions, reducing responsibilities and enhancing modularity. Return the refactored code inside of a code block and nothing else.",
@@ -272,7 +267,6 @@ Here are some more example commands.
     "provider": "openai",
   },
   {
-    "command": "comment",
     "label": "Comment",
     "userMessageTemplate":
       "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nWrite really good comments using best practices for the given language. Attention paid to documenting parameters, return types, any exceptions or errors. Don't change the code. Return only the comment inside of a code block and nothing else.",

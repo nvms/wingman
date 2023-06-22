@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 import { providers, type Provider } from "./providers";
-import { defaultCommands, buildCommandTemplate, type Command } from "./templates/render";
+import { defaultCommands, buildCommandTemplate, type Command, BuiltinCategory } from "./templates/render";
 import { commandHandler } from "./templates/runner";
 import { display, generateCommandName, getConfig, randomString } from "./utils";
 import { MainViewProvider, SecondaryViewProvider } from "./views";
@@ -47,6 +47,7 @@ function createCommandMap(templates: Command[]) {
     return {
       ...template,
       command: template.command ? `wingman.command.${template.command}` : `wingman.command.${generateCommandName(template)}-${randomString()}`,
+      category: template.category ?? BuiltinCategory.Misc,
     };
   });
 

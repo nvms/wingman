@@ -68,7 +68,7 @@ export async function substitute(templateString: string, editor: vscode.TextEdit
   return templateString.replace("{{language_instructions}}", languageInstructions);
 }
 
-enum BuiltinCategory {
+export enum BuiltinCategory {
   Completion = "Completion",
   DocumentationComments = "Documentation & comments",
   Tests = "Tests",
@@ -419,7 +419,7 @@ export const buildCommandTemplate = (commandName: string): Command => {
     ...base,
     model,
     temperature,
-    category: template.category || BuiltinCategory.Misc,
+    category: template.category ?? BuiltinCategory.Misc,
     ...template,
     languageInstructions,
     userMessageTemplate,

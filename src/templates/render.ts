@@ -138,7 +138,7 @@ export const defaultCommands: Command[] = [
     label: "Complete selected",
     description: "Complete the code, using selection as guidance.",
     userMessageTemplate:
-      "I have the following {{language}} code snippet:\n```{{filetype}}\n{{text_selection}}\n```\n\nComplete the rest. Use best practices and do not write any comments. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your solution in any way.",
+      "I have the following {{language}} code snippet:\n```{{filetype}}\n{{text_selection}}\n```\n\nIt is unfinished. Find the areas that appear to be unfinished and complete it. Use best practices and do not write any comments. {{language_instructions}} IMPORTANT: Only return the code inside of a code fence and nothing else. Do not explain your solution in any way.",
     languageInstructions: {
       vue: "Use the modern Vue 3 composition API.",
     },

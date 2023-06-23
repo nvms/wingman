@@ -153,7 +153,7 @@ function partialResponse(message) {
   const chatBox = $(`#chat-${chatId}`);
 
   function createAiTextDiv() {
-    const wrapper = $("<div></div>").addClass("ai-text p-4 overflow-x-auto flex").attr("id", `ai-${responseId}`);
+    const wrapper = $("<div></div>").addClass("ai-text p-4 overflow-x-hiddenuto flex").attr("id", `ai-${responseId}`);
     const avatarWrapper = $("<div></div>").addClass("mr-4 flex-0 flex flex-col justify-start items-start align-middle");
     const avatarBox = $("<div></div>").addClass("p-2 ai-avatar rounded-md h-10 w-10 flex justify-center items-center align-middle");
     const textDiv = $("<div></div>").addClass("flex-1 response-container").text(message.value.text);

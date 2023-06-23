@@ -140,3 +140,7 @@ make ul's be bulleted with some indentation
 	background: var(--vscode-panelSectionHeader-background);
 	opacity: 0.75;
 }
+
+.response-container {
+	overflow-x: auto;
+}

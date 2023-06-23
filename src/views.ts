@@ -143,7 +143,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
       .map((category) => {
         const templatesWithThisCategory = Array.from(commandMap.values()).filter((template) => template.category === category);
         const categoryCommandsHTML = templatesWithThisCategory.map(buttonHtml).join("");
-        const isCategoryCollapsed = ExtensionState.get(`category-${category}-collapsed`) ?? false;
+        const isCategoryCollapsed = ExtensionState.get(`category-${category}-collapsed`) ?? true;
         return `
             <div class="m-0">
               <div

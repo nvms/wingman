@@ -298,6 +298,14 @@ export const defaultCommands: Command[] = [
     category: BuiltinCategory.AnalysisDebugging,
   },
   {
+    label: "Fix known bug",
+    description: "Prompts for a description of the bug, and attempts to resolve it.",
+    userMessageTemplate:
+      "I have the following {{language}} code:\n```{{filetype}}\n{{text_selection}}\n```\n\nYour task is to find and fix a bug. Apart from fixing the bug, do not change the code.\n\nDescription of bug: {{input:Briefly describe the bug.}}\n\nIMPORTANT: Only return the code inside a code fence and nothing else. Do not explain your fix or changes in any way.",
+    callbackType: CallbackType.Replace,
+    category: BuiltinCategory.AnalysisDebugging,
+  },
+  {
     label: "Explain",
     description: "Explains the selected code.",
     userMessageTemplate:

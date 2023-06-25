@@ -16,6 +16,7 @@ let chatId = 0;
 let responseId = 0;
 let aiIsResponding = false;
 let autoScroll = false;
+let shown = false;
 
 window.addEventListener("message", (e) => {
   const message = e.data;
@@ -45,6 +46,12 @@ window.addEventListener("message", (e) => {
       if (!$("#input-container").hasClass("hidden")) {
         $("#input").focus();
       }
+      shown = true;
+      break;
+    }
+    case "hidden": {
+      shown = false;
+      break;
     }
   }
 });
@@ -114,7 +121,12 @@ function responseFinished(message) {
   responseId++;
   $("#abort").addClass("hidden");
   $("#repeat-last").removeClass("hidden");
-  $("#input").prop("disabled", false).focus();
+  $("#input").prop("disabled", false);
+
+  if (shown) {
+    $("#input").focus();
+  }
+
   scrollToBottom();
 }
 

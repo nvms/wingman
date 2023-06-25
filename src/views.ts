@@ -26,6 +26,8 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
     webviewView.onDidChangeVisibility(() => {
       if (webviewView.visible) {
         SecondaryViewProvider.postMessage({ type: "shown" });
+      } else {
+        SecondaryViewProvider.postMessage({ type: "hidden" });
       }
     });
 

@@ -138,6 +138,13 @@ function responseAborted() {
   formatDiv(div[0], message.value.text);
   responseId++;
   $("#input").prop("disabled", false).focus();
+
+  const spinner = div[0].querySelector("#spinner");
+
+  if (spinner) {
+    spinner.remove();
+  }
+
   scrollToBottom();
 }
 

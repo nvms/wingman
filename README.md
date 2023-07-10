@@ -1,16 +1,16 @@
 # wingman
 
-A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa or Claude integration with _**highly extensible and completely customizable prompting**_ templates. These are your prompts, with a few built-in defaults to get you started.
+A Visual Studio Code extension with ChatGPT (3.5 and 4), LLaMa, or Claude integration with _**highly extensible and completely customizable prompting**_ templates. These are your prompts, with a few built-in defaults to get you started.
 
 Wingman is and always will be free and open source. If you're enjoying it and find value in it, please consider [leaving a review](https://marketplace.visualstudio.com/items?itemName=nvms.ai-wingman&ssr=false#review-details) on the VSCode Marketplace to help give it exposure.
 
-The extension is an attempt at delivering a modular tool that supports a broad spectrum of use cases. If you have a use case that isn't supported, and you think it might be a good fit for wingman, please let me know by opening an issue.
+The extension is an attempt to deliver a modular tool that supports a broad spectrum of use cases. If you have a use case that isn't supported and you think it might be a good fit for Wingman, please let me know by opening an issue.
 
 ---
 
 _**A quick note on using LLaMa-based models as a completion source:**_
 
-Support for LLaMa-based models assumes that you're using an endpoint that mimics the OpenAI API. [https://github.com/go-skynet/LocalAI](LocalAI) is a good example of a tool that does this. Set `wingman.openai.apiBaseUrl` to your API URL (e.g. `http://localhost:1234/v1`) and `wingman.openai.model` to your desired model (e.g. `ggml-gpt4all-j`). Make sure your command's `provider` is set to `openai` (it is by default), and you're all set.
+Support for LLaMa-based models assumes that you're using an endpoint that mimics the OpenAI API. [LocalAI](https://github.com/go-skynet/LocalAI) is a good example of a tool that does this. Set `wingman.openai.apiBaseUrl` to your API URL (e.g. `http://localhost:1234/v1`) and `wingman.openai.model` to your desired model (e.g. `ggml-gpt4all-j`). Make sure your command's `provider` is set to `openai` (it is by default), and you're all set.
 
 ---
 
@@ -40,7 +40,7 @@ Support for LLaMa-based models assumes that you're using an endpoint that mimics
 
 ## Demonstration
 
-The majority of the prompts below are built-in, and can be used out-of-the-box. You can disable all of these by setting `wingman.showBuiltinCommands` to `false` in your settings.
+The majority of the prompts below are built-in and can be used out-of-the-box. You can disable all of these by setting `wingman.showBuiltinCommands` to `false` in your settings.
 
 It's really easy to create your own, and you are encouraged to do so.
 
@@ -147,7 +147,7 @@ This is a custom prompt called "Reword README text". I use it when I'm drawing b
 ## Features
 
 - **User-defined commands** - Easily create your own commands with custom prompt templates.
-- **Language-specific elaboration** - Use vscode's language identifier to define language-specific elaboration for your prompts. Add `{{language_instructions}}` to your templates, and then define the instructions for each language in your command's `languageInstructions` property. Here's an example:
+- **Language-specific elaboration** - Use VSCode's language identifier to define language-specific elaboration for your prompts. Add `{{language_instructions}}` to your templates, and then define the instructions for each language in your command's `languageInstructions` property. Here's an example:
 
   ````json
   {

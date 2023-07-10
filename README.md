@@ -15,7 +15,7 @@ Support for LLaMa-based models assumes that you're using an endpoint that mimics
 ---
 
 - [Demonstration](#demonstration)
-  - [Comment-drive completion](#comment-drive-completion)
+  - [Comment-driven completion](#comment-driven-completion)
   - [Add documentation to what's selected](#add-documentation-to-whats-selected)
   - [Refactor: decompose and modularize](#refactor-decompose-and-modularize)
   - [Refactor: make it more functional](#refactor-make-it-more-functional)
@@ -44,7 +44,7 @@ The majority of the prompts below are built-in, and can be used out-of-the-box. 
 
 It's really easy to create your own, and you are encouraged to do so.
 
-#### Comment-drive completion
+#### Comment-driven completion
 
 <center>
 

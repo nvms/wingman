@@ -112,7 +112,7 @@ export class OpenAIProvider implements Provider {
           this.viewProvider?.postMessage({ type: "partialResponse", value: partialResponse });
         },
         systemMessage,
-        timeoutMs: 60 * 1000,
+        timeoutMs: getConfig<number>("requestTimeoutMs") ?? 60 * 1000,
         abortSignal: this._abort.signal,
         ...this.conversationState,
       });

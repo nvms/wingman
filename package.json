@@ -83,6 +83,12 @@
     "configuration": {
       "title": "Wingman",
       "properties": {
+        "wingman.requestTimeoutMs": {
+          "order": 1,
+          "type": "number",
+          "default": 60000,
+          "description": "Request timeout in milliseconds"
+        },
         "wingman.anthropic.model": {
           "type": "string",
           "default": "claude-instant-v1",

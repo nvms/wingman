@@ -135,15 +135,13 @@ function responseAborted() {
   $("#abort").addClass("hidden");
   $("#repeat-last").removeClass("hidden");
   const div = $(`#ai-${responseId}`);
-  formatDiv(div[0], message.value.text);
+  const responseContainer = div[0].querySelector(".response-container");
+  formatDiv(responseContainer, `${responseContainer.innerHTML}\n\n*This request was aborted*`);
   responseId++;
   $("#input").prop("disabled", false).focus();
 
   const spinner = div[0].querySelector("#spinner");
-
-  if (spinner) {
-    spinner.remove();
-  }
+  if (spinner) spinner.remove();
 
   scrollToBottom();
 }

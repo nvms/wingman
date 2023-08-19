@@ -113,7 +113,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
               <div class="flex justify-between flex-1 w-full">
                 <span>${template.label}</span>
                 <div class="flex">
-                  <span class="template-type-indicator">${template.userMessageTemplate.includes("{{command_args}}") ? chatCircleSvg : ""}</span>
+                  <span class="template-type-indicator">${template.userMessageTemplate.includes("{{input") ? chatCircleSvg : ""}</span>
                   <span class="template-type-indicator">${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
                   <span class="template-type-indicator">${template.userMessageTemplate.includes("{{project_text}}") ? checklistSvg : ""}</span>
                   <span class="template-type-indicator">${getCallbackTypeSVG(template.callbackType)}</span>

@@ -31,7 +31,7 @@ export interface Provider {
    * @param options
    * @param provider
    */
-  create(provider: vscode.WebviewViewProvider, template?: Command): Promise<void>;
+  create(provider: vscode.WebviewViewProvider, template: Command): Promise<void>;
   destroy(): void;
   send: (message: string, systemMessage?: string, template?: Command) => Promise<any>;
   repeatLast: () => Promise<void>;

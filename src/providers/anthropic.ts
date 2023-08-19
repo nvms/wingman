@@ -17,7 +17,7 @@ export class AnthropicProvider implements Provider {
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template?: Command) {
+  async create(provider: PostableViewProvider, template: Command) {
     const apiKey = await getSecret<string>("anthropic.apiKey", "");
 
     // If the user still uses the now deprecated anthropic.apiKey config, move it to the secrets store
@@ -85,11 +85,10 @@ export class AnthropicProvider implements Provider {
     }
 
     const samplingParameters: SamplingParameters = {
+      ...template?.completionParams,
       prompt,
-      temperature: template?.temperature ?? (getConfig("anthropic.temperature") as number),
-      max_tokens_to_sample: template?.maxTokens ?? (getConfig("anthropic.maxTokens") as number) ?? 4096,
-      top_k: template?.numberOfChoices ?? -1,
-      model: template?.model ?? (getConfig("anthropic.model") as string) ?? "claude-instant-v1",
+      temperature: template?.completionParams?.temperature ?? (getConfig("anthropic.temperature") as number),
+      model: template?.completionParams?.model ?? (getConfig("anthropic.model") as string) ?? "claude-instant-v1",
     };
 
     try {

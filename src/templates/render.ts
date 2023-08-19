@@ -93,10 +93,6 @@ export enum AIProvider {
 }
 
 export interface Command {
-  model?: string;
-  maxTokens?: number;
-  temperature?: number;
-  numberOfChoices?: number;
   command?: string;
   label: string;
   description?: string;
@@ -108,13 +104,12 @@ export interface Command {
   callbackType?: CallbackType;
   category?: string;
   provider?: AIProvider;
+  completionParams?: {
+    [key: string]: any;
+  };
 }
 
 export const baseCommand: Command = {
-  maxTokens: 4096,
-  numberOfChoices: 1,
-  model: "gpt-3.5-turbo",
-  temperature: 0.3,
   label: "Unnamed command",
   systemMessageTemplate: "You are a {{language}} coding assistant.",
   userMessageTemplate: "",
@@ -131,6 +126,21 @@ export const baseCommand: Command = {
   category: BuiltinCategory.Misc,
   provider: AIProvider.OpenAI,
 };
+
+// https://platform.openai.com/docs/api-reference/chat/create
+const defaultOpenAICompletionParams = () => ({
+  n: 1,
+  model: "gpt-3.5-turbo",
+  temperature: 0.3,
+});
+
+// https://docs.anthropic.com/claude/reference/complete_post
+const defaultAnthropicCompletionParams = () => ({
+  // max_tokens_to_sample: 4096,
+  top_k: 5,
+  model: "claude-instant-v1",
+  temperature: 0.3,
+});
 
 export const defaultCommands: Command[] = [
   // Completion
@@ -416,19 +426,42 @@ export const buildCommandTemplate = (commandName: string): Command => {
   // we want to fallback to the value defined in settings.json, NOT the value
   // defined in baseCommand. Otherwise, the settings.json value will be ignored.
   const provider = template.provider ?? "openai";
-  const model = template.model ?? getConfig<string>(`${provider}.model`);
-  const temperature = template.temperature ?? getConfig<number>(`${provider}.temperature`);
+  const model = template?.completionParams?.model ?? getConfig<string>(`${provider}.model`);
+  const temperature = template?.completionParams?.temperature ?? getConfig<number>(`${provider}.temperature`);
 
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();
   const systemMessageTemplate = template.systemMessageTemplate?.trim();
 
+  let completionParams;
+
+  switch (provider) {
+    case "openai":
+      completionParams = {
+        ...defaultOpenAICompletionParams(),
+        ...template.completionParams,
+        model,
+        temperature,
+      };
+      break;
+    case "anthropic":
+      completionParams = {
+        ...defaultAnthropicCompletionParams(),
+        ...template.completionParams,
+        model,
+        temperature,
+      };
+      break;
+    default:
+      completionParams = { ...template.completionParams };
+      break;
+  }
+
   return {
     ...base,
-    model,
-    temperature,
     category: template.category ?? BuiltinCategory.Misc,
     ...template,
+    completionParams,
     languageInstructions,
     userMessageTemplate,
     systemMessageTemplate,

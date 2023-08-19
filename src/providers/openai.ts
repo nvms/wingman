@@ -22,7 +22,7 @@ export class OpenAIProvider implements Provider {
   conversationState: ConversationState = { conversationId: "", parentMessageId: "" };
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template?: Command) {
+  async create(provider: PostableViewProvider, template: Command) {
     const apiKey = getConfig<string>("openai.apiKey") ?? (await getSecret<string>("openai.apiKey", "llama"));
 
     // If the user still uses the now deprecated openai.apiKey config, move it to the secrets store
@@ -38,10 +38,11 @@ export class OpenAIProvider implements Provider {
       temperature = 0.8,
     } = {
       apiBaseUrl: getConfig<string>("openai.apiBaseUrl") ?? getConfig<string>("apiBaseUrl"),
-      model: template?.model ?? getConfig<string>("openai.model") ?? getConfig<string>("model"),
-      temperature: template?.temperature ?? getConfig<number>("openai.temperature") ?? getConfig<number>("temperature"),
+      model: template?.completionParams?.model ?? getConfig<string>("openai.model"),
+      temperature: template?.completionParams?.temperature ?? getConfig<number>("openai.temperature"),
     };
     this.viewProvider = provider;
+
     this.instance = new ChatGPTAPI({
       apiKey,
       apiBaseUrl,
@@ -49,6 +50,7 @@ export class OpenAIProvider implements Provider {
       // @ts-expect-error this works just fine
       fetch,
       completionParams: {
+        ...template.completionParams,
         model,
         temperature,
         // max_tokens: template?.maxTokens ?? getConfig<number>("openai.maxTokens") ?? 4096,

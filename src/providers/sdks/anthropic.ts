@@ -5,7 +5,6 @@ import type { Response as NodeFetchResponse } from "node-fetch";
 export interface SamplingParameters {
   prompt: string;
   temperature?: number;
-  max_tokens_to_sample: number;
   stop_sequences?: string[];
   top_k?: number;
   top_p?: number;

@@ -73,6 +73,10 @@ export const commandHandler = async (template: Command) => {
 
     await send(userMessage, systemMessage, template);
   } catch (error) {
+    // The request can be intentionally closed by clicking the "abort" button.
+    // We don't need to surface this error to the user, because they already know that it happened.
+    if (String(error).includes("The operation was aborted")) return;
+
     displayWarning(String(error));
   }
 };

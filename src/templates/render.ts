@@ -136,7 +136,7 @@ const defaultOpenAICompletionParams = () => ({
 
 // https://docs.anthropic.com/claude/reference/complete_post
 const defaultAnthropicCompletionParams = () => ({
-  // max_tokens_to_sample: 4096,
+  max_tokens_to_sample: 4096,
   top_k: 5,
   model: "claude-instant-v1",
   temperature: 0.3,

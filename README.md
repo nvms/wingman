@@ -204,14 +204,13 @@ You can create your own commands by adding them to your settings under `wingman.
 
   // Optional.
   systemMessageTemplate: "You are a {{language}} coding assistant.",
-  // Optional.
-  numberOfChoices: 1,
-  // Optional.
-  model: "gpt-3.5-turbo",
-  // Optional.
-  temperature: 0.3,
-  // Optional.
-  maxTokens: 4096,
+  completionParams: {
+    // Put your provider-specific completion params in here,
+    // if you want. Sensible defaults are assigned, but you may
+    // override them here:
+    // https://platform.openai.com/docs/api-reference/chat/create
+    // https://docs.anthropic.com/claude/reference/complete_post
+  },
   // Optional.
   // This determins what to do with the code that the model generates.
   // Possible values:

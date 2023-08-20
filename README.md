@@ -199,11 +199,14 @@ You can create your own commands by adding them to your settings under `wingman.
 {
   // Required. Human readable label that appears in the UI.
   label: "Default",
+
   // Required. Your prompt, including any interpolations you need.
   userMessageTemplate: "",
 
   // Optional.
   systemMessageTemplate: "You are a {{language}} coding assistant.",
+
+  // Optional.
   completionParams: {
     // Put your provider-specific completion params in here,
     // if you want. Sensible defaults are assigned, but you may
@@ -211,6 +214,7 @@ You can create your own commands by adding them to your settings under `wingman.
     // https://platform.openai.com/docs/api-reference/chat/create
     // https://docs.anthropic.com/claude/reference/complete_post
   },
+
   // Optional.
   // This determins what to do with the code that the model generates.
   // Possible values:
@@ -220,6 +224,7 @@ You can create your own commands by adding them to your settings under `wingman.
   // - "beforeSelected": Places the text from the first code block of the reply before the originally selected text.
   // - "afterSelected": Places the text from the first code block of the reply after the originally selected text.
   callbackType: "none",
+
   // Optional.
   // Used to replace {{language_instructions}} interpolation.
   // e.g. If the language ID of the active editor is "typescript",
@@ -231,7 +236,9 @@ You can create your own commands by adding them to your settings under `wingman.
     html: "Use modern HTML syntax.",
     csharp: "Use modern C# syntax.",
   },
+
   // Optional. Decides what category in the UI that this should appear under.
+
   category: "Misc",
   // Optional.
   // Possible values: "openai", "anthropic"

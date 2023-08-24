@@ -46,7 +46,7 @@ function createCommandMap(templates: Command[]) {
   const allCommands = templates.map((template) => {
     return {
       ...template,
-      provider: template.provider ?? AIProvider.OpenAI,
+      provider: template.provider ?? AIProvider.Goinfer,
       command: template.command ? `wingman.command.${template.command}` : `wingman.command.${generateCommandName(template)}-${randomString()}`,
       category: template.category ?? BuiltinCategory.Misc,
     };

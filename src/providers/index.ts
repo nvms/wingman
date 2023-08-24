@@ -1,6 +1,7 @@
 import type * as vscode from "vscode";
 
 import { AnthropicProvider } from "./anthropic";
+import { GoinferProvider } from "./goinfer";
 import { OpenAIProvider } from "./openai";
 import { AIProvider, type Command } from "../templates/render";
 
@@ -41,4 +42,5 @@ export interface Provider {
 export const providers = {
   [AIProvider.OpenAI]: OpenAIProvider,
   [AIProvider.Anthropic]: AnthropicProvider,
+  [AIProvider.Goinfer]: GoinferProvider,
 };

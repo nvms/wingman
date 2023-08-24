@@ -110,12 +110,12 @@ export class Client {
         },
         onmessage: (ev) => {
           const completion = JSON.parse(ev.data) as StreamedMessage;
-          if (onUpdate) {
+          /* if (onUpdate) {
             Promise.resolve(onUpdate(completion)).catch((error) => {
               abortController.abort();
               reject(error);
             });
-          }
+          } */
 
           // console.log(completion);
 

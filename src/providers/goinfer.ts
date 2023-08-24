@@ -97,14 +97,17 @@ export class GoinferProvider implements Provider {
 
       const editor = vscode.window.activeTextEditor!;
       const selection = getSelectionInfo(editor);
+      let partialText = "";
 
       const goinferResponse: InferResult = await this.instance!.completeStream(samplingParameters, {
         onOpen: (response) => {
           console.log("Opened stream, HTTP status code", response.status);
         },
         onUpdate: (partialResponse: StreamedMessage) => {
-          const msg = this.toProviderStreamedResponse(partialResponse);
-          console.log("MSG:", msg.text);
+          partialText += partialResponse.content;
+          // console.log("P", partialText);
+          const msg = this.toProviderResponse(partialText);
+          // console.log("MSG:", msg.text);
           this.viewProvider?.postMessage({
             type: "partialResponse",
             value: msg,
@@ -114,7 +117,7 @@ export class GoinferProvider implements Provider {
       });
 
       // Reformat the API response into a ProvderResponse
-      const response = this.toProviderResponse(goinferResponse);
+      const response = this.toProviderResponse(goinferResponse.text);
 
       // Append the last response to the conversation history
       this.conversationTextHistory = `${this.conversationTextHistory ?? ""}${prompt} ${response.text}`;
@@ -136,18 +139,9 @@ export class GoinferProvider implements Provider {
     await this.send(lastMessage, lastSystemMessage, lastTemplate);
   }
 
-  toProviderResponse(response: InferResult) {
+  toProviderResponse(text: string) {
     return {
-      text: response.text,
-      parentMessageId: "",
-      converastionId: "",
-      id: "",
-    };
-  }
-
-  toProviderStreamedResponse(response: StreamedMessage) {
-    return {
-      text: response.content,
+      text,
       parentMessageId: "",
       converastionId: "",
       id: "",

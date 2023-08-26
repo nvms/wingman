@@ -89,6 +89,16 @@
           "default": 60000,
           "description": "Request timeout in milliseconds"
         },
+        "wingman.defaultCtx": {
+          "type": "number",
+          "default": 2048,
+          "description": "Default context window length for the model (a fallback if the command does not specify)"
+        },
+        "wingman.defaultTemplate": {
+          "type": "string",
+          "default": "[INST] <<SYS>>\n{system}\n<</SYS>>\n\n{prompt} [/INST]",
+          "description": "Default template (a fallback if the command does not specify)"
+        },
         "wingman.anthropic.model": {
           "type": "string",
           "default": "claude-instant-v1",
@@ -266,7 +276,8 @@
                 "default": "openai",
                 "enum": [
                   "anthropic",
-                  "openai"
+                  "openai",
+                  "goinfer"
                 ],
                 "description": "Which provider should this command use?"
               }

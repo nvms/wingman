@@ -2,7 +2,7 @@
 import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { Client, type InferParams, type InferResult, type StreamedMessage, DEFAULT_TEMPLATE } from "./sdks/goinfer";
+import { Client, type InferParams, type InferResult, type StreamedMessage } from "./sdks/goinfer";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
 import { displayWarning, getConfig, getSecret, getSelectionInfo, setSecret, unsetConfig } from "../utils";
@@ -84,12 +84,16 @@ export class GoinferProvider implements Provider {
       prompt = `${this.conversationTextHistory ?? ""}${message}`;
     }
 
+    const modelTemplate = template?.completionParams?.template ?? (getConfig("defaultTemplate") as string);
     const samplingParameters: InferParams = {
       prompt,
-      template: DEFAULT_TEMPLATE.replace("{system}", systemMessage),
+      template: modelTemplate.replace("{system}", systemMessage),
       ...template?.completionParams,
       temperature: template?.completionParams?.temperature ?? (getConfig("openai.temperature") as number),
-      model: template?.completionParams?.model ?? (getConfig("openai.model") as string) ?? "llama2",
+      model: {
+        name: template?.completionParams?.model ?? (getConfig("openai.model") as string) ?? "llama2",
+        ctx: template?.completionParams?.ctx ?? (getConfig("defaultCtx") as number) ?? 2048,
+      },
     };
 
     try {

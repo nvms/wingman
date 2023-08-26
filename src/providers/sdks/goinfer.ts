@@ -2,12 +2,19 @@ import { fetchEventSource } from "@ai-zen/node-fetch-event-source";
 import fetch from "node-fetch";
 import type { Response as NodeFetchResponse } from "node-fetch";
 
+interface ModelConf {
+  name: string;
+  ctx?: number;
+  freq_rope_base?: number;
+  freq_rope_scale?: number;
+}
+
 export interface InferParams {
   prompt: string;
   template?: string;
   stream?: boolean;
   threads?: number;
-  model?: string;
+  model?: ModelConf;
   n_predict?: number;
   top_k?: number;
   top_p?: number;
@@ -49,7 +56,6 @@ export type OnOpen = (response: NodeFetchResponse) => void | Promise<void>;
 export type OnUpdate = (completion: StreamedMessage) => void | Promise<void>;
 
 const DEFAULT_API_URL = "https://localhost:5143";
-export const DEFAULT_TEMPLATE = "{system}\n\n### Instruction: {prompt}\n\n### Response:";
 
 export class Client {
   private apiUrl: string;

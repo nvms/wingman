@@ -96,7 +96,7 @@
         },
         "wingman.defaultTemplate": {
           "type": "string",
-          "default": "[INST] <<SYS>>\n{system}\n<</SYS>>\n\n{prompt} [/INST]",
+          "default": "### System:\nYou are an AI assistant that follows instruction extremely well. Help as much as you can.\n\n### User:\n{prompt}\n\n### Assistant:",
           "description": "Default template (a fallback if the command does not specify)"
         },
         "wingman.anthropic.model": {
@@ -277,7 +277,8 @@
                 "enum": [
                   "anthropic",
                   "openai",
-                  "goinfer"
+                  "goinfer",
+                  "koboldcpp"
                 ],
                 "description": "Which provider should this command use?"
               }

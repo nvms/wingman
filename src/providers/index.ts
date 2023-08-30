@@ -1,6 +1,7 @@
 import type * as vscode from "vscode";
 
 import { AnthropicProvider } from "./anthropic";
+import { GoinferProvider } from "./goinfer";
 import { KoboldcppProvider } from "./koboldcpp";
 import { OpenAIProvider } from "./openai";
 import { type Command } from "../templates/render";
@@ -162,7 +163,7 @@ export const providers = {
   },
   // https://synw.github.io/goinfer/llama_api/inference
   Goinfer: {
-    provider: OpenAIProvider,
+    provider: GoinferProvider,
     defaults: {
       apiBaseUrl: "http://localhost:5143",
       format: "Alpaca",

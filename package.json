@@ -248,7 +248,9 @@
                 "default": "openai",
                 "enum": [
                   "anthropic",
-                  "openai"
+                  "openai",
+                  "goinfer",
+                  "koboldcpp"
                 ],
                 "description": "Which provider should this command use?"
               }

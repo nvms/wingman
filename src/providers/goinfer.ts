@@ -1,25 +1,39 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { Client, DEFAULT_TEMPLATE, DEFAULT_CTX, type KoboldInferParams } from "./sdks/koboldcpp";
+import { Client, type InferParams, type InferResult, type StreamedMessage, DEFAULT_CTX, DEFAULT_TEMPLATE } from "./sdks/goinfer";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, formatPrompt, getConfig, getSelectionInfo, llamaMaxTokens } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo, llamaMaxTokens, setSecret, unsetConfig } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
 let lastSystemMessage: string | undefined;
 
-export class KoboldcppProvider implements Provider {
+export class GoinferProvider implements Provider {
   viewProvider: PostableViewProvider | undefined;
   instance: Client | undefined;
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template: Command & { apiBaseUrl: string; provider: string }) {
+  async create(provider: PostableViewProvider, template: Command) {
+    const apiKey = await getSecret<string>("openai.apiKey", "");
+
+    // If the user still uses the now deprecated openai.apiKey config, move it to the secrets store
+    // and unset the config.
+    if (getConfig<string>("openai.apiKey")) {
+      setSecret("openai.apiKey", getConfig<string>("openai.apiKey"));
+      unsetConfig("openai.apiKey");
+    }
+
+    const { apiBaseUrl } = {
+      apiBaseUrl: getConfig("openai.apiBaseUrl") as string | undefined,
+    };
+
     this.viewProvider = provider;
     this.conversationTextHistory = undefined;
-    this.instance = new Client("", { apiUrl: template.apiBaseUrl });
+    this.instance = new Client(apiKey, { apiUrl: apiBaseUrl });
   }
 
   destroy() {
@@ -71,11 +85,16 @@ export class KoboldcppProvider implements Provider {
     }
 
     const modelTemplate = template?.completionParams?.template ?? DEFAULT_TEMPLATE;
-    const samplingParameters: KoboldInferParams = {
-      prompt: formatPrompt(prompt, modelTemplate, systemMessage),
+    const samplingParameters: InferParams = {
+      prompt,
+      template: modelTemplate.replace("{system}", systemMessage),
       ...template?.completionParams,
       temperature: template?.completionParams?.temperature ?? (getConfig("openai.temperature") as number),
-      max_length: llamaMaxTokens(prompt, DEFAULT_CTX),
+      model: {
+        name: template?.completionParams?.model ?? (getConfig("openai.model") as string) ?? "llama2",
+        ctx: template?.completionParams?.ctx ?? DEFAULT_CTX,
+      },
+      n_predict: llamaMaxTokens(prompt, DEFAULT_CTX),
     };
 
     try {
@@ -85,12 +104,12 @@ export class KoboldcppProvider implements Provider {
       const selection = getSelectionInfo(editor);
       let partialText = "";
 
-      await this.instance!.completeStream(samplingParameters, {
+      const goinferResponse: InferResult = await this.instance!.completeStream(samplingParameters, {
         onOpen: (response) => {
           console.log("Opened stream, HTTP status code", response.status);
         },
-        onUpdate: (partialResponse: string) => {
-          partialText += partialResponse;
+        onUpdate: (partialResponse: StreamedMessage) => {
+          partialText += partialResponse.content;
           // console.log("P", partialText);
           const msg = this.toProviderResponse(partialText);
           // console.log("MSG:", msg.text);
@@ -103,7 +122,7 @@ export class KoboldcppProvider implements Provider {
       });
 
       // Reformat the API response into a ProvderResponse
-      const response = this.toProviderResponse(partialText);
+      const response = this.toProviderResponse(goinferResponse.text);
 
       // Append the last response to the conversation history
       this.conversationTextHistory = `${this.conversationTextHistory ?? ""}${prompt} ${response.text}`;

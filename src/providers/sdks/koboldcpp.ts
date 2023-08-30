@@ -15,6 +15,8 @@ export type OnOpen = (response: NodeFetchResponse) => void | Promise<void>;
 export type OnUpdate = (completion: string) => void | Promise<void>;
 
 const DEFAULT_API_URL = "https://localhost:5001";
+export const DEFAULT_TEMPLATE = "{system}\n\n{prompt}";
+export const DEFAULT_CTX = 2048;
 
 export class Client {
   private apiUrl: string;

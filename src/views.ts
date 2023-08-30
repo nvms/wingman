@@ -5,10 +5,133 @@ import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
 import { commandMap, ExtensionState, getProviderInstance, setProviderInstance } from "./extension";
-import { providers } from "./providers";
-import { buildCommandTemplate, CallbackType, type Command, AIProvider } from "./templates/render";
+import { DEFAULT_PROVIDER, formats, providers } from "./providers";
+import { buildCommandTemplate, CallbackType, type Command } from "./templates/render";
 import { repeatLast, send } from "./templates/runner";
 import { display, displayWarning, getConfig } from "./utils";
+
+// key is, e.g., "OpenAI Official.temperature"
+export const getConfiguredValue = (key: string, fallback = null) => {
+  const [provider, property] = key.split(".");
+  // @ts-expect-error Chill out, TypeScript.
+  return ExtensionState.get(key) ?? providers?.[provider]?.defaults?.[property] ?? providers?.[provider]?.defaults?.completionParams?.[property] ?? fallback;
+};
+
+export const getCurrentProviderDefaultCompletionParams = () => {
+  const provider = ExtensionState.get("current-provider") as keyof typeof providers;
+
+  return {
+    ...providers?.[provider]?.defaults?.completionParams,
+  };
+};
+
+export class ConfigViewProvider implements vscode.WebviewViewProvider {
+  public static readonly viewType = "wingman.configView";
+  private static _view?: vscode.WebviewView;
+
+  constructor(private readonly _extensionPath: string, private readonly _extensionUri: vscode.Uri) {}
+
+  resolveWebviewView(webviewView: vscode.WebviewView, _context: vscode.WebviewViewResolveContext<unknown>, _token: vscode.CancellationToken): void | Thenable<void> {
+    webviewView.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [this._extensionUri],
+    };
+
+    ConfigViewProvider._view = webviewView;
+
+    webviewView.webview.html = this.getWebviewHTML(webviewView.webview);
+
+    const sendValue = (key: string, value: any) => {
+      ConfigViewProvider.postMessage({ type: "get", value: { key, value } });
+    };
+
+    webviewView.webview.onDidReceiveMessage((data) => {
+      switch (data.type) {
+        case "get": {
+          const { key } = data.value; // e.g. "OpenAI Official.temperature"
+          sendValue(key, getConfiguredValue(key));
+          break;
+        }
+
+        case "set": {
+          const { key, value } = data.value;
+          ExtensionState.set(key, value);
+          sendValue(key, value);
+          break;
+        }
+
+        case "restore": {
+          Object.keys(providers).forEach((provider) => {
+            // @ts-expect-error Chill out, TypeScript.
+            const defaults = providers[provider].defaults;
+            Object.keys(defaults).forEach((key) => {
+              if (key === "completionParams") {
+                Object.keys(defaults.completionParams).forEach((key) => {
+                  console.log("restoring", key, defaults.completionParams[key]);
+                  ExtensionState.set(`${provider}.${key}`, undefined);
+                });
+                return;
+              }
+              console.log("restoring", key, defaults.completionParams[key]);
+              ExtensionState.set(`${provider}.${key}`, undefined);
+            });
+          });
+
+          break;
+        }
+
+        case "get-providers": {
+          ConfigViewProvider.postMessage({ type: "providers", value: providers });
+          break;
+        }
+
+        case "get-formats": {
+          ConfigViewProvider.postMessage({ type: "formats", value: formats });
+          break;
+        }
+
+        case "set-current-provider": {
+          ExtensionState.set("current-provider", data.value);
+          break;
+        }
+
+        case "get-current-provider": {
+          const provider = (ExtensionState.get("current-provider") as string) ?? DEFAULT_PROVIDER;
+          // @ts-expect-error Chill out, TypeScript.
+          ConfigViewProvider.postMessage({ type: "current-provider", value: { provider, defaults: providers[provider].defaults } });
+          break;
+        }
+      }
+    });
+  }
+
+  public static postMessage(message: any) {
+    this._view?.webview.postMessage(message);
+  }
+
+  private getWebviewHTML(webview: vscode.Webview) {
+    const indexHtmlPath = path.join(this._extensionPath, "media", "config.html");
+    const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
+    const $ = cheerio.load(indexHtml);
+
+    const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "config.js"));
+    const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "reset.css"));
+    const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css"));
+    const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "config.css"));
+    const tailwindJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "tailwind.min.js"));
+    const tailwindCssUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "tailwind.min.css"));
+    const jqueryJsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "jquery.min.js"));
+
+    return $.html()
+      .replace("{{scriptUri}}", scriptUri.toString())
+      .replace("{{styleResetUri}}", styleResetUri.toString())
+      .replace("{{styleVSCodeUri}}", styleVSCodeUri.toString())
+      .replace("{{styleMainUri}}", styleMainUri.toString())
+      .replace("{{tailwindJsUri}}", tailwindJsUri.toString())
+      .replace("{{tailwindCssUri}}", tailwindCssUri.toString())
+      .replace("{{jqueryJsUri}}", jqueryJsUri.toString());
+  }
+}
 
 export class MainViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "wingman.mainView";
@@ -67,7 +190,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
     const chatCircleSvg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><g fill="currentColor"><path d="M224 128a96 96 0 0 1-144.07 83.11l-37.39 12.47a8 8 0 0 1-10.12-10.12l12.47-37.39A96 96 0 1 1 224 128Z" opacity=".2"/><path d="M128 24a104 104 0 0 0-91.82 152.88l-11.35 34.05a16 16 0 0 0 20.24 20.24l34.05-11.35A104 104 0 1 0 128 24Zm0 192a87.87 87.87 0 0 1-44.06-11.81a8 8 0 0 0-4-1.08a7.85 7.85 0 0 0-2.53.42L40 216l12.47-37.4a8 8 0 0 0-.66-6.54A88 88 0 1 1 128 216Zm12-88a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm-44 0a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm88 0a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z"/></g></svg>';
     const caretDownLightSvg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="m212.24 100.24l-80 80a6 6 0 0 1-8.48 0l-80-80a6 6 0 0 1 8.48-8.48L128 167.51l75.76-75.75a6 6 0 0 1 8.48 8.48Z"/></svg>';
+      '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256" class="rotate-180"><path fill="currentColor" d="m212.24 100.24l-80 80a6 6 0 0 1-8.48 0l-80-80a6 6 0 0 1 8.48-8.48L128 167.51l75.76-75.75a6 6 0 0 1 8.48 8.48Z"/></svg>';
     const openAiSvg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91a6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9a6.046 6.046 0 0 0 .743 7.097a5.98 5.98 0 0 0 .51 4.911a6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206a5.99 5.99 0 0 0 3.997-2.9a6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081l4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085l4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355l-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085l-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5l2.607 1.5v2.999l-2.597 1.5l-2.607-1.5Z"/></svg>';
     const checklistSvg =
@@ -107,7 +230,6 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
         <li>
           <button
             class="command-button flex flex-col justify-between items-start py-1 px-2 text-left"
-            data-provider="${template.provider}"
             data-command="${template.command}">
             <div class="pointer-events-none flex flex-1 w-full flex-col">
               <div class="flex justify-between flex-1 w-full">
@@ -117,13 +239,6 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                   <span class="template-type-indicator">${template.userMessageTemplate.includes("{{text_selection}}") ? bracketsCurlySvg : ""}</span>
                   <span class="template-type-indicator">${template.userMessageTemplate.includes("{{project_text}}") ? checklistSvg : ""}</span>
                   <span class="template-type-indicator">${getCallbackTypeSVG(template.callbackType)}</span>
-                  ${
-                    getConfig("showProviderLogo")
-                      ? `<span class="provider">
-                        ${template.provider === AIProvider.OpenAI ? `<span class="logo">${openAiSvg}</span>` : '<span class="text">A\\</span>'}
-                      </span>`
-                      : ""
-                  }
                 </div>
               </div>
               <div class="w-full">
@@ -192,7 +307,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly _extensionPath: string, private readonly _extensionUri: vscode.Uri) {}
 
-  public static async runCommand(command: Command) {
+  public static async runCommand(command: Command & { provider: keyof typeof providers; apiBaseUrl: string }) {
     const { provider, command: cmd } = command;
 
     if (!provider) {
@@ -200,7 +315,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
       return;
     }
 
-    const ProviderClass = providers[provider];
+    const ProviderClass = providers[provider].provider;
 
     if (!ProviderClass) {
       displayWarning(`Provider ${provider} not found.`);

@@ -1,8 +1,11 @@
 /* eslint-disable no-undef */
-// import {
-//   provideVSCodeDesignSystem,
-//   allComponents
-// } from "../node_modules/@vscode/webview-ui-toolkit/dist/toolkit.min.js"
+import {
+  provideVSCodeDesignSystem,
+  allComponents,
+  // eslint-disable-next-line import/extensions
+} from "../node_modules/@vscode/webview-ui-toolkit/dist/toolkit.min.js";
+
+provideVSCodeDesignSystem().register(allComponents);
 
 const vscode = acquireVsCodeApi();
 
@@ -24,7 +27,7 @@ function toggleCollapse(node) {
   $(node).siblings(".command-list").toggleClass("hidden", collapsed);
   $(node).toggleClass("collapsed", collapsed);
   const arrow = $(node).find(".collapse-arrow");
-  arrow.toggleClass("rotate-90", collapsed);
+  arrow.toggleClass("rotate-[-90deg]", collapsed);
   vscode.postMessage({ type: "collapseCategory", value: { category: node.dataset.collapseCategory, collapsed } });
 }
 
@@ -40,7 +43,7 @@ function addClickHandler(node) {
   $(node).siblings(".command-list").toggleClass("hidden", collapsed);
   $(node).toggleClass("collapsed", collapsed);
   node.addEventListener("click", handleClick);
-  $(node).find(".collapse-arrow").toggleClass("rotate-90", collapsed);
+  $(node).find(".collapse-arrow").toggleClass("rotate-[-90deg]", collapsed);
 }
 
 function handleCommandClick(e) {

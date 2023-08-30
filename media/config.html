@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="{{tailwindJsUri}}"></script>
+    <script src="{{jqueryJsUri}}"></script>
+
+    <link href="{{styleResetUri}}" rel="stylesheet" />
+    <link href="{{styleVSCodeUri}}" rel="stylesheet" />
+    <link href="{{styleMainUri}}" rel="stylesheet" />
+    <link href="{{tailwindCssUri}}" rel="stylesheet" />
+
+    <title>Configuration view</title>
+  </head>
+  <body class="p-0 h-screen">
+    <div id="main-section" class="p-2 flex flex-col justify-between h-screen" style="margin:0;">
+      <div class="flex-1">
+        <!-- Provider -->
+        <div id="config-provider">
+          <div class="section-label mb-1">
+            Provider
+          </div>
+          <vscode-dropdown class="w-full" id="config-provider-value"></vscode-dropdown>
+        </div>
+
+        <!-- Prompt formatting -->
+        <div id="config-prompt-formatting" class="mt-1 mb-1">
+          <div class="section-label mb-1">
+            Prompt formatting
+          </div>
+          <vscode-dropdown class="w-full" id="config-provider-format">
+            <!-- <vscode-option>Alpaca</vscode-option> -->
+            <!-- <vscode-option>Vicuna</vscode-option> -->
+            <!-- <vscode-option>ChatML</vscode-option> -->
+            <!-- <vscode-option>Llama2</vscode-option> -->
+          </vscode-dropdown>
+        </div>
+
+        <div id="provider-specific-configuration" class=""> </div>
+      </div>
+
+      <div class="flex-0">
+        <!-- Restore to defaults -->
+        <div id="config-restore-defaults" class="mt-1 mb-1">
+          <div class="section-label mb-1">
+            Reset to defaults
+          </div>
+          <vscode-button appearance="secondary" id="restore-settings-button" class="w-full m-0">Restore settings to default</vscode-button>
+        </div>
+      </div>
+
+    </div>
+    <script type="module" src="{{scriptUri}}"></script>
+  </body>
+</html>

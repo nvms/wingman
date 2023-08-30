@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 
-import { commandMap } from "../extension";
-import { displayWarning, getConfig, getFilesForContextFormatted, getSelectionInfo } from "../utils";
+import { ExtensionState, commandMap } from "../extension";
+import { DEFAULT_PROVIDER, providers } from "../providers";
+import { getFilesForContextFormatted, getSelectionInfo } from "../utils";
+import { getConfiguredValue } from "../views";
 
 const DEFAULT_PROMPT = "Elaborate, or leave blank.";
 
@@ -13,33 +15,13 @@ export async function substitute(templateString: string, editor: vscode.TextEdit
   templateString = templateString.replace("{{language}}", languageId);
   templateString = templateString.replace("{{text_selection}}", selectedText);
 
-  // TODO: As of 1.3.6. Remove eventually in favor of {{input}}.
-  // For now, warn the user so that they update their custom commands.
-  if (templateString.includes("{{command_args")) {
-    displayWarning("Heads up! {{command_args}} is deprecated and will be removed soon. Please use {{input}} instead.");
-
-    const input = await vscode.window.showInputBox({
-      prompt: DEFAULT_PROMPT,
-      value: "",
-    });
-
-    if (input === undefined) {
-      return;
-    }
-
-    templateString = templateString.replace("{{command_args}}.", input);
-    templateString = templateString.replace("{{command_args}}", input);
-  }
-
   if (templateString.includes("{{input}}")) {
     const input = await vscode.window.showInputBox({
       prompt: DEFAULT_PROMPT,
       value: "",
     });
 
-    if (input === undefined) {
-      return;
-    }
+    if (input === undefined) return;
 
     templateString = templateString.replace("{{input}}.", input);
     templateString = templateString.replace("{{input}}", input);
@@ -55,9 +37,7 @@ export async function substitute(templateString: string, editor: vscode.TextEdit
         value: "",
       });
 
-      if (input === undefined) {
-        return;
-      }
+      if (input === undefined) return;
 
       templateString = templateString.replace(match, input);
     }
@@ -87,11 +67,6 @@ export enum CallbackType {
   BeforeSelected = "beforeSelected",
 }
 
-export enum AIProvider {
-  OpenAI = "openai",
-  Anthropic = "anthropic",
-}
-
 export interface Command {
   command?: string;
   label: string;
@@ -103,7 +78,6 @@ export interface Command {
   };
   callbackType?: CallbackType;
   category?: string;
-  provider?: AIProvider;
   completionParams?: {
     [key: string]: any;
   };
@@ -124,23 +98,7 @@ export const baseCommand: Command = {
     csharp: "Use modern C# syntax and features.",
   },
   category: BuiltinCategory.Misc,
-  provider: AIProvider.OpenAI,
 };
-
-// https://platform.openai.com/docs/api-reference/chat/create
-const defaultOpenAICompletionParams = () => ({
-  n: 1,
-  model: "gpt-3.5-turbo",
-  temperature: 0.3,
-});
-
-// https://docs.anthropic.com/claude/reference/complete_post
-const defaultAnthropicCompletionParams = () => ({
-  max_tokens_to_sample: 4096,
-  top_k: 5,
-  model: "claude-instant-v1",
-  temperature: 0.3,
-});
 
 export const defaultCommands: Command[] = [
   // Completion
@@ -337,7 +295,6 @@ export const defaultCommands: Command[] = [
       "I have a question regarding a {{language}} project. First, I will ask the question, then I will give you the code for the entire project. Your task is to answer the question, considering the project code in your answer.\n\nQuestion: {{input:What is your question?}}\n\nProject code:\n\n{{project_text}}",
     callbackType: CallbackType.Buffer,
     category: BuiltinCategory.AnalysisDebugging,
-    provider: AIProvider.Anthropic,
   },
   {
     label: "Chat",
@@ -418,44 +375,27 @@ export const defaultCommands: Command[] = [
  * @param commandName The name of either a builtin command or a user-defined command. (e.g. wingman.command.decompose)
  * @returns
  */
-export const buildCommandTemplate = (commandName: string): Command => {
+export const buildCommandTemplate = (commandName: string): Command & { provider: keyof typeof providers; apiBaseUrl: string } => {
   const base = { ...baseCommand };
   const template: Command = commandMap.get(commandName) || base;
-
-  // If a user-defined command does not specify a value for model or temperature,
-  // we want to fallback to the value defined in settings.json, NOT the value
-  // defined in baseCommand. Otherwise, the settings.json value will be ignored.
-  const provider = template.provider ?? "openai";
-  const model = template?.completionParams?.model ?? getConfig<string>(`${provider}.model`);
-  const temperature = template?.completionParams?.temperature ?? getConfig<number>(`${provider}.temperature`);
-
+  const provider = (ExtensionState.get("current-provider") as keyof typeof providers) ?? DEFAULT_PROVIDER;
+  const temperature = getConfiguredValue(`${provider}.temperature`, template?.completionParams?.temperature ?? 0.3);
+  const model = getConfiguredValue(`${provider}.model`, template?.completionParams?.model);
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();
   const systemMessageTemplate = template.systemMessageTemplate?.trim();
+  let completionParams = { ...template.completionParams };
 
-  let completionParams;
-
-  switch (provider) {
-    case "openai":
+  Object.keys(providers).forEach((prov) => {
+    if (prov === provider) {
       completionParams = {
-        ...defaultOpenAICompletionParams(),
+        ...providers[prov].defaults.completionParams,
         ...template.completionParams,
         model,
         temperature,
       };
-      break;
-    case "anthropic":
-      completionParams = {
-        ...defaultAnthropicCompletionParams(),
-        ...template.completionParams,
-        model,
-        temperature,
-      };
-      break;
-    default:
-      completionParams = { ...template.completionParams };
-      break;
-  }
+    }
+  });
 
   return {
     ...base,
@@ -465,5 +405,7 @@ export const buildCommandTemplate = (commandName: string): Command => {
     languageInstructions,
     userMessageTemplate,
     systemMessageTemplate,
+    provider,
+    apiBaseUrl: (ExtensionState.get(`${provider}.apiBaseUrl`) as string) ?? providers[provider].defaults.apiBaseUrl,
   };
 };

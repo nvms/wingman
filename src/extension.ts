@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 
 import { providers, type Provider } from "./providers";
-import { defaultCommands, buildCommandTemplate, type Command, BuiltinCategory, AIProvider } from "./templates/render";
+import { defaultCommands, buildCommandTemplate, type Command, BuiltinCategory } from "./templates/render";
 import { commandHandler } from "./templates/runner";
 import { display, generateCommandName, getConfig, randomString } from "./utils";
-import { MainViewProvider, SecondaryViewProvider } from "./views";
+import { MainViewProvider, SecondaryViewProvider, ConfigViewProvider } from "./views";
 
 let providerInstance: Provider | undefined;
 
@@ -46,7 +46,6 @@ function createCommandMap(templates: Command[]) {
   const allCommands = templates.map((template) => {
     return {
       ...template,
-      provider: template.provider ?? AIProvider.OpenAI,
       command: template.command ? `wingman.command.${template.command}` : `wingman.command.${generateCommandName(template)}-${randomString()}`,
       category: template.category ?? BuiltinCategory.Misc,
     };
@@ -73,6 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
   createCommandMap(allTemplates);
 
   try {
+    // Prompt view
     const mainViewProvider = new MainViewProvider(context.extensionPath, context.extensionUri);
 
     context.subscriptions.push(
@@ -81,6 +81,16 @@ export function activate(context: vscode.ExtensionContext) {
       }),
     );
 
+    // Configuration view
+    const configViewProvider = new ConfigViewProvider(context.extensionPath, context.extensionUri);
+
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(ConfigViewProvider.viewType, configViewProvider, {
+        webviewOptions: { retainContextWhenHidden: true },
+      }),
+    );
+
+    // Chat view
     const secondaryViewProvider = new SecondaryViewProvider(context.extensionPath, context.extensionUri);
 
     context.subscriptions.push(

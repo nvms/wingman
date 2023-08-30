@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo, setSecret, unsetConfig } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
 
 interface ConversationState {
   conversationId: string;
@@ -22,39 +22,16 @@ export class OpenAIProvider implements Provider {
   conversationState: ConversationState = { conversationId: "", parentMessageId: "" };
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template: Command) {
-    const apiKey = getConfig<string>("openai.apiKey") ?? (await getSecret<string>("openai.apiKey", "llama"));
-
-    // If the user still uses the now deprecated openai.apiKey config, move it to the secrets store
-    // and unset the config.
-    if (getConfig<string>("openai.apiKey")) {
-      setSecret("openai.apiKey", getConfig<string>("openai.apiKey"));
-      unsetConfig("openai.apiKey");
-    }
-
-    const {
-      apiBaseUrl = "https://api.openai.com/v1",
-      model = "gpt-3.5-turbo",
-      temperature = 0.8,
-    } = {
-      apiBaseUrl: getConfig<string>("openai.apiBaseUrl") ?? getConfig<string>("apiBaseUrl"),
-      model: template?.completionParams?.model ?? getConfig<string>("openai.model"),
-      temperature: template?.completionParams?.temperature ?? getConfig<number>("openai.temperature"),
-    };
+  async create(provider: PostableViewProvider, template: Command & { apiBaseUrl: string; provider: string }) {
+    const apiKey = await getSecret<string>(`${template.provider}.apiKey`, "");
     this.viewProvider = provider;
-
     this.instance = new ChatGPTAPI({
       apiKey,
-      apiBaseUrl,
+      apiBaseUrl: template.apiBaseUrl,
       debug: false,
       // @ts-expect-error this works just fine
       fetch,
-      completionParams: {
-        ...template.completionParams,
-        model,
-        temperature,
-        // max_tokens: template?.maxTokens ?? getConfig<number>("openai.maxTokens") ?? 4096,
-      },
+      completionParams: { ...template.completionParams },
     });
   }
 

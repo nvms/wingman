@@ -1,0 +1,27 @@
+
+.tint-bg {
+  background: var(--vscode-panelSectionHeader-background);
+}
+
+.bor-b {
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.bor-t {
+  border-top: 1px solid var(--vscode-panel-border);
+}
+
+#main-section {
+}
+
+.section-label, label {
+  color: var(--vscode-foreground);
+  opacity: 0.75;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+input[type="number"].input-number {
+  /* @apply px-4 py-1; */
+  border: 1px solid #404040;
+}

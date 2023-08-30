@@ -1,26 +1,25 @@
 import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { Client, type CompletionResponse, type SamplingParameters, AI_PROMPT, HUMAN_PROMPT } from "./sdks/anthropic";
+import { Client, type KoboldInferParams } from "./sdks/koboldcpp";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
+import { displayWarning, getConfig, getSelectionInfo } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
 let lastSystemMessage: string | undefined;
 
-export class AnthropicProvider implements Provider {
+export class KoboldcppProvider implements Provider {
   viewProvider: PostableViewProvider | undefined;
   instance: Client | undefined;
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
   async create(provider: PostableViewProvider, template: Command & { apiBaseUrl: string; provider: string }) {
-    const apiKey = await getSecret<string>(`${template.provider}.apiKey`, "");
     this.viewProvider = provider;
     this.conversationTextHistory = undefined;
-    this.instance = new Client(apiKey, { apiUrl: template.apiBaseUrl });
+    this.instance = new Client("", { apiUrl: template.apiBaseUrl });
   }
 
   destroy() {
@@ -65,17 +64,18 @@ export class AnthropicProvider implements Provider {
     if (!isFollowup) {
       this.viewProvider?.postMessage({ type: "newChat" });
       // The first message should have the system message prepended
-      prompt = `${systemMessage ?? ""}${HUMAN_PROMPT} ${message}${AI_PROMPT}`;
+      prompt = `${message}`;
     } else {
       // followups should have the conversation history prepended
-      prompt = `${this.conversationTextHistory ?? ""}${HUMAN_PROMPT} ${message}${AI_PROMPT}`;
+      prompt = `${this.conversationTextHistory ?? ""}${message}`;
     }
 
-    const samplingParameters: SamplingParameters = {
+    const modelTemplate = template?.completionParams?.template ?? (getConfig("defaultTemplate") as string) ?? "";
+    const samplingParameters: KoboldInferParams = {
+      prompt: modelTemplate.replace("{system}", systemMessage).replace("{prompt}", prompt),
       ...template?.completionParams,
-      prompt,
-      temperature: template?.completionParams?.temperature ?? (getConfig("anthropic.temperature") as number),
-      model: template?.completionParams?.model ?? (getConfig("anthropic.model") as string) ?? "claude-instant-v1",
+      temperature: template?.completionParams?.temperature ?? (getConfig("openai.temperature") as number),
+      max_length: 512,
     };
 
     try {
@@ -83,19 +83,27 @@ export class AnthropicProvider implements Provider {
 
       const editor = vscode.window.activeTextEditor!;
       const selection = getSelectionInfo(editor);
+      let partialText = "";
 
-      const anthropicResponse: CompletionResponse = await this.instance!.completeStream(samplingParameters, {
+      await this.instance!.completeStream(samplingParameters, {
         onOpen: (response) => {
           console.log("Opened stream, HTTP status code", response.status);
         },
-        onUpdate: (partialResponse: CompletionResponse) => {
-          this.viewProvider?.postMessage({ type: "partialResponse", value: this.toProviderResponse(partialResponse) });
+        onUpdate: (partialResponse: string) => {
+          partialText += partialResponse;
+          // console.log("P", partialText);
+          const msg = this.toProviderResponse(partialText);
+          // console.log("MSG:", msg.text);
+          this.viewProvider?.postMessage({
+            type: "partialResponse",
+            value: msg,
+          });
         },
         signal: this._abort.signal,
       });
 
       // Reformat the API response into a ProvderResponse
-      const response = this.toProviderResponse(anthropicResponse);
+      const response = this.toProviderResponse(partialText);
 
       // Append the last response to the conversation history
       this.conversationTextHistory = `${this.conversationTextHistory ?? ""}${prompt} ${response.text}`;
@@ -117,10 +125,9 @@ export class AnthropicProvider implements Provider {
     await this.send(lastMessage, lastSystemMessage, lastTemplate);
   }
 
-  toProviderResponse(response: CompletionResponse) {
+  toProviderResponse(text: string) {
     return {
-      // for some reason, the response completion text always has a space at the beginning.
-      text: response.completion.trimStart(),
+      text,
       parentMessageId: "",
       converastionId: "",
       id: "",

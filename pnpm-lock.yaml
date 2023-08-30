@@ -8,6 +8,9 @@ dependencies:
   '@ai-zen/node-fetch-event-source':
     specifier: ^2.1.0
     version: 2.1.0
+  '@anthropic-ai/tokenizer':
+    specifier: ^0.0.4
+    version: 0.0.4
   '@vscode/webview-ui-toolkit':
     specifier: ^1.2.2
     version: 1.2.2(react@18.2.0)
@@ -23,6 +26,12 @@ dependencies:
   fetch:
     specifier: ^1.1.0
     version: 1.1.0
+  gpt-tokenizer:
+    specifier: ^2.1.1
+    version: 2.1.1
+  llama-tokenizer-js:
+    specifier: ^1.1.3
+    version: 1.1.3
   node-fetch:
     specifier: ^3.3.1
     version: 3.3.1
@@ -105,6 +114,13 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       node-fetch: 3.3.1
+    dev: false
+
+  /@anthropic-ai/tokenizer@0.0.4:
+    resolution: {integrity: sha512-EHRKbxlxlc8W4KCBEseByJ7YwyYCmgu9OyN59H9+IYIGPoKv8tXyQXinkeGDI+cI8Tiuz9wk2jZb/kK7AyvL7g==}
+    dependencies:
+      '@types/node': 18.16.16
+      tiktoken: 1.0.10
     dev: false
 
   /@babel/code-frame@7.21.4:
@@ -637,7 +653,6 @@ packages:
 
   /@types/node@18.16.16:
     resolution: {integrity: sha512-NpaM49IGQQAUlBhHMF82QH80J08os4ZmyF9MkpCzWAGuOHqE4gTEbhzd7L3l5LmWuZ6E0OiC1FweQ4tsiW35+g==}
-    dev: true
 
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -1451,7 +1466,7 @@ packages:
       cac: 6.7.14
       conf: 11.0.1
       eventsource-parser: 1.0.0
-      js-tiktoken: 1.0.6
+      js-tiktoken: 1.0.7
       keyv: 4.5.2
       p-timeout: 6.1.1
       quick-lru: 6.1.1
@@ -2835,6 +2850,12 @@ packages:
       responselike: 3.0.0
     dev: true
 
+  /gpt-tokenizer@2.1.1:
+    resolution: {integrity: sha512-WlX+vj6aPaZ71U6Bf18fem+5k58zlgh2a4nbc7KHy6aGVIyq3nCh709b/8momu34sV/5t/SpzWi8LayWD9uyDw==}
+    dependencies:
+      rfc4648: 1.5.2
+    dev: false
+
   /graceful-fs@4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: true
@@ -3279,8 +3300,8 @@ packages:
     hasBin: true
     dev: true
 
-  /js-tiktoken@1.0.6:
-    resolution: {integrity: sha512-lxHntEupgjWvSh37WxpAW4XN6UBXBtFJOpZZq5HN5oNjDfN7L/iJhHOKjyL/DFtuYXUwn5jfTciLtOWpgQmHjQ==}
+  /js-tiktoken@1.0.7:
+    resolution: {integrity: sha512-biba8u/clw7iesNEWLOLwrNGoBP2lA+hTaBLs/D45pJdUPFXyxD6nhcDVtADChghv4GgyAiMKYMiRx7x6h7Biw==}
     dependencies:
       base64-js: 1.5.1
     dev: false
@@ -3475,6 +3496,10 @@ packages:
       through: 2.3.8
       wrap-ansi: 7.0.0
     dev: true
+
+  /llama-tokenizer-js@1.1.3:
+    resolution: {integrity: sha512-+BUgsLCXVQJkjiD/t7PdESLn+yXJIRX/BJfwzVVYfKZ9aN3gsP9xoadBZxKnCxGz2Slby+S7x41gUr2TKNaS4Q==}
+    dev: false
 
   /loader-runner@4.3.0:
     resolution: {integrity: sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==}
@@ -4493,6 +4518,10 @@ packages:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
+  /rfc4648@1.5.2:
+    resolution: {integrity: sha512-tLOizhR6YGovrEBLatX1sdcuhoSCXddw3mqNVAcKxGJ+J0hFeJ+SjeWCv5UPA/WU3YzWPPuCVYgXBKZUPGpKtg==}
+    dev: false
+
   /rfdc@1.3.0:
     resolution: {integrity: sha512-V2hovdzFbOi77/WajaSMXk2OLm+xNIeQdMMuB7icj7bk6zi2F8GGAxigcnDFpJHbNyNcgyJDiP+8nOrY5cZGrA==}
     dev: true
@@ -4982,6 +5011,10 @@ packages:
   /through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
     dev: true
+
+  /tiktoken@1.0.10:
+    resolution: {integrity: sha512-gF8ndTCNu7WcRFbl1UUWaFIB4CTXmHzS3tRYdyUYF7x3C6YR6Evoao4zhKDmWIwv2PzNbzoQMV8Pxt+17lEDbA==}
+    dev: false
 
   /titleize@3.0.0:
     resolution: {integrity: sha512-KxVu8EYHDPBdUYdKZdKtU2aj2XfEx9AfjXxE/Aj0vT06w2icA09Vus1rh6eSu1y01akYg6BjIK/hxyLJINoMLQ==}

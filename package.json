@@ -69,6 +69,11 @@
         },
         {
           "type": "webview",
+          "id": "wingman.configView",
+          "name": "Configuration"
+        },
+        {
+          "type": "webview",
           "id": "wingman.secondaryView",
           "name": "Conversation"
         }
@@ -88,29 +93,6 @@
           "type": "number",
           "default": 60000,
           "description": "Request timeout in milliseconds"
-        },
-        "wingman.anthropic.model": {
-          "type": "string",
-          "default": "claude-instant-v1",
-          "description": "Model (a fallback if the command does not specify, e.g. 'claude-instant-v1', 'claude-v1-100k')"
-        },
-        "wingman.openai.model": {
-          "order": 4,
-          "type": "string",
-          "default": "gpt-3.5-turbo",
-          "description": "Model (a fallback if the command does not specify, e.g. 'gpt-3.5-turbo', 'gpt-4', 'ggml-gpt4all-j', 'wizard-mega-13B.ggml.q4.bin')"
-        },
-        "wingman.openai.apiBaseUrl": {
-          "order": 3,
-          "type": "string",
-          "default": "https://api.openai.com/v1",
-          "description": "API base URL (without trailing slash, for local LLaMa-based inference use something like github.com/go-skynet/LocalAI)"
-        },
-        "wingman.openai.temperature": {
-          "order": 5,
-          "type": "number",
-          "default": 0.3,
-          "description": "Temperature (a fallback if the command does not specify)"
         },
         "wingman.showProviderLogo": {
           "order": 6,
@@ -343,11 +325,14 @@
   },
   "dependencies": {
     "@ai-zen/node-fetch-event-source": "^2.1.0",
+    "@anthropic-ai/tokenizer": "^0.0.4",
     "@vscode/webview-ui-toolkit": "^1.2.2",
     "chatgpt": "^5.2.5",
     "cheerio": "1.0.0-rc.12",
     "fast-glob": "^3.2.12",
     "fetch": "^1.1.0",
+    "gpt-tokenizer": "^2.1.1",
+    "llama-tokenizer-js": "^1.1.3",
     "node-fetch": "^3.3.1"
   }
 }

@@ -15,6 +15,8 @@ export type OnOpen = (response: NodeFetchResponse) => void | Promise<void>;
 export type OnUpdate = (completion: string) => void | Promise<void>;
 
 const DEFAULT_API_URL = "https://localhost:5001";
+export const DEFAULT_TEMPLATE = "{system}\n\n{prompt}";
+export const DEFAULT_CTX = 2048;
 
 export class Client {
   private apiUrl: string;
@@ -46,6 +48,8 @@ export class Client {
 
   completeStream(params: KoboldInferParams, { onOpen, onUpdate, signal }: { onOpen?: OnOpen; onUpdate?: OnUpdate; signal?: AbortSignal }): Promise<void> {
     const abortController = new AbortController();
+
+    console.log("Url", this.apiUrl);
 
     return new Promise((resolve, reject) => {
       signal?.addEventListener("abort", (event) => {

@@ -2,10 +2,10 @@
 import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { Client, type KoboldInferParams } from "./sdks/koboldcpp";
+import { Client, DEFAULT_TEMPLATE, DEFAULT_CTX, type KoboldInferParams } from "./sdks/koboldcpp";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSelectionInfo } from "../utils";
+import { displayWarning, formatPrompt, getConfig, getSelectionInfo, llamaMaxTokens } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
@@ -75,13 +75,14 @@ export class KoboldcppProvider implements Provider {
       prompt = `${this.conversationTextHistory ?? ""}${message}`;
     }
 
-    const modelTemplate = template?.completionParams?.template ?? (getConfig("defaultTemplate") as string);
+    const modelTemplate = template?.completionParams?.template ?? DEFAULT_TEMPLATE;
     const samplingParameters: KoboldInferParams = {
-      prompt: modelTemplate.replace("{system}", systemMessage).replace("{prompt}", prompt),
+      prompt: formatPrompt(prompt, modelTemplate, systemMessage),
       ...template?.completionParams,
       temperature: template?.completionParams?.temperature ?? (getConfig("openai.temperature") as number),
-      max_length: 512,
+      max_length: llamaMaxTokens(prompt, DEFAULT_CTX),
     };
+    console.log("Params", samplingParameters);
 
     try {
       this.viewProvider?.postMessage({ type: "requestMessage", value: message });

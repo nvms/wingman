@@ -2,10 +2,10 @@
 import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { Client, type InferParams, type InferResult, type StreamedMessage } from "./sdks/goinfer";
+import { Client, type InferParams, type InferResult, type StreamedMessage, DEFAULT_CTX, DEFAULT_TEMPLATE } from "./sdks/goinfer";
 import { type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo, setSecret, unsetConfig } from "../utils";
+import { displayWarning, getConfig, getSecret, getSelectionInfo, llamaMaxTokens, setSecret, unsetConfig } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
@@ -84,7 +84,7 @@ export class GoinferProvider implements Provider {
       prompt = `${this.conversationTextHistory ?? ""}${message}`;
     }
 
-    const modelTemplate = template?.completionParams?.template ?? (getConfig("defaultTemplate") as string);
+    const modelTemplate = template?.completionParams?.template ?? DEFAULT_TEMPLATE;
     const samplingParameters: InferParams = {
       prompt,
       template: modelTemplate.replace("{system}", systemMessage),
@@ -92,8 +92,9 @@ export class GoinferProvider implements Provider {
       temperature: template?.completionParams?.temperature ?? (getConfig("openai.temperature") as number),
       model: {
         name: template?.completionParams?.model ?? (getConfig("openai.model") as string) ?? "llama2",
-        ctx: template?.completionParams?.ctx ?? (getConfig("defaultCtx") as number) ?? 2048,
+        ctx: template?.completionParams?.ctx ?? DEFAULT_CTX,
       },
+      n_predict: llamaMaxTokens(prompt, DEFAULT_CTX),
     };
 
     try {

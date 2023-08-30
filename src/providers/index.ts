@@ -5,7 +5,8 @@ import { GoinferProvider } from "./goinfer";
 import { KoboldcppProvider } from "./koboldcpp";
 import { OpenAIProvider } from "./openai";
 import { type Command } from "../templates/render";
-import { AnthropicTokenizer, GPTTokenizer, LlamaTokenizer } from "../tokenizers";
+import { GPTTokenizer } from "../tokenizers/gpt";
+import { LlamaTokenizer } from "../tokenizers/llama";
 
 export const DEFAULT_PROVIDER = "OpenAI Official";
 
@@ -197,7 +198,9 @@ export const tokenizers = {
     description: "Use this with llama family models",
   },
   "anthropic-tokenizer": {
-    tokenizer: AnthropicTokenizer,
+    // This tokenizer relies on tiktoken_bg.wasm, which won't work in a
+    // vscode extension. We'll probably need to fork this or find an alternative.
+    /* tokenizer: AnthropicTokenizer, */
     description: "Use this with Anthropic models",
   },
 };

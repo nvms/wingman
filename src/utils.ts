@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import Glob from "fast-glob";
+import llamaTokenizer from "llama-tokenizer-js";
 import * as vscode from "vscode";
 
 import { ExtensionState } from "./extension";
@@ -231,3 +232,12 @@ export const randomString = (): string => {
   }
   return result;
 };
+
+export function llamaMaxTokens(prompt: string, ctx: number) {
+  const n = llamaTokenizer.encode(prompt).length;
+  return ctx - n;
+}
+
+export function formatPrompt(prompt: string, template: string, systemMessage: string) {
+  return template.replace("{system}", systemMessage).replace("{prompt}", prompt);
+}

@@ -266,7 +266,9 @@
                 "default": "openai",
                 "enum": [
                   "anthropic",
-                  "openai"
+                  "openai",
+                  "goinfer",
+                  "koboldcpp"
                 ],
                 "description": "Which provider should this command use?"
               }
@@ -348,6 +350,7 @@
     "cheerio": "1.0.0-rc.12",
     "fast-glob": "^3.2.12",
     "fetch": "^1.1.0",
+    "llama-tokenizer-js": "^1.1.3",
     "node-fetch": "^3.3.1"
   }
 }

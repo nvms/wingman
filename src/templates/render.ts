@@ -90,6 +90,8 @@ export enum CallbackType {
 export enum AIProvider {
   OpenAI = "openai",
   Anthropic = "anthropic",
+  Goinfer = "goinfer",
+  KoboldCpp = "koboldcpp",
 }
 
 export interface Command {
@@ -139,6 +141,15 @@ const defaultAnthropicCompletionParams = () => ({
   max_tokens_to_sample: 4096,
   top_k: 5,
   model: "claude-instant-v1",
+  temperature: 0.3,
+});
+
+// https://synw.github.io/goinfer/llama_api/inference
+const defaultGoinferCompletionParams = () => ({
+  temperature: 0.3,
+});
+
+const defaultKoboldcppCompletionParams = () => ({
   temperature: 0.3,
 });
 
@@ -449,6 +460,21 @@ export const buildCommandTemplate = (commandName: string): Command => {
         ...defaultAnthropicCompletionParams(),
         ...template.completionParams,
         model,
+        temperature,
+      };
+      break;
+    case "goinfer":
+      completionParams = {
+        ...defaultGoinferCompletionParams(),
+        ...template.completionParams,
+        model,
+        temperature,
+      };
+      break;
+    case "koboldcpp":
+      completionParams = {
+        ...defaultKoboldcppCompletionParams(),
+        ...template.completionParams,
         temperature,
       };
       break;

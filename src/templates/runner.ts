@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { CallbackType, substitute, type Command } from "./render";
+import { CallbackType, substitute, type Command, type ReadyCommand } from "./render";
 import { getProviderInstance } from "../extension";
 import { addTextAfterSelection, addTextBeforeSelection, displayWarning, putTextInNewBuffer, replaceLinesWithText } from "../utils";
 
@@ -8,8 +8,8 @@ export async function repeatLast() {
   await getProviderInstance()?.repeatLast();
 }
 
-export async function send(userMessage: string, systemMessage?: string, template?: Command) {
-  await getProviderInstance()?.send(userMessage, systemMessage, template);
+export async function send(userMessage: string, systemMessage?: string, cmd?: ReadyCommand) {
+  await getProviderInstance()?.send(userMessage, systemMessage, cmd);
 }
 
 /**
@@ -51,7 +51,7 @@ export function handleResponseCallbackType(template: Command, editor: vscode.Tex
   }
 }
 
-export const commandHandler = async (template: Command) => {
+export const commandHandler = async (cmd: ReadyCommand) => {
   const { activeTextEditor } = vscode.window;
 
   if (!activeTextEditor) return;
@@ -59,19 +59,15 @@ export const commandHandler = async (template: Command) => {
   try {
     const { languageId } = activeTextEditor.document;
 
-    const userMessage = await substitute(template.userMessageTemplate, activeTextEditor, template.languageInstructions?.[languageId] ?? "");
+    const userMessage = await substitute(cmd.userMessageTemplate, activeTextEditor, cmd.languageInstructions?.[languageId] ?? "");
 
-    const systemMessage = await substitute(
-      template.systemMessageTemplate ?? "You are an assistant to a {{language}} programmer.",
-      activeTextEditor,
-      template.languageInstructions?.[languageId] ?? "",
-    );
+    const systemMessage = await substitute(cmd.systemMessageTemplate, activeTextEditor, cmd.languageInstructions?.[languageId] ?? "");
 
     if (!userMessage || !systemMessage) {
       return;
     }
 
-    await send(userMessage, systemMessage, template);
+    await send(userMessage, systemMessage, cmd);
   } catch (error) {
     // The request can be intentionally closed by clicking the "abort" button.
     // We don't need to surface this error to the user, because they already know that it happened.

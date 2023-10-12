@@ -12,6 +12,7 @@ const vscode = acquireVsCodeApi();
 
 let providers = {};
 let formats = {};
+let tokenizers = {};
 let currentProviderLabel = "";
 let currentProviderDefaults = {};
 
@@ -37,6 +38,7 @@ const onProviderChange = (defaults) => {
     Object.entries(defaults).forEach(([key, value]) => {
       if (key === "completionParams") return createInputs(value);
       if (key === "format") return;
+      if (key === "tokenizer") return;
 
       const label = $("<label class='mt-1'></label>");
       label.text(key);
@@ -74,6 +76,7 @@ const onProviderChange = (defaults) => {
 
   vscode.postMessage({ type: "set-current-provider", value: currentProviderLabel });
   vscode.postMessage({ type: "get-formats" });
+  vscode.postMessage({ type: "get-tokenizers" });
 
   getValuesForCurrentProvider();
 };
@@ -98,6 +101,7 @@ window.addEventListener("message", (e) => {
   const message = e.data;
 
   switch (message.type) {
+    // Response to "get-current-provider" message
     case "current-provider": {
       const { provider, defaults } = message.value;
 
@@ -109,6 +113,7 @@ window.addEventListener("message", (e) => {
       break;
     }
 
+    // Response to "get-providers" message
     case "providers": {
       providers = message.value;
       const labels = Object.entries(providers);
@@ -137,11 +142,17 @@ window.addEventListener("message", (e) => {
       break;
     }
 
+    // Response to "get-formats" message
     case "formats": {
       formats = message.value;
 
-      const formatSelect = $("#config-provider-format");
+      const formatSelect = $("#config-format-value");
+      formatSelect.attr("name", `${currentProviderLabel}.format`);
       formatSelect.empty();
+
+      formatSelect.on("change", (e) => {
+        vscode.postMessage({ type: "set", value: { key: `${currentProviderLabel}.format`, value: e.target.value } });
+      });
 
       Object.entries(formats).forEach(([label, _]) => {
         const option = document.createElement("vscode-option");
@@ -150,13 +161,41 @@ window.addEventListener("message", (e) => {
         formatSelect.append(option);
       });
 
+      // Get the configured value for the format for the currently selected provider.
+      vscode.postMessage({ type: "get", value: { key: `${currentProviderLabel}.format` } });
+
+      break;
+    }
+
+    // Response to "get-tokenizers" message
+    case "tokenizers": {
+      tokenizers = message.value;
+
+      const tokenizerSelect = $("#config-tokenizer-value");
+      tokenizerSelect.attr("name", `${currentProviderLabel}.tokenizer`);
+      tokenizerSelect.empty();
+
+      tokenizerSelect.on("change", (e) => {
+        vscode.postMessage({ type: "set", value: { key: `${currentProviderLabel}.tokenizer`, value: e.target.value } });
+      });
+
+      Object.entries(tokenizers).forEach(([label, _]) => {
+        const option = document.createElement("vscode-option");
+        option.setAttribute("value", label);
+        option.textContent = label;
+        tokenizerSelect.append(option);
+      });
+
+      // Get the configured value for the format for the currently selected provider.
+      vscode.postMessage({ type: "get", value: { key: `${currentProviderLabel}.tokenizer` } });
+
       break;
     }
 
     case "get": {
       const { key, value } = message.value;
 
-      $(`input[name="${key}"]`).val(value);
+      $(`[name="${key}"]`).val(value);
 
       break;
     }

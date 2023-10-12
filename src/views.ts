@@ -5,24 +5,15 @@ import * as cheerio from "cheerio";
 import * as vscode from "vscode";
 
 import { commandMap, ExtensionState, getProviderInstance, setProviderInstance } from "./extension";
-import { DEFAULT_PROVIDER, formats, providers } from "./providers";
-import { buildCommandTemplate, CallbackType, type Command } from "./templates/render";
+import { DEFAULT_PROVIDER, formats, providers, tokenizers } from "./providers";
+import { buildCommandTemplate, CallbackType, type ReadyCommand, type Command } from "./templates/render";
 import { repeatLast, send } from "./templates/runner";
-import { display, displayWarning, getConfig } from "./utils";
+import { display, displayWarning, getConfig, getProviderConfigValue } from "./utils";
 
 // key is, e.g., "OpenAI Official.temperature"
 export const getConfiguredValue = (key: string, fallback = null) => {
   const [provider, property] = key.split(".");
-  // @ts-expect-error Chill out, TypeScript.
-  return ExtensionState.get(key) ?? providers?.[provider]?.defaults?.[property] ?? providers?.[provider]?.defaults?.completionParams?.[property] ?? fallback;
-};
-
-export const getCurrentProviderDefaultCompletionParams = () => {
-  const provider = ExtensionState.get("current-provider") as keyof typeof providers;
-
-  return {
-    ...providers?.[provider]?.defaults?.completionParams,
-  };
+  return getProviderConfigValue(provider, property) ?? fallback;
 };
 
 export class ConfigViewProvider implements vscode.WebviewViewProvider {
@@ -67,12 +58,10 @@ export class ConfigViewProvider implements vscode.WebviewViewProvider {
             Object.keys(defaults).forEach((key) => {
               if (key === "completionParams") {
                 Object.keys(defaults.completionParams).forEach((key) => {
-                  console.log("restoring", key, defaults.completionParams[key]);
                   ExtensionState.set(`${provider}.${key}`, undefined);
                 });
                 return;
               }
-              console.log("restoring", key, defaults.completionParams[key]);
               ExtensionState.set(`${provider}.${key}`, undefined);
             });
           });
@@ -87,6 +76,11 @@ export class ConfigViewProvider implements vscode.WebviewViewProvider {
 
         case "get-formats": {
           ConfigViewProvider.postMessage({ type: "formats", value: formats });
+          break;
+        }
+
+        case "get-tokenizers": {
+          ConfigViewProvider.postMessage({ type: "tokenizers", value: tokenizers });
           break;
         }
 
@@ -135,7 +129,6 @@ export class ConfigViewProvider implements vscode.WebviewViewProvider {
 
 export class MainViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "wingman.mainView";
-  private _view?: vscode.WebviewView;
 
   constructor(private readonly _extensionPath: string, private readonly _extensionUri: vscode.Uri) {}
 
@@ -144,7 +137,6 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
-    this._view = webviewView;
 
     webviewView.onDidChangeVisibility(() => {
       if (webviewView.visible) {
@@ -307,7 +299,7 @@ export class SecondaryViewProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly _extensionPath: string, private readonly _extensionUri: vscode.Uri) {}
 
-  public static async runCommand(command: Command & { provider: keyof typeof providers; apiBaseUrl: string }) {
+  public static async runCommand(command: ReadyCommand) {
     const { provider, command: cmd } = command;
 
     if (!provider) {

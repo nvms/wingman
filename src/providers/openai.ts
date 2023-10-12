@@ -1,71 +1,78 @@
-import { ChatGPTAPI, type ChatMessage } from "chatgpt";
-import fetch from "node-fetch";
 import * as vscode from "vscode";
 
-import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { type Command } from "../templates/render";
+import { type PostableViewProvider, type Provider } from ".";
+import { Client } from "./sdks/openai";
+import { type ReadyCommand } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
-
-interface ConversationState {
-  conversationId: string;
-  parentMessageId: string;
-}
+import { getConfig, getCurrentProviderConfig, getCurrentProviderName, getSecret, getSelectionInfo } from "../utils";
 
 let lastMessage: string | undefined;
-let lastTemplate: Command | undefined;
+let lastTemplate: ReadyCommand | undefined;
 let lastSystemMessage: string | undefined;
 
-export class OpenAIProvider implements Provider {
-  viewProvider: PostableViewProvider | undefined;
-  instance: ChatGPTAPI | undefined;
-  conversationState: ConversationState = { conversationId: "", parentMessageId: "" };
-  _abort: AbortController = new AbortController();
+interface ChatMessage {
+  id: string;
+  text: string;
+  role: "user" | "system" | "assistant" | "function";
+  name?: string;
+  delta?: string;
+  detail?: any;
+  parentMessageId?: string;
+  conversationId?: string;
+}
 
-  async create(provider: PostableViewProvider, template: Command & { apiBaseUrl: string; provider: string }) {
-    const apiKey = await getSecret<string>(`${template.provider}.apiKey`, "");
+export class OpenAIProvider implements Provider {
+  _abort: AbortController = new AbortController();
+  viewProvider: PostableViewProvider | undefined;
+  instance: Client | undefined;
+  messages: any[] = [];
+
+  async create(provider: PostableViewProvider, cmd: ReadyCommand) {
     this.viewProvider = provider;
-    this.instance = new ChatGPTAPI({
-      apiKey,
-      apiBaseUrl: template.apiBaseUrl,
-      debug: false,
-      // @ts-expect-error this works just fine
-      fetch,
-      completionParams: { ...template.completionParams },
+
+    const key = await getSecret<string>(`${getCurrentProviderName()}.apiKey`, "");
+
+    this.instance = new Client({
+      apiKey: key,
+      apiUrl: String(getCurrentProviderConfig("apiBaseUrl")),
+      cmd,
     });
   }
 
-  destroy() {
-    this.instance = undefined;
-  }
+  destroy() {}
 
-  abort() {
-    this._abort.abort();
-    this._abort = new AbortController();
-  }
+  async send(message: string, systemMessage?: string, cmd?: ReadyCommand) {
+    if (this.messages.length === 0) {
+      this.messages.push({ role: "system", content: systemMessage });
+    }
 
-  async send(message: string, systemMessage?: string, template?: Command): Promise<void | ProviderResponse> {
+    this.messages.push({ role: "user", content: message });
+
     let isFollowup = false;
 
     lastMessage = message;
 
-    if (template) {
-      lastTemplate = template;
+    if (cmd) {
+      lastTemplate = cmd;
     }
-    if (!template && !lastTemplate) {
+
+    if (!cmd && !lastTemplate) {
       return;
     }
-    if (!template) {
-      template = lastTemplate!;
+
+    if (!cmd) {
+      cmd = lastTemplate!;
       isFollowup = true;
     }
 
     if (systemMessage) {
       lastSystemMessage = systemMessage;
     }
+
     if (!systemMessage && !lastSystemMessage) {
       return;
     }
+
     if (!systemMessage) {
       systemMessage = lastSystemMessage!;
     }
@@ -76,38 +83,39 @@ export class OpenAIProvider implements Provider {
       this.viewProvider?.postMessage({ type: "newChat" });
     }
 
+    const params = {
+      ...cmd.completionParams,
+      stream: true,
+      messages: this.messages,
+    };
+
     try {
       this.viewProvider?.postMessage({ type: "requestMessage", value: message });
 
       const editor = vscode.window.activeTextEditor!;
       const selection = getSelectionInfo(editor);
-
-      const response = await this.instance!.sendMessage(message, {
+      const response = await this.instance!.completeStream(params, {
+        timeoutMs: getConfig<number>("requestTimeoutMs") ?? 60 * 1000,
+        abortSignal: this._abort.signal,
         onProgress: (partialResponse: ChatMessage) => {
           if (!parentMessageId) {
             parentMessageId = partialResponse.parentMessageId;
           }
 
-          this.viewProvider?.postMessage({ type: "partialResponse", value: partialResponse });
+          this.viewProvider?.postMessage({
+            type: "partialResponse",
+            value: partialResponse,
+          });
         },
-        systemMessage,
-        timeoutMs: getConfig<number>("requestTimeoutMs") ?? 60 * 1000,
-        abortSignal: this._abort.signal,
-        ...this.conversationState,
       });
-
-      this.conversationState = {
-        conversationId: String(response.conversationId),
-        parentMessageId: response.id,
-      };
 
       this.viewProvider?.postMessage({ type: "responseFinished", value: response });
 
       if (!isFollowup) {
-        handleResponseCallbackType(template, editor, selection, response.text);
+        handleResponseCallbackType(cmd, editor, selection, response.text);
       }
     } catch (error) {
-      displayWarning(String(error));
+      console.error(error);
     }
   }
 
@@ -117,5 +125,10 @@ export class OpenAIProvider implements Provider {
     }
 
     await this.send(lastMessage, lastSystemMessage, lastTemplate);
+  }
+
+  abort() {
+    this._abort.abort();
+    this._abort = new AbortController();
   }
 }

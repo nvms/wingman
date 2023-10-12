@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 
-import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
-import { Client, type CompletionResponse, type SamplingParameters, AI_PROMPT, HUMAN_PROMPT } from "./sdks/anthropic";
-import { type Command } from "../templates/render";
+import { type PostableViewProvider, type ProviderResponse, type Provider, type formats } from ".";
+import { Client, type CompletionResponse, type SamplingParameters } from "./sdks/anthropic";
+import { type ReadyCommand, formatFirst, format } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo } from "../utils";
+import { displayWarning, getCurrentProviderConfig, getCurrentProviderName, getProviderConfigValue, getSecret, getSelectionInfo } from "../utils";
 
 let lastMessage: string | undefined;
-let lastTemplate: Command | undefined;
+let lastTemplate: ReadyCommand | undefined;
 let lastSystemMessage: string | undefined;
 
 export class AnthropicProvider implements Provider {
@@ -16,11 +16,11 @@ export class AnthropicProvider implements Provider {
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template: Command & { apiBaseUrl: string; provider: string }) {
-    const apiKey = await getSecret<string>(`${template.provider}.apiKey`, "");
+  async create(provider: PostableViewProvider, _template: ReadyCommand) {
+    const apiKey = await getSecret<string>(`${getCurrentProviderName()}.apiKey`, "");
     this.viewProvider = provider;
     this.conversationTextHistory = undefined;
-    this.instance = new Client(apiKey, { apiUrl: template.apiBaseUrl });
+    this.instance = new Client(apiKey, { apiUrl: getCurrentProviderConfig("apiBaseUrl") });
   }
 
   destroy() {
@@ -33,49 +33,56 @@ export class AnthropicProvider implements Provider {
     this._abort = new AbortController();
   }
 
-  async send(message: string, systemMessage?: string, template?: Command): Promise<void | ProviderResponse> {
+  async send(message: string, systemMessage?: string, cmd?: ReadyCommand): Promise<void | ProviderResponse> {
     let isFollowup = false;
 
     lastMessage = message;
 
-    if (template) {
-      lastTemplate = template;
+    if (cmd) {
+      lastTemplate = cmd;
     }
 
-    if (!template && !lastTemplate) {
+    if (!cmd && !lastTemplate) {
       return;
     }
 
-    if (!template) {
-      template = lastTemplate!;
+    if (!cmd) {
+      cmd = lastTemplate!;
       isFollowup = true;
     }
 
     if (systemMessage) {
       lastSystemMessage = systemMessage;
     }
+
     if (!systemMessage && !lastSystemMessage) {
       return;
     }
+
     if (!systemMessage) {
       systemMessage = lastSystemMessage!;
     }
 
     let prompt;
+
+    const fmt = getCurrentProviderConfig("format") as keyof typeof formats;
+
     if (!isFollowup) {
       this.viewProvider?.postMessage({ type: "newChat" });
       // The first message should have the system message prepended
-      prompt = `${systemMessage ?? ""}${HUMAN_PROMPT} ${message}${AI_PROMPT}`;
+      /* prompt = `${systemMessage ?? ""}${HUMAN_PROMPT} ${message}${AI_PROMPT}`; */
+      prompt = formatFirst(systemMessage, message, fmt);
     } else {
       // followups should have the conversation history prepended
-      prompt = `${this.conversationTextHistory ?? ""}${HUMAN_PROMPT} ${message}${AI_PROMPT}`;
+      /* prompt = `${this.conversationTextHistory ?? ""}${HUMAN_PROMPT} ${message}${AI_PROMPT}`; */
+      prompt = `${this.conversationTextHistory ?? ""}${format(message, fmt)}`;
     }
 
     const samplingParameters: SamplingParameters = {
-      ...template?.completionParams,
+      ...cmd?.completionParams,
       prompt,
-      temperature: template?.completionParams?.temperature ?? (getConfig("anthropic.temperature") as number),
-      model: template?.completionParams?.model ?? (getConfig("anthropic.model") as string) ?? "claude-instant-v1",
+      temperature: Number(getProviderConfigValue("Anthropic", "temperature")),
+      model: String(getProviderConfigValue("Anthropic", "model")),
     };
 
     try {
@@ -102,7 +109,7 @@ export class AnthropicProvider implements Provider {
       this.viewProvider?.postMessage({ type: "responseFinished", value: response });
 
       if (!isFollowup) {
-        handleResponseCallbackType(template, editor, selection, response.text);
+        handleResponseCallbackType(cmd, editor, selection, response.text);
       }
     } catch (error) {
       displayWarning(String(error));

@@ -1,9 +1,8 @@
 import * as vscode from "vscode";
 
-import { ExtensionState, commandMap } from "../extension";
-import { DEFAULT_PROVIDER, providers } from "../providers";
-import { getFilesForContextFormatted, getSelectionInfo } from "../utils";
-import { getConfiguredValue } from "../views";
+import { commandMap } from "../extension";
+import { formats, type providers, type tokenizers } from "../providers";
+import { getCurrentProviderCompletionParams, getCurrentProviderConfig, getCurrentProviderName, getFilesForContextFormatted, getSelectionInfo } from "../utils";
 
 const DEFAULT_PROMPT = "Elaborate, or leave blank.";
 
@@ -83,9 +82,17 @@ export interface Command {
   };
 }
 
+export interface ReadyCommand extends Command {
+  apiBaseUrl: string;
+  systemMessageTemplate: string;
+  provider: keyof typeof providers;
+  format: keyof typeof formats;
+  tokenizer: keyof typeof tokenizers;
+}
+
 export const baseCommand: Command = {
   label: "Unnamed command",
-  systemMessageTemplate: "You are a {{language}} coding assistant.",
+  systemMessageTemplate: "You are an assistant to a {{language}} programmer.",
   userMessageTemplate: "",
   callbackType: CallbackType.None,
   languageInstructions: {
@@ -375,27 +382,18 @@ export const defaultCommands: Command[] = [
  * @param commandName The name of either a builtin command or a user-defined command. (e.g. wingman.command.decompose)
  * @returns
  */
-export const buildCommandTemplate = (commandName: string): Command & { provider: keyof typeof providers; apiBaseUrl: string } => {
+export const buildCommandTemplate = (commandName: string): ReadyCommand => {
   const base = { ...baseCommand };
   const template: Command = commandMap.get(commandName) || base;
-  const provider = (ExtensionState.get("current-provider") as keyof typeof providers) ?? DEFAULT_PROVIDER;
-  const temperature = getConfiguredValue(`${provider}.temperature`, template?.completionParams?.temperature ?? 0.3);
-  const model = getConfiguredValue(`${provider}.model`, template?.completionParams?.model);
+
   const languageInstructions = { ...base.languageInstructions, ...template.languageInstructions };
   const userMessageTemplate = template.userMessageTemplate.trim();
-  const systemMessageTemplate = template.systemMessageTemplate?.trim();
-  let completionParams = { ...template.completionParams };
+  const systemMessageTemplate = String(template.systemMessageTemplate?.trim() ?? base.systemMessageTemplate);
 
-  Object.keys(providers).forEach((prov) => {
-    if (prov === provider) {
-      completionParams = {
-        ...providers[prov].defaults.completionParams,
-        ...template.completionParams,
-        model,
-        temperature,
-      };
-    }
-  });
+  const completionParams = {
+    ...getCurrentProviderCompletionParams(),
+    ...template.completionParams,
+  };
 
   return {
     ...base,
@@ -405,7 +403,19 @@ export const buildCommandTemplate = (commandName: string): Command & { provider:
     languageInstructions,
     userMessageTemplate,
     systemMessageTemplate,
-    provider,
-    apiBaseUrl: (ExtensionState.get(`${provider}.apiBaseUrl`) as string) ?? providers[provider].defaults.apiBaseUrl,
+    provider: getCurrentProviderName(),
+    apiBaseUrl: String(getCurrentProviderConfig("apiBaseUrl")),
+    format: getCurrentProviderConfig("format") as keyof typeof formats,
+    tokenizer: getCurrentProviderConfig("tokenizer") as keyof typeof tokenizers,
   };
+};
+
+export const format = (userMessage: string, fmt: keyof typeof formats) => {
+  const format = formats[fmt];
+  return format.user.replace("{user_message}", userMessage);
+};
+
+export const formatFirst = (systemMessage: string, userMessage: string, fmt: keyof typeof formats) => {
+  const format = formats[fmt];
+  return format.first.replace("{system}", format.system).replace("{user}", format.user).replace("{system_message}", systemMessage).replace("{user_message}", userMessage);
 };

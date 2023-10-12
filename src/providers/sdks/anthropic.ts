@@ -24,12 +24,9 @@ export interface CompletionResponse {
 export type OnOpen = (response: NodeFetchResponse) => void | Promise<void>;
 export type OnUpdate = (completion: CompletionResponse) => void | Promise<void>;
 
-export const HUMAN_PROMPT = "\n\nHuman:";
-export const AI_PROMPT = "\n\nAssistant:";
-
 const ANTHROPIC_SDK = "anthropic-typescript/0.4.4";
 const ANTHROPIC_VERSION = "2023-01-01";
-const DEFAULT_API_URL = "https://api.anthropic.com";
+const DEFAULT_API_URL = "https://api.anthropic.com/v1/complete";
 
 enum Event {
   Ping = "ping",
@@ -45,7 +42,7 @@ export class Client {
   }
 
   async complete(params: SamplingParameters, options?: { signal?: AbortSignal }): Promise<CompletionResponse> {
-    const response = await fetch(`${this.apiUrl}/v1/complete`, {
+    const response = await fetch(this.apiUrl, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -77,7 +74,7 @@ export class Client {
         reject(new Error("Caller aborted completeStream"));
       });
 
-      fetchEventSource(`${this.apiUrl}/v1/complete`, {
+      fetchEventSource(this.apiUrl, {
         method: "POST",
         headers: {
           Accept: "application/json",

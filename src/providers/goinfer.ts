@@ -3,9 +3,9 @@ import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
 import { Client, type InferParams, type InferResult, type StreamedMessage, DEFAULT_CTX, DEFAULT_TEMPLATE } from "./sdks/goinfer";
-import { type Command } from "../templates/render";
+import { type ReadyCommand, type Command } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, getConfig, getSecret, getSelectionInfo, llamaMaxTokens, setSecret, unsetConfig } from "../utils";
+import { displayWarning, getConfig, getCurrentProviderConfig, getSecret, getSelectionInfo, llamaMaxTokens, setSecret, unsetConfig } from "../utils";
 
 let lastMessage: string | undefined;
 let lastTemplate: Command | undefined;
@@ -17,7 +17,7 @@ export class GoinferProvider implements Provider {
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template: Command) {
+  async create(provider: PostableViewProvider, template: ReadyCommand) {
     const apiKey = await getSecret<string>("openai.apiKey", "");
 
     // If the user still uses the now deprecated openai.apiKey config, move it to the secrets store
@@ -27,9 +27,7 @@ export class GoinferProvider implements Provider {
       unsetConfig("openai.apiKey");
     }
 
-    const { apiBaseUrl } = {
-      apiBaseUrl: getConfig("openai.apiBaseUrl") as string | undefined,
-    };
+    const apiBaseUrl = String(getCurrentProviderConfig("apiBaseUrl"));
 
     this.viewProvider = provider;
     this.conversationTextHistory = undefined;
@@ -105,14 +103,9 @@ export class GoinferProvider implements Provider {
       let partialText = "";
 
       const goinferResponse: InferResult = await this.instance!.completeStream(samplingParameters, {
-        onOpen: (response) => {
-          console.log("Opened stream, HTTP status code", response.status);
-        },
         onUpdate: (partialResponse: StreamedMessage) => {
           partialText += partialResponse.content;
-          // console.log("P", partialText);
           const msg = this.toProviderResponse(partialText);
-          // console.log("MSG:", msg.text);
           this.viewProvider?.postMessage({
             type: "partialResponse",
             value: msg,

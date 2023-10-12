@@ -2,12 +2,12 @@ import * as vscode from "vscode";
 
 import { type PostableViewProvider, type ProviderResponse, type Provider } from ".";
 import { Client, DEFAULT_TEMPLATE, DEFAULT_CTX, type KoboldInferParams } from "./sdks/koboldcpp";
-import { type Command } from "../templates/render";
+import { type ReadyCommand } from "../templates/render";
 import { handleResponseCallbackType } from "../templates/runner";
-import { displayWarning, formatPrompt, getConfig, getSelectionInfo, llamaMaxTokens } from "../utils";
+import { displayWarning, formatPrompt, getSelectionInfo, llamaMaxTokens } from "../utils";
 
 let lastMessage: string | undefined;
-let lastTemplate: Command | undefined;
+let lastTemplate: ReadyCommand | undefined;
 let lastSystemMessage: string | undefined;
 
 export class KoboldcppProvider implements Provider {
@@ -16,7 +16,7 @@ export class KoboldcppProvider implements Provider {
   conversationTextHistory: string | undefined;
   _abort: AbortController = new AbortController();
 
-  async create(provider: PostableViewProvider, template: Command & { apiBaseUrl: string; provider: string }) {
+  async create(provider: PostableViewProvider, template: ReadyCommand) {
     this.viewProvider = provider;
     this.conversationTextHistory = undefined;
     this.instance = new Client("", { apiUrl: template.apiBaseUrl });
@@ -32,21 +32,21 @@ export class KoboldcppProvider implements Provider {
     this._abort = new AbortController();
   }
 
-  async send(message: string, systemMessage?: string, template?: Command): Promise<void | ProviderResponse> {
+  async send(message: string, systemMessage?: string, cmd?: ReadyCommand): Promise<void | ProviderResponse> {
     let isFollowup = false;
 
     lastMessage = message;
 
-    if (template) {
-      lastTemplate = template;
+    if (cmd) {
+      lastTemplate = cmd;
     }
 
-    if (!template && !lastTemplate) {
+    if (!cmd && !lastTemplate) {
       return;
     }
 
-    if (!template) {
-      template = lastTemplate!;
+    if (!cmd) {
+      cmd = lastTemplate!;
       isFollowup = true;
     }
 
@@ -70,11 +70,10 @@ export class KoboldcppProvider implements Provider {
       prompt = `${this.conversationTextHistory ?? ""}${message}`;
     }
 
-    const modelTemplate = template?.completionParams?.template ?? DEFAULT_TEMPLATE;
+    const modelTemplate = cmd?.completionParams?.template ?? DEFAULT_TEMPLATE;
     const samplingParameters: KoboldInferParams = {
       prompt: formatPrompt(prompt, modelTemplate, systemMessage),
-      ...template?.completionParams,
-      temperature: template?.completionParams?.temperature ?? (getConfig("openai.temperature") as number),
+      ...cmd?.completionParams,
       max_length: llamaMaxTokens(prompt, DEFAULT_CTX),
     };
 
@@ -86,14 +85,9 @@ export class KoboldcppProvider implements Provider {
       let partialText = "";
 
       await this.instance!.completeStream(samplingParameters, {
-        onOpen: (response) => {
-          console.log("Opened stream, HTTP status code", response.status);
-        },
         onUpdate: (partialResponse: string) => {
           partialText += partialResponse;
-          // console.log("P", partialText);
           const msg = this.toProviderResponse(partialText);
-          // console.log("MSG:", msg.text);
           this.viewProvider?.postMessage({
             type: "partialResponse",
             value: msg,
@@ -110,7 +104,7 @@ export class KoboldcppProvider implements Provider {
       this.viewProvider?.postMessage({ type: "responseFinished", value: response });
 
       if (!isFollowup) {
-        handleResponseCallbackType(template, editor, selection, response.text);
+        handleResponseCallbackType(cmd, editor, selection, response.text);
       }
     } catch (error) {
       displayWarning(String(error));

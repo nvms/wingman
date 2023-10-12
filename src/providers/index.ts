@@ -4,7 +4,7 @@ import { AnthropicProvider } from "./anthropic";
 import { GoinferProvider } from "./goinfer";
 import { KoboldcppProvider } from "./koboldcpp";
 import { OpenAIProvider } from "./openai";
-import { type Command } from "../templates/render";
+import { type ReadyCommand } from "../templates/render";
 import { GPTTokenizer } from "../tokenizers/gpt";
 import { LlamaTokenizer } from "../tokenizers/llama";
 
@@ -33,9 +33,9 @@ export interface Provider {
    * @param options
    * @param provider
    */
-  create(provider: vscode.WebviewViewProvider, template: Command & { apiBaseUrl: string; provider: string }): Promise<void>;
+  create(provider: vscode.WebviewViewProvider, cmd: ReadyCommand): Promise<void>;
   destroy(): void;
-  send: (message: string, systemMessage?: string, template?: Command) => Promise<any>;
+  send: (message: string, systemMessage?: string, cmd?: ReadyCommand) => Promise<any>;
   repeatLast: () => Promise<void>;
   abort: () => void;
 }
@@ -60,9 +60,9 @@ export const formats: { [key: string]: Format } = {
   },
   Anthropic: {
     system: "{system_message}",
-    user: "### Human: {user_message}\n\n### Assistant:",
-    first: "{system}\n\n{user}",
-    stops: ["### Human:"],
+    user: "\n\nHuman: {user_message}\n\nAssistant:",
+    first: "{system}{user}",
+    stops: ["Human:"],
   },
   Alpaca: {
     system: "{system_message}",
@@ -101,9 +101,9 @@ export const providers = {
   "OpenAI Official": {
     provider: OpenAIProvider,
     defaults: {
-      apiBaseUrl: "https://api.openai.com/v1",
+      apiBaseUrl: "https://api.openai.com/v1/chat/completions",
       format: "OpenAI Official",
-      tokenizer: "gpt-tokenizer",
+      tokenizer: "gpt",
       completionParams: {
         n: 1,
         model: "gpt-3.5-turbo",
@@ -114,9 +114,9 @@ export const providers = {
   "OpenAI Proxy": {
     provider: OpenAIProvider,
     defaults: {
-      apiBaseUrl: "http://localhost:8000",
+      apiBaseUrl: "http://localhost:8000/v1/chat/completions",
       format: "Alpaca",
-      tokenizer: "llama-tokenizer",
+      tokenizer: "llama",
       completionParams: {
         n: 1,
         model: "gpt-3.5-turbo",
@@ -128,11 +128,12 @@ export const providers = {
   Anthropic: {
     provider: AnthropicProvider,
     defaults: {
-      apiBaseUrl: "http://localhost:8000",
+      apiBaseUrl: "https://api.anthropic.com/v1/complete",
       format: "Anthropic",
+      tokenizer: "llama",
       completionParams: {
-        maxTokensToSample: 4096,
-        topK: 5,
+        max_tokens_to_sample: 4096,
+        top_k: 5,
         model: "claude-instant-v1",
         temperature: 0.3,
       },
@@ -143,7 +144,7 @@ export const providers = {
     defaults: {
       apiBaseUrl: "http://localhost:8000",
       format: "Alpaca",
-      tokenizer: "llama-tokenizer",
+      tokenizer: "llama",
       completionParams: {
         model: "wizard-mega-13B-ggml.bin",
         temperature: 0.3,
@@ -155,7 +156,7 @@ export const providers = {
     defaults: {
       apiBaseUrl: "http://localhost:8000",
       format: "Llama 2",
-      tokenizer: "llama-tokenizer",
+      tokenizer: "llama",
       completionParams: {
         model: "wizard-mega-13B-ggml.bin",
         temperature: 0.3,
@@ -168,7 +169,7 @@ export const providers = {
     defaults: {
       apiBaseUrl: "http://localhost:5143",
       format: "Alpaca",
-      tokenizer: "llama-tokenizer",
+      tokenizer: "llama",
       completionParams: {
         model: "codellama-7b-instruct.Q4_K_M.gguf",
         temperature: 0.3,
@@ -180,7 +181,7 @@ export const providers = {
     defaults: {
       apiBaseUrl: "http://localhost:8000",
       format: "Alpaca",
-      tokenizer: "llama-tokenizer",
+      tokenizer: "llama",
       completionParams: {
         temperature: 0.8,
       },
@@ -189,15 +190,15 @@ export const providers = {
 };
 
 export const tokenizers = {
-  "gpt-tokenizer": {
+  gpt: {
     tokenizer: GPTTokenizer,
     description: "Use this with OpenAI GPT family models",
   },
-  "llama-tokenizer": {
+  llama: {
     tokenizer: LlamaTokenizer,
     description: "Use this with llama family models",
   },
-  "anthropic-tokenizer": {
+  anthropic: {
     // This tokenizer relies on tiktoken_bg.wasm, which won't work in a
     // vscode extension. We'll probably need to fork this or find an alternative.
     /* tokenizer: AnthropicTokenizer, */

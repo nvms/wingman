@@ -2,10 +2,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 import Glob from "fast-glob";
+// @ts-expect-error Ignore missing type declarations
 import llamaTokenizer from "llama-tokenizer-js";
 import * as vscode from "vscode";
 
 import { ExtensionState } from "./extension";
+import { DEFAULT_PROVIDER, providers } from "./providers";
 import { type Command } from "./templates/render";
 
 export function getSelectionInfo(editor: vscode.TextEditor): { selectedText: string; startLine: number; endLine: number } {
@@ -240,4 +242,51 @@ export function llamaMaxTokens(prompt: string, ctx: number) {
 
 export function formatPrompt(prompt: string, template: string, systemMessage: string) {
   return template.replace("{system}", systemMessage).replace("{prompt}", prompt);
+}
+
+export function getCurrentProviderName(): keyof typeof providers {
+  return (ExtensionState.get("current-provider") as keyof typeof providers) ?? DEFAULT_PROVIDER;
+}
+
+export function getProviderConfigValue(provider: string, key: string): string | undefined {
+  const value = ExtensionState.get(`${provider}.${key}`) as any;
+  if (value) return value;
+
+  // @ts-expect-error ...
+  if (providers[provider].defaults[key]) {
+    // @ts-expect-error ...
+    return providers[provider].defaults[key];
+  }
+
+  // @ts-expect-error ...
+  if (providers[provider].defaults.completionParams[key]) {
+    // @ts-expect-error ...
+    return providers[provider].defaults.completionParams[key];
+  }
+
+  return undefined;
+}
+
+export function getCurrentProviderCompletionParams(): object | undefined {
+  if (providers[getCurrentProviderName()].defaults.completionParams) {
+    return providers[getCurrentProviderName()].defaults.completionParams;
+  }
+
+  return undefined;
+}
+
+/**
+ * Get a value from, in this order:
+ * 1. Stored extension state (driven by user changes).
+ * 2. Sensible provider defaults.
+ * @example
+ *
+ * ```ts
+ * const format = getCurrentProviderConfig("format");
+ * const tokenizer = getCurrentProviderConfig("tokenizer");
+ * const model = getCurrentProviderConfig("model");
+ * ```
+ */
+export function getCurrentProviderConfig(key: string) {
+  return getProviderConfigValue(getCurrentProviderName(), key);
 }

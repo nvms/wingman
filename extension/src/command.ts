@@ -7,6 +7,7 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
   const editor = vscode.window.activeTextEditor;
   const readable = getHumanReadableLanguageName(languageid(editor), extension(editor));
   const selection = getSelectionInfo(editor);
+  const completionParams = getActiveModeActivePresetKeyValue("completionParams") as Preset["completionParams"];
 
   const substitute = async (text: string) => {
     text = text.replaceAll("{{ft}}", languageid(editor));
@@ -53,11 +54,10 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
         if (matchGroups && matchGroups.length === 3) {
           const paramName = matchGroups[1];
           const paramValue = matchGroups[2];
-          const activePresetCompletionParameters = getActiveModeActivePresetKeyValue("completionParams") as Preset["completionParams"];
 
-          // If the active preset has a completion parameter with this name, overwrite it with this value.
-          if (Object.hasOwnProperty.call(activePresetCompletionParameters, paramName)) {
-            activePresetCompletionParameters[paramName] = paramValue;
+          if (Object.hasOwnProperty.call(completionParams, paramName)) {
+            const numberRegex = /^[0-9]+(\.[0-9]+)?$/;
+            completionParams[paramName] = numberRegex.test(paramValue) ? Number(paramValue) : paramValue;
           }
 
           text = text.replace(match, "");
@@ -74,5 +74,5 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
   const message = await substitute(prompt.message);
   const system = await substitute(prompt.system ?? getActiveModeActivePresetKeyValue("system") as Preset["system"]);
 
-  return { message, system };
+  return { message, system, completionParams };
 }

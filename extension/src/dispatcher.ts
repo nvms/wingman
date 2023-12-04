@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatEvents, InsertionMethod, PromptDefinition } from "../../shared";
+import { ChatEvents, InsertionMethod, PromptDefinition, Preset } from "../../shared";
 import { createPrompt } from "./command";
 import { providers } from "./providers/common";
 import { OpenAIProvider } from "./providers/openai";
@@ -145,7 +145,7 @@ export type PreparedCommand = {
   system: string;
   insertionMethod: InsertionMethod;
   url: string;
-  completionParams: Record<string, string | number | boolean | any[]>;
+  completionParams: Preset["completionParams"];
 };
 
 const prepareCommand = async (prompt: PromptDefinition & { promptId: string }): Promise<PreparedCommand> => {
@@ -161,6 +161,5 @@ const prepareCommand = async (prompt: PromptDefinition & { promptId: string }): 
     ...substituted,
     insertionMethod,
     url: getActiveModeActivePresetKeyValue("url") as string,
-    completionParams: getActiveModeActivePresetKeyValue("completionParams") as Record<string, string | number | boolean>,
   };
 };

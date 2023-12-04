@@ -35,9 +35,9 @@ It's really not that complicated.
 
 A UI is included for prompt management.
 
-Wingman makes your prompts dynamic with support for dynamic placeholders.
+Wingman makes your prompts dynamic with support for placeholders.
 
-Supported dynamic placeholders:
+Current placeholders:
 
 - `{{selection}}` is replaced with the selected text.
 - `{{ft}}` is replaced with the VSCode language identifier (`go`, `typescript`)
@@ -56,7 +56,7 @@ Supported dynamic placeholders:
 
 A UI is included for preset management.
 
-A preset is a provider configuration. It defines the system message, the provider, the API URL for the provider, and all completion parameters for that provider. You can create as many presets as you want and switch between them whenever.
+A preset is a provider configuration. It defines the system message, the provider, the API URL, and completion parameters. You can create as many presets as you want and switch between them whenever.
 
 <center>
 
@@ -68,7 +68,7 @@ A preset is a provider configuration. It defines the system message, the provide
 
 A UI is included for preset management.
 
-Modes enhance the prompt and preset management experience. A mode is a collection of presets and prompts. Built-in modes are "Programming", "Creative writing", and "Technical writing".
+Modes enhance the prompt and preset management experience. A mode is a collection of presets and prompts. Three built-in modes are provided as examples: "Programming", "Creative writing", and "Technical writing", but you are encouraged to create your own.
 
 Modes can have presets assigned to them. Here's why this is useful:
 

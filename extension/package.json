@@ -1,7 +1,7 @@
 {
   "name": "ai-wingman",
   "displayName": "Wingman",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "Your pair programming wingman. Supports OpenAI, Anthropic, or any LLM on your local inference server.",
   "categories": [
     "Other"

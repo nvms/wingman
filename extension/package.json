@@ -1,8 +1,8 @@
 {
-  "name": "wingman",
+  "name": "ai-wingman",
   "displayName": "Wingman",
   "version": "2.0.3",
-  "description": "",
+  "description": "Your pair programming wingman, powered by ChatGPT, Claude, or your local LLaMa.",
   "categories": [
     "Other"
   ],
@@ -10,12 +10,30 @@
     "ai",
     "chat",
     "gpt",
+    "gpt3",
+    "gpt4",
     "llm",
     "chatgpt",
-    "claude"
+    "chatgpt4",
+    "chatgpt3",
+    "claude",
+    "openai",
+    "anthropic",
+    "refactoring",
+    "debugging",
+    "generation",
+    "copilot",
+    "wingman"
   ],
+  "homepage": "https://github.com/nvms/wingman/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nvms/wingman"
+  },
   "license": "ISC",
-  "author": "",
+  "author": {
+    "name": "nvms"
+  },
   "publisher": "nvms",
   "type": "commonjs",
   "main": "dist/extension.umd.js",
@@ -74,5 +92,12 @@
   "engines": {
     "vscode": "^1.84.2"
   },
-  "icon": "assets/GameIconsFeatheredWing.png"
+  "icon": "assets/GameIconsFeatheredWing.png",
+  "badges": [
+    {
+      "description": "PRs Welcome",
+      "url": "https://img.shields.io/badge/PRs-welcome-brightgreen.svg",
+      "href": "https://github.com/nvms/wingman"
+    }
+  ]
 }

@@ -102,6 +102,10 @@ export class OpenAIClient {
             abortController.abort();
             return reject(error);
           },
+          onclose: () => {
+            result.text = result.text.trim();
+            return resolve(result);
+          },
         },
       );
     });

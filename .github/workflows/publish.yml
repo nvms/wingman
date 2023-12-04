@@ -17,10 +17,13 @@ jobs:
         with:
           node-version: 21.x
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install extension dependencies
+        run: cd extension && npm install
+
+      - name: Install webview dependencies
+        run: cd webview && npm install
 
       - name: Publish to Visual Studio Marketplace
         run: npm run publish
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}

@@ -113,24 +113,26 @@
             </select>
           </div>
 
-          <div class="flex-1 flex flex-col">
+          <!-- <div class="flex-1 flex flex-col">
             <label for="tokenizer">Tokenizer</label>
             <select bind:value={presetClone.tokenizer} name="tokenizer">
               {#each tokenizers as tokenizer}
                 <option value={tokenizer}>{tokenizer}</option>
               {/each}
             </select>
-          </div>
+          </div> -->
 
-          <div class="flex-1 flex flex-col">
+          <!-- <div class="flex-1 flex flex-col">
             <label for="format">Format</label>
             <select bind:value={presetClone.format} name="format">
               {#each formats as format}
                 <option value={format}>{format}</option>
               {/each}
             </select>
-          </div>
+          </div> -->
+
           <!-- <pre>{JSON.stringify(presetClone, null, 2)}</pre> -->
+
         </div>
         <div class="flex-1 space-y-2">
           {#each Object.entries(presetClone.completionParams) as [key, value]}

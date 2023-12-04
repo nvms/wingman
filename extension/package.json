@@ -2,7 +2,7 @@
   "name": "ai-wingman",
   "displayName": "Wingman",
   "version": "2.0.11",
-  "description": "Your pair programming wingman, powered by ChatGPT, Claude, or your local LLaMa.",
+  "description": "Your pair programming wingman. Supports OpenAI, Anthropic, or any LLM on your local inference server.",
   "categories": [
     "Other"
   ],

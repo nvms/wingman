@@ -90,11 +90,11 @@ export const promptSetProviderKey = async (provider: string) => {
 export function activate(context: vscode.ExtensionContext) {
   State.create(context);
 
-  // const stateCreated = State.get(stateKeys.stateCreated());
+  const stateCreated = State.get(stateKeys.stateCreated());
 
-  // if (!stateCreated) {
+  if (!stateCreated) {
     createState();
-  // }
+  }
 
   // Then decide to show the welcome wizard.
   // const showWizard = State.get(stateKeys.welcomeWizard());

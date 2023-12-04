@@ -5968,7 +5968,10 @@ var promptSetProviderKey = async (provider) => {
 };
 function activate(context) {
   State.create(context);
-  createState();
+  const stateCreated = State.get(stateKeys.stateCreated());
+  if (!stateCreated) {
+    createState();
+  }
   try {
     const setApiKeyCommand = vscode6.commands.registerCommand("wingman.setApiKey", async () => {
       const selectedProvider = await vscode6.window.showQuickPick(

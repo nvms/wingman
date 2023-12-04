@@ -17,8 +17,11 @@ jobs:
         with:
           node-version: 21.x
 
-      - name: Install dependencies
-        run: cd extension && npm install
+      - name: Build webview
+        run: cd webview && npm install && npm run build
+
+      - name: Build extension
+        run: cd extension && npm install && npm run build
 
       - name: Copy README so it gets published
         run: cp README.md extension

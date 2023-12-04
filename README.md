@@ -87,7 +87,7 @@ Switching between modes automaticlaly activates the last preset used in that mod
 # Development
 
 1. In `/webview`: `npm run dev`. This is a Svelte project that outputs to `/extension/dist`.
-2. In `/extension`: `npm run esbuild:watch`
+2. In `/extension`: `npm run build:watch`
 3. Run the extension using the debug panel.
 
 # What's next?

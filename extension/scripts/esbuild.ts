@@ -12,18 +12,18 @@ const options: BuildOptions = {
   entryPoints: ["src/extension.ts"],
   bundle: true,
   metafile: process.argv.includes("--metafile"),
-  // outdir: "./dist",
-  outfile: "./dist/extension.umd.js",
+  outfile: process.argv.includes("--browser") ? "./dist/extension.browser.js" : "./dist/extension.umd.js",
   external: [
     "vscode",
-    "typescript", // vue-component-meta
+    "typescript",
   ],
   format: "cjs",
-  platform: "node",
+  platform: process.argv.includes("--browser") ? "browser" : "node",
   target: "ESNext",
   tsconfig: "./tsconfig.json",
   sourcemap: process.argv.includes("--sourcemap"),
-  minify: process.argv.includes("--minify"),
+  // minify: process.argv.includes("--minify"),
+  minify: true,
   plugins: [
     {
       name: "umd2esm",

@@ -37,9 +37,11 @@
   "publisher": "nvms",
   "type": "commonjs",
   "main": "dist/extension.umd.js",
+  "browser": "dist/extension.browser.js",
   "scripts": {
     "esbuild": "tsx scripts/esbuild.ts",
     "esbuild:watch": "tsx scripts/esbuild.ts --watch",
+    "build:browser": "tsx scripts/esbuild.ts --browser",
     "package": "vsce package --no-dependencies",
     "publish": "vsce publish --no-dependencies",
     "release": "bumpp -c \"Release v%s\" package.json"

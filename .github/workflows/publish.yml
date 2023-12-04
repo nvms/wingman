@@ -23,6 +23,9 @@ jobs:
       - name: Copy README so it gets published
         run: cp README.md extension
 
+      - name: Copy LICENSE so it gets published
+        run: cp LICENSE.md extension
+
       - name: Publish to Visual Studio Marketplace
         run: cd extension && npm run publish
         env:

@@ -17,13 +17,7 @@ jobs:
         with:
           node-version: 21.x
 
-      - name: Install extension dependencies
-        run: cd extension && npm install
-
-      - name: Install webview dependencies
-        run: cd webview && npm install
-
       - name: Publish to Visual Studio Marketplace
-        run: npm run publish
+        run: cd extension && npm run publish
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}

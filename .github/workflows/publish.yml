@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 21.x
 
+      - name: Install dependencies
+        run: cd extension && npm install
+
       - name: Publish to Visual Studio Marketplace
         run: cd extension && npm run publish
         env:

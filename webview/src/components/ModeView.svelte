@@ -135,15 +135,12 @@
 
   const getHistory = () => {
     extComm.GET("chatHistory").then((history) => {
-      if (history && history.length) {
-        conversationHistory = history;
+      conversationHistory = history;
 
-        // Go through the history and turn the `archived` property back into a Date object.
-        conversationHistory = conversationHistory.map((conversation) => {
-          conversation.archived = new Date(conversation.archived);
-          return conversation;
-        });
-      }
+      conversationHistory = conversationHistory.map((conversation) => {
+        conversation.archived = new Date(conversation.archived);
+        return conversation;
+      });
     });
   };
 

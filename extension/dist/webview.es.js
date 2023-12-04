@@ -54752,7 +54752,7 @@ PROMPT
     t(7, I = !1), t(9, d = !1), u.focus();
   }), $ = () => {
     oe.GET("chatHistory").then((L) => {
-      L && L.length && (t(12, C = L), t(12, C = C.map((G) => (G.archived = new Date(G.archived), G))));
+      t(12, C = L), t(12, C = C.map((G) => (G.archived = new Date(G.archived), G)));
     });
   };
   mt.subscribe(() => {

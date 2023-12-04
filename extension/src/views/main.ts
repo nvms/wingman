@@ -125,7 +125,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 break;
               }
               case "chatHistory": {
-                const history = State.getWorkspace(stateKeys.activeModeChatHistory());
+                const history = State.getWorkspace(stateKeys.activeModeChatHistory()) ?? [];
                 webviewView.webview.postMessage({ id, content: history });
                 break;
               }

@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: cd extension && npm install
 
+      - name: Copy README so it gets published
+        run: cp README.md extension
+
       - name: Publish to Visual Studio Marketplace
         run: cd extension && npm run publish
         env:

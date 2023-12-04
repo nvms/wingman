@@ -1,4 +1,4 @@
-A highly flexible, customizable, and powerful extension for Visual Studio Code.
+A highly flexible, customizable, and powerful extension for working with LLMs within Visual Studio Code.
 
 Highlights:
 

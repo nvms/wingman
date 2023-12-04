@@ -147,13 +147,13 @@
                   type="number"
                   step="any"
                   bind:value={presetClone.completionParams[key]}
-                  name="url"
+                  name={key}
                 />
               {:else if typeof value === "boolean"}
                 <input
                   type="checkbox"
                   bind:checked={presetClone.completionParams[key]}
-                  name="url"
+                  name={key}
                 />
               {:else if Array.isArray(value)}
                 <TagInput

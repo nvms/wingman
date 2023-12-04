@@ -52038,8 +52038,8 @@ function bT(r) {
   );
 }
 function RT(r) {
-  let e, t, n;
-  function a() {
+  let e, t, n, a;
+  function i() {
     r[17].call(
       e,
       /*key*/
@@ -52048,17 +52048,20 @@ function RT(r) {
   }
   return {
     c() {
-      e = b("input"), S(e, "type", "checkbox"), S(e, "name", "url");
+      e = b("input"), S(e, "type", "checkbox"), S(e, "name", t = /*key*/
+      r[22]);
     },
-    m(i, o) {
-      q(i, e, o), e.checked = /*presetClone*/
+    m(o, s) {
+      q(o, e, s), e.checked = /*presetClone*/
       r[1].completionParams[
         /*key*/
         r[22]
-      ], t || (n = Te(e, "change", a), t = !0);
+      ], n || (a = Te(e, "change", i), n = !0);
     },
-    p(i, o) {
-      r = i, o[0] & /*presetClone, providers*/
+    p(o, s) {
+      r = o, s[0] & /*presetClone, providers*/
+      6 && t !== (t = /*key*/
+      r[22]) && S(e, "name", t), s[0] & /*presetClone, providers*/
       6 && (e.checked = /*presetClone*/
       r[1].completionParams[
         /*key*/
@@ -52067,14 +52070,14 @@ function RT(r) {
     },
     i: Ie,
     o: Ie,
-    d(i) {
-      i && Y(e), t = !1, n();
+    d(o) {
+      o && Y(e), n = !1, a();
     }
   };
 }
 function CT(r) {
-  let e, t, n;
-  function a() {
+  let e, t, n, a;
+  function i() {
     r[16].call(
       e,
       /*key*/
@@ -52083,20 +52086,23 @@ function CT(r) {
   }
   return {
     c() {
-      e = b("input"), S(e, "type", "number"), S(e, "step", "any"), S(e, "name", "url"), S(e, "class", "svelte-16936go");
+      e = b("input"), S(e, "type", "number"), S(e, "step", "any"), S(e, "name", t = /*key*/
+      r[22]), S(e, "class", "svelte-16936go");
     },
-    m(i, o) {
-      q(i, e, o), fe(
+    m(o, s) {
+      q(o, e, s), fe(
         e,
         /*presetClone*/
         r[1].completionParams[
           /*key*/
           r[22]
         ]
-      ), t || (n = Te(e, "input", a), t = !0);
+      ), n || (a = Te(e, "input", i), n = !0);
     },
-    p(i, o) {
-      r = i, o[0] & /*presetClone, providers*/
+    p(o, s) {
+      r = o, s[0] & /*presetClone, providers*/
+      6 && t !== (t = /*key*/
+      r[22]) && S(e, "name", t), s[0] & /*presetClone, providers*/
       6 && Ld(e.value) !== /*presetClone*/
       r[1].completionParams[
         /*key*/
@@ -52112,8 +52118,8 @@ function CT(r) {
     },
     i: Ie,
     o: Ie,
-    d(i) {
-      i && Y(e), t = !1, n();
+    d(o) {
+      o && Y(e), n = !1, a();
     }
   };
 }

@@ -57,6 +57,18 @@ export const createDefaultPresetsForAllModes = () => {
           completionParams: {
             ...getProviderCompletionParamDefaults("Anthropic") as any,
           },
+        },
+        {
+          id: generateId(),
+          name: "LM Studio",
+          provider: "OpenAI",
+          format: "Anthropic",
+          tokenizer: "OpenAI",
+          url: "http://localhost:1234/v1/chat/completions",
+          system: systems.get(mode.id),
+          completionParams: {
+            ...getProviderCompletionParamDefaults("OpenAI") as any,
+          },
         }
       ] as Preset[]);
       State.set(`${mode.id}-activePreset`, State.get(`${mode.id}-presets`)[0]);

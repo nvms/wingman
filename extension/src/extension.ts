@@ -3,7 +3,7 @@ import { Preset, defaultModes, generateId, systems } from "../../shared";
 import { getProviderCompletionParamDefaults, providers } from "./providers/common";
 import { State } from "./state";
 import { createPromptMap, getModes, stateKeys } from "./utils";
-import { MainViewProvider, sendNotificationError } from "./views/main";
+import { MainViewProvider } from "./views/main";
 
 export const createDefaultPresetsForAllModes = () => {
   const modes = getModes();
@@ -60,6 +60,19 @@ export const createDefaultPresetsForAllModes = () => {
         },
         {
           id: generateId(),
+          name: "Anthropic (claude-2.1)",
+          provider: "Anthropic",
+          format: "Anthropic",
+          tokenizer: "Anthropic",
+          url: "https://api.anthropic.com/v1/complete",
+          system: systems.get(mode.id),
+          completionParams: {
+            ...getProviderCompletionParamDefaults("Anthropic") as any,
+            model: "claude-2.1",
+          },
+        },
+        {
+          id: generateId(),
           name: "LM Studio",
           provider: "OpenAI",
           format: "OpenAI",
@@ -108,7 +121,6 @@ export function activate(context: vscode.ExtensionContext) {
     createState();
   }
 
-  // Then decide to show the welcome wizard.
   // const showWizard = State.get(stateKeys.welcomeWizard());
 
   // if (showWizard === undefined) {

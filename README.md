@@ -68,7 +68,7 @@ A preset is a provider configuration. It defines the system message, the provide
 
 A UI is included for preset management.
 
-Modes enhance the prompt and preset management experience. Sort your prompts into modes based on your current context, such as documentation or development. Built-in modes are "Programming", "Creative writing", and "Technical writing".
+Modes enhance the prompt and preset management experience. A mode is a collection of presets and modes. Activating a mode (by selecting it in the UI) will activate the default preset for that mode. Built-in modes are "Programming", "Creative writing", and "Technical writing".
 
 Modes can have presets assigned to them. Here's why this is useful:
 

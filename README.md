@@ -31,11 +31,11 @@ It's really not that complicated.
 - Presets
 - Modes
 
-# Prompts
+## Prompts
 
 A UI is included for prompt management.
 
-Wingman makes your prompts dynamic with support for dyanmic placeholders.
+Wingman makes your prompts dynamic with support for dynamic placeholders.
 
 Supported dynamic placeholders:
 
@@ -52,7 +52,7 @@ Supported dynamic placeholders:
 
 </center>
 
-# Presets
+## Presets
 
 A UI is included for preset management.
 
@@ -64,7 +64,7 @@ A preset is a provider configuration. It defines the system message, the provide
 
 </center>
 
-# Modes
+## Modes
 
 A UI is included for preset management.
 
@@ -73,10 +73,10 @@ Modes enhance the prompt and preset management experience. A mode is a collectio
 Modes can have presets assigned to them. Here's why this is useful:
 
 - Your "Programming" mode can use your GPT-4-Turbo preset.
-- Your "Creativing writing" mode can use your Anthropic Claude preset.
+- Your "Creative writing" mode can use your Anthropic Claude preset.
 - And so on, and so forth.
 
-Switching between modes automaticlaly activates the last preset used in that mode.
+Switching between modes automatically activates the last preset used in that mode.
 
 <center>
 
@@ -97,7 +97,7 @@ Switching between modes automaticlaly activates the last preset used in that mod
 | Github placeholders   | `{{gh_pr_comments}}`                                        | Soon  |
 |                       | `{{gh_pr_diff}}`                                            | Soon  |
 | Code review           | PR review, comment generation                               | Soon  |
-|                       | PR review, provide solutions driven by commentor suggestion | Soon  |
+|                       | PR review, provide solutions driven by commenter suggestion | Soon  |
 | Personalities         | Simple personality management UI.                           | Later |
 |                       | `{{personality:me}}` `{{personality:sarcastic}}`            | Later |
 | Import/export prompts | Export prompts to JSON                                      | Soon  |

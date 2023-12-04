@@ -62,7 +62,7 @@ export const createDefaultPresetsForAllModes = () => {
           id: generateId(),
           name: "LM Studio",
           provider: "OpenAI",
-          format: "Anthropic",
+          format: "OpenAI",
           tokenizer: "OpenAI",
           url: "http://localhost:1234/v1/chat/completions",
           system: systems.get(mode.id),

@@ -92,7 +92,7 @@
   "engines": {
     "vscode": "^1.84.2"
   },
-  "icon": "assets/GameIconsFeatheredWing.png",
+  "icon": "assets/logo.png",
   "badges": [
     {
       "description": "PRs Welcome",

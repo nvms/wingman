@@ -66,7 +66,7 @@
       </div>
       <div>
         {#if !isCreate}
-          <Button variant="secondary" on:click={deleteMode}>Delete</Button>
+          <Button variant="danger" on:click={deleteMode}>Delete</Button>
         {/if}
       </div>
     </div>

@@ -53447,7 +53447,7 @@ function ed(r) {
   let e, t;
   return e = new Ve({
     props: {
-      variant: "secondary",
+      variant: "danger",
       $$slots: { default: [jT] },
       $$scope: { ctx: r }
     }

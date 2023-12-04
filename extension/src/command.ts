@@ -9,8 +9,8 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
   const selection = getSelectionInfo(editor);
 
   const substitute = async (text: string) => {
-    text = text.replace("{{ft}}", languageid(editor));
-    text = text.replace("{{language}}", readable);
+    text = text.replaceAll("{{ft}}", languageid(editor));
+    text = text.replaceAll("{{language}}", readable);
 
     if (text.includes("{{input}}")) {
       const input = await vscode.window.showInputBox({
@@ -67,8 +67,8 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
 
     const inst = languageInstructions[languageid(editor)] ?? "";
 
-    text = text.replace("{{language_instructions}}", inst);
-    return text.replace("{{selection}}", selection.selectedText).trim();
+    text = text.replaceAll("{{language_instructions}}", inst);
+    return text.replaceAll("{{selection}}", selection.selectedText).trim();
   };
 
   const message = await substitute(prompt.message);

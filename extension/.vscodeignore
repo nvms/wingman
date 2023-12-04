@@ -1,0 +1,9 @@
+src
+scripts
+*.vsix
+.github
+.vscode
+tsconfig.*
+vite.config.*
+package-lock.json
+node_modules

@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  @apply w-full h-full p-0 m-0;
+  /* @apply bg-transparent; */
+  background: var(--vscode-panel-background);
+  color: var(--vscode-foreground);
+}
+
+html {
+  @apply border-t;
+  border-color: var(--vscode-panel-border);
+}
+
+.border-panel {
+  border-color: var(--vscode-panel-border);
+}
+
+.bg-panel {
+  background: var(--vscode-panel-background);
+}
+
+.bg-activity-bar {
+  background: var(--vscode-activityBar-background);
+}
+
+.hljs {
+  @apply text-sm;
+  @apply rounded-md flex justify-start self-start leading-none bg-neutral-500/10;
+}
+
+code {
+  @apply bg-neutral-500/10 opacity-80 rounded-md;
+  @apply border border-neutral-500/40;
+  @apply py-0.5 px-1;
+}
+
+[data-actions] {
+  /* @apply flex justify-between pb-4 pt-2 overflow-x-auto space-x-1; */
+  @apply flex justify-between overflow-x-auto space-x-1 rounded-md bg-neutral-500/10 border border-neutral-500/40 p-2 my-2;
+}
+
+.action-button {
+  @apply px-2 py-1 rounded-md text-xs;
+  @apply bg-neutral-500/20;
+  @apply border border-neutral-500/40;
+  @apply hover:bg-neutral-500/30;
+  @apply text-neutral-500;
+  @apply transition-colors;
+}
+
+.message {
+  ul {
+    margin-left: 0;
+  }
+
+  li {
+    list-style-position: outside;
+  }
+}

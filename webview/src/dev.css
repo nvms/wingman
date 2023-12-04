@@ -1,0 +1,15 @@
+/* https://code.visualstudio.com/api/references/theme-color */
+
+* {
+  --vscode-foreground: #E9ECEF;
+  --vscode-panel-border: #707682;
+  --vscode-panel-background: #05080C;
+  --vscode-activityBar-background: #0D0F11;
+  --vscode-list-hoverBackground: #13171C;
+  --vscode-activityBar-activeBorder: #F39275;
+  --vscode-inputOption-activeBorder: #D89124;
+}
+
+html {
+  font-size: 14px;
+}

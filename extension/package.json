@@ -44,7 +44,7 @@
     "esbuild:browser": "tsx scripts/esbuild.ts --browser",
     "package": "vsce package --no-dependencies",
     "publish": "vsce publish --no-dependencies",
-    "release": "npm run esbuild && npm run esbuild:browser && bumpp -c \"Release v%s\" package.json"
+    "release": "bumpp -c \"Release v%s\" package.json"
   },
   "contributes": {
     "commands": [

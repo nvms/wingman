@@ -244,7 +244,7 @@
             disableNavigation ? "pointer-events-none opacity-30" : ""
           }`}
         >
-          <div class="px-2 flex flex-col border-b border-panel">
+          <div class="px-2 flex flex-col border-b border-panel main-bg">
             <div class="flex">
               {#each uniqueModes as mode}
                 <button on:click={() => setActiveMode(mode)}>
@@ -259,7 +259,7 @@
               {/each}
             </div>
           </div>
-          <div class="flex flex-col px-2">
+          <div class="flex flex-col px-2 main-bg">
             <!-- <div class="px-2 text-xs opacity-50 mt-2 leading-none">
               Settings
             </div> -->
@@ -305,7 +305,7 @@
         </div>
       </header>
 
-      <main class="flex-1 overflow-hidden flex">
+      <main class="flex-1 overflow-hidden flex main-bg">
         {#if $activeMode?.id}
           <ModeView
             bind:closeConversation
@@ -331,8 +331,8 @@
     border-color: var(--vscode-panel-border);
   }
 
-  .main-content {
-    background: var(--vscode-panel-background);
+  .main-bg {
+    background: var(--vscode-sideBar-background);
   }
 
   .mode-icon {

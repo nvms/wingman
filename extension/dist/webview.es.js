@@ -55175,7 +55175,7 @@ function hd(r) {
       var _;
       e = b("button"), t = b("div"), a = ce(n), o = F(), S(t, "class", i = xe(`mode-icon ${/*$activeMode*/
       ((_ = r[1]) == null ? void 0 : _.id) === /*mode*/
-      r[28].id ? "active" : ""} py-2 px-2`) + " svelte-1ekznwk");
+      r[28].id ? "active" : ""} py-2 px-2`) + " svelte-scqs3m");
     },
     m(_, d) {
       q(_, e, d), g(e, t), g(t, a), g(e, o), s || (l = Te(e, "click", c), s = !0);
@@ -55187,7 +55187,7 @@ function hd(r) {
       r[28].label + "") && Ke(a, n), d[0] & /*$activeMode, uniqueModes*/
       3 && i !== (i = xe(`mode-icon ${/*$activeMode*/
       ((u = r[1]) == null ? void 0 : u.id) === /*mode*/
-      r[28].id ? "active" : ""} py-2 px-2`) + " svelte-1ekznwk") && S(t, "class", i);
+      r[28].id ? "active" : ""} py-2 px-2`) + " svelte-scqs3m") && S(t, "class", i);
     },
     d(_) {
       _ && Y(e), s = !1, l();
@@ -55285,12 +55285,12 @@ function Mb(r) {
       pe(e.$$.fragment), t = F(), G && G.c(), n = F(), a = b("div"), i = b("header"), o = b("div"), s = b("div"), l = b("div");
       for (let Q = 0; Q < te.length; Q += 1)
         te[Q].c();
-      c = F(), _ = b("div"), d = b("div"), u = b("button"), m = b("div"), p = ce("Modes"), f = F(), T = b("button"), C = b("div"), h = ce("Presets"), D = F(), M = b("button"), y = b("div"), w = ce("Prompts"), $ = F(), B = b("button"), z = b("div"), re = ce("Extension"), j = F(), N = b("main"), ne && ne.c(), S(l, "class", "flex"), S(s, "class", "px-2 flex flex-col border-b border-panel"), S(m, "class", E = xe(`mode-icon py-2 px-2 ${/*showModeSettings*/
-      r[8] ? "active" : ""}`) + " svelte-1ekznwk"), S(C, "class", I = xe(`mode-icon py-2 px-2 ${/*showPresetSettings*/
-      r[5] ? "active" : ""}`) + " svelte-1ekznwk"), S(y, "class", A = xe(`mode-icon py-2 px-2 ${/*showPromptSettings*/
-      r[6] ? "active" : ""}`) + " svelte-1ekznwk"), S(z, "class", K = xe(`mode-icon py-2 px-2 ${/*showExtensionSettings*/
-      r[7] ? "active" : ""}`) + " svelte-1ekznwk"), S(d, "class", "flex"), S(_, "class", "flex flex-col px-2"), S(o, "class", P = xe(`flex-1 flex flex-col ${/*disableNavigation*/
-      r[9] ? "pointer-events-none opacity-30" : ""}`) + " svelte-1ekznwk"), S(i, "class", "py-0 flex-0 flex justify-between svelte-1ekznwk"), S(N, "class", "flex-1 overflow-hidden flex"), S(a, "class", "h-full flex flex-col");
+      c = F(), _ = b("div"), d = b("div"), u = b("button"), m = b("div"), p = ce("Modes"), f = F(), T = b("button"), C = b("div"), h = ce("Presets"), D = F(), M = b("button"), y = b("div"), w = ce("Prompts"), $ = F(), B = b("button"), z = b("div"), re = ce("Extension"), j = F(), N = b("main"), ne && ne.c(), S(l, "class", "flex"), S(s, "class", "px-2 flex flex-col border-b border-panel main-bg svelte-scqs3m"), S(m, "class", E = xe(`mode-icon py-2 px-2 ${/*showModeSettings*/
+      r[8] ? "active" : ""}`) + " svelte-scqs3m"), S(C, "class", I = xe(`mode-icon py-2 px-2 ${/*showPresetSettings*/
+      r[5] ? "active" : ""}`) + " svelte-scqs3m"), S(y, "class", A = xe(`mode-icon py-2 px-2 ${/*showPromptSettings*/
+      r[6] ? "active" : ""}`) + " svelte-scqs3m"), S(z, "class", K = xe(`mode-icon py-2 px-2 ${/*showExtensionSettings*/
+      r[7] ? "active" : ""}`) + " svelte-scqs3m"), S(d, "class", "flex"), S(_, "class", "flex flex-col px-2 main-bg svelte-scqs3m"), S(o, "class", P = xe(`flex-1 flex flex-col ${/*disableNavigation*/
+      r[9] ? "pointer-events-none opacity-30" : ""}`) + " svelte-scqs3m"), S(i, "class", "py-0 flex-0 flex justify-between svelte-scqs3m"), S(N, "class", "flex-1 overflow-hidden flex main-bg svelte-scqs3m"), S(a, "class", "h-full flex flex-col");
     },
     m(Q, k) {
       de(e, Q, k), q(Q, t, k), G && G.m(Q, k), q(Q, n, k), q(Q, a, k), g(a, i), g(i, o), g(o, s), g(s, l);
@@ -55346,15 +55346,15 @@ function Mb(r) {
       }
       (!x || k[0] & /*showModeSettings*/
       256 && E !== (E = xe(`mode-icon py-2 px-2 ${/*showModeSettings*/
-      Q[8] ? "active" : ""}`) + " svelte-1ekznwk")) && S(m, "class", E), (!x || k[0] & /*showPresetSettings*/
+      Q[8] ? "active" : ""}`) + " svelte-scqs3m")) && S(m, "class", E), (!x || k[0] & /*showPresetSettings*/
       32 && I !== (I = xe(`mode-icon py-2 px-2 ${/*showPresetSettings*/
-      Q[5] ? "active" : ""}`) + " svelte-1ekznwk")) && S(C, "class", I), (!x || k[0] & /*showPromptSettings*/
+      Q[5] ? "active" : ""}`) + " svelte-scqs3m")) && S(C, "class", I), (!x || k[0] & /*showPromptSettings*/
       64 && A !== (A = xe(`mode-icon py-2 px-2 ${/*showPromptSettings*/
-      Q[6] ? "active" : ""}`) + " svelte-1ekznwk")) && S(y, "class", A), (!x || k[0] & /*showExtensionSettings*/
+      Q[6] ? "active" : ""}`) + " svelte-scqs3m")) && S(y, "class", A), (!x || k[0] & /*showExtensionSettings*/
       128 && K !== (K = xe(`mode-icon py-2 px-2 ${/*showExtensionSettings*/
-      Q[7] ? "active" : ""}`) + " svelte-1ekznwk")) && S(z, "class", K), (!x || k[0] & /*disableNavigation*/
+      Q[7] ? "active" : ""}`) + " svelte-scqs3m")) && S(z, "class", K), (!x || k[0] & /*disableNavigation*/
       512 && P !== (P = xe(`flex-1 flex flex-col ${/*disableNavigation*/
-      Q[9] ? "pointer-events-none opacity-30" : ""}`) + " svelte-1ekznwk")) && S(o, "class", P), /*$activeMode*/
+      Q[9] ? "pointer-events-none opacity-30" : ""}`) + " svelte-scqs3m")) && S(o, "class", P), /*$activeMode*/
       (W = Q[1]) != null && W.id ? ne ? (ne.p(Q, k), k[0] & /*$activeMode*/
       2 && O(ne, 1)) : (ne = Id(Q), ne.c(), O(ne, 1), ne.m(N, null)) : ne && (Ce(), v(ne, 1, 1, () => {
         ne = null;

@@ -1,9 +1,10 @@
 <script lang="ts">
   import extComm from "@/messaging";
-  import type { Mode } from "../../../shared";
-  import { createEventDispatcher } from "svelte";
-  import Button from "./Button.svelte";
   import { activeMode } from "@/store";
+  import { createEventDispatcher } from "svelte";
+  import type { Mode } from "../../../shared";
+  import Button from "./Button.svelte";
+  import ConfirmationDialog from "./ConfirmationDialog.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -27,6 +28,7 @@
   };
   
   const deleteMode = () => {
+    showConfirmDelete = false;
     extComm.DELETE("mode", mode).then((data) => {
       extComm.GET("activeMode").then((data) => {
         activeMode.set(data);
@@ -39,6 +41,8 @@
   const close = () => {
     dispatch("close");
   };
+
+  let showConfirmDelete = false;
 </script>
 
 <div class="space-y-2 p-2 w-full">
@@ -66,7 +70,15 @@
       </div>
       <div>
         {#if !isCreate}
-          <Button variant="danger" on:click={deleteMode}>Delete</Button>
+          <Button variant="danger" on:click={() => showConfirmDelete = true}>Delete</Button>
+          <ConfirmationDialog open={showConfirmDelete} on:close={() => showConfirmDelete = false}>
+            <p>
+              Are you sure you want to delete this mode? This action cannot be undone.
+            </p>
+            <div class="flex justify-center mt-4">
+              <Button variant="danger" on:click={deleteMode}>Yes, delete</Button>
+            </div>
+          </ConfirmationDialog>
         {/if}
       </div>
     </div>

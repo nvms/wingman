@@ -1,7 +1,8 @@
 <script lang="ts">
+  import extComm from "@/messaging";
   import { createEventDispatcher, onMount } from "svelte";
   import Button from "./Button.svelte";
-  import extComm from "@/messaging";
+  import ConfirmationDialog from "./ConfirmationDialog.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -25,7 +26,15 @@
     extComm.RESTORE_DEFAULTS().then(() => {
       getPrompts();
     });
+
+    showConfirmRestore = false;
   }
+
+  let showConfirmRestore = false;
+
+  const onConfirmRestore = () => {
+    restore();
+  };
 </script>
 
 <div class="flex-1 bg-neutral-500/10 space-y-6 p-4">
@@ -36,7 +45,15 @@
       modes will be restored along with all default prompts and presets.
       Any stored API keys will not be removed.
     </p>
-    <Button variant="danger" on:click={restore}>Restore</Button>
+    <Button variant="danger" on:click={() => showConfirmRestore = true}>Restore</Button>
+    <ConfirmationDialog open={showConfirmRestore} on:close={() => showConfirmRestore = false}>
+      <p>
+        Are you sure you want to restore the defaults? You will lose any modes, presets or prompts you may have created.
+      </p>
+      <div class="flex justify-center mt-4">
+        <Button variant="danger" on:click={onConfirmRestore}>Yes, restore</Button>
+      </div>
+    </ConfirmationDialog>
   </div>
   {#if providers.length}
     <div class="space-y-2">

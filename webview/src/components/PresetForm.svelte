@@ -4,6 +4,7 @@
   import { createEventDispatcher } from "svelte";
   import { generateId, type Preset } from "../../../shared";
   import Button from "./Button.svelte";
+  import ConfirmationDialog from "./ConfirmationDialog.svelte";
   import TagInput from "./TagInput.svelte";
 
   export let preset: Preset;
@@ -66,7 +67,10 @@
     });
   };
 
+  let showConfirmDelete = false;
+
   const deletePreset = () => {
+    showConfirmDelete = false;
     extComm.DELETE("preset", presetClone.id).then(() => {
       getPresets();
 
@@ -179,7 +183,15 @@
           <Button variant="secondary" on:click={savePresetAs}>Save As...</Button>
         </div>
         <div>
-          <Button variant="danger" on:click={deletePreset}>Delete</Button>
+          <Button variant="danger" on:click={() => showConfirmDelete = true}>Delete</Button>
+          <ConfirmationDialog open={showConfirmDelete} on:close={() => showConfirmDelete = false}>
+            <p>
+              Are you sure you want to delete this preset? This action cannot be undone.
+            </p>
+            <div class="flex justify-center mt-4">
+              <Button variant="danger" on:click={deletePreset}>Yes, delete</Button>
+            </div>
+          </ConfirmationDialog>
         </div>
       </div>
     </form>

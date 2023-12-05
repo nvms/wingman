@@ -1,13 +1,18 @@
 <script lang="ts">
   import extComm from "@/messaging";
-  import { uniqueModeStore } from "@/store";
-  import { createEventDispatcher } from "svelte";
+  import { activeModePrompts, uniqueModeStore } from "@/store";
+  import { createEventDispatcher, onMount } from "svelte";
   import type { Mode, PromptDefinition } from "../../../shared";
   import Button from "./Button.svelte";
+  import ConfirmationDialog from "./ConfirmationDialog.svelte";
   const dispatch = createEventDispatcher();
 
   const getPrompts = () => {
     dispatch("getPrompts");
+
+    extComm.GET("activeModePrompts").then((data) => {
+      activeModePrompts.set(data);
+    });
   };
 
   export let prompt: PromptDefinition & { promptId: string; mode: Mode };
@@ -33,7 +38,14 @@
     }
   };
 
+  onMount(() => {
+    getPrompts();
+  });
+
+  let showConfirmDelete = false;
+
   const deletePrompt = () => {
+    showConfirmDelete = false;
     extComm.DELETE("prompt", prompt).then(() => {
       getPrompts();
       dispatch("promptDeleted");
@@ -122,9 +134,15 @@
   <div class="flex-1 flex justify-between">
     <Button variant="secondary" class="mr-2" on:click={savePrompt}>Save</Button>
     {#if prompt?.promptId}
-      <Button variant="danger" class="mr-2" on:click={deletePrompt}
-        >Delete</Button
-      >
+      <Button variant="danger" class="mr-2" on:click={() => showConfirmDelete = true}>Delete</Button>
+      <ConfirmationDialog open={showConfirmDelete} on:close={() => showConfirmDelete = false}>
+        <p>
+          Are you sure you want to delete this prompt? This action cannot be undone.
+        </p>
+        <div class="flex justify-center mt-4">
+          <Button variant="danger" on:click={deletePrompt}>Yes, delete</Button>
+        </div>
+      </ConfirmationDialog>
     {/if}
   </div>
 </div>

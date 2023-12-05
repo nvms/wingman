@@ -79,9 +79,11 @@ export const alertError = (message: string) => vscode.window.showErrorMessage(me
 export const languageid = (editor: vscode.TextEditor): string => editor?.document?.languageId ?? "plaintext";
 export const extension = (editor: vscode.TextEditor): string => editor?.document?.fileName?.split?.(".").pop() || "";
 
-export const promptMap: { [promptId: string]: PromptDefinition & { promptId: string; mode: Mode; } } = {};
+export let promptMap: { [promptId: string]: PromptDefinition & { promptId: string; mode: Mode; } } = {};
 
 export const createPromptMap = () => {
+  promptMap = {};
+
   const prompts = defaultPrompts.map((prompt) => {
     return {
       ...prompt,

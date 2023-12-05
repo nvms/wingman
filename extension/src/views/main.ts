@@ -241,8 +241,8 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 const prompts = (State.get(stateKeys.promptMap()) as { [promptId: string]: PromptDefinition & { promptId: string; mode: Mode; } }) || {};
                 const nextPrompts = { ...prompts };
                 Object.values(nextPrompts).forEach((prompt) => {
-                  if (prompt.mode.id === mode.id) {
-                    delete nextPrompts[prompt.promptId];
+                  if (prompt?.mode?.id === mode.id) {
+                    delete nextPrompts[prompt?.promptId];
                   }
                 });
 

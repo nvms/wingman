@@ -54068,7 +54068,7 @@ function Eb(r) {
   r[0] && rd(r);
   return {
     c() {
-      e = b("div"), t = b("div"), n = b("div"), n.textContent = "Prompts", a = B(), o = b("div");
+      e = b("div"), t = b("div"), n = b("div"), n.textContent = "Modes", a = B(), o = b("div");
       for (let u = 0; u < _.length; u += 1)
         _[u].c();
       i = B(), d && d.c(), s = B(), m && m.c(), S(n, "class", "font-semibold px-4 pt-2 select-none"), S(o, "class", "flex flex-col"), S(t, "class", "flex-0 border-r border-panel overflow-y-auto"), S(e, "class", "flex flex-1 bg-neutral-500/10");

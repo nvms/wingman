@@ -7,7 +7,12 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
   const editor = vscode.window.activeTextEditor;
   const readable = getHumanReadableLanguageName(languageid(editor), extension(editor));
   const selection = getSelectionInfo(editor);
-  const completionParams = getActiveModeActivePresetKeyValue("completionParams") as Preset["completionParams"];
+  const completionParams = Object.fromEntries(
+    Object.entries(
+      getActiveModeActivePresetKeyValue("completionParams") as Preset["completionParams"]
+    )
+      .filter(([_, value]) => value != null)
+  ) as unknown as Preset["completionParams"];
 
   const substitute = async (text: string) => {
     text = text.replaceAll("{{ft}}", languageid(editor));

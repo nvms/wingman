@@ -1,7 +1,7 @@
 <script lang="ts">
   import extComm from "@/messaging";
   import { activeMode, activePreset } from "@/store";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { generateId, type Preset } from "../../../shared";
   import Button from "./Button.svelte";
   import ConfirmationDialog from "./ConfirmationDialog.svelte";
@@ -9,6 +9,7 @@
 
   export let preset: Preset;
   let presetClone = { ...preset };
+  let paramDefaults: Preset["completionParams"];
   let providers: string[] = [];
   let tokenizers: string[] = [];
   let formats: string[] = [];
@@ -85,6 +86,12 @@
       presetClone.completionParams = data;
     });
   };
+
+  onMount(() => {
+    extComm.GET("providerCompletionParams", presetClone.provider).then((data) => {
+      paramDefaults = data;
+    });
+  });
 </script>
 
 <div class="w-full flex-1 flex">
@@ -135,44 +142,58 @@
             </select>
           </div> -->
 
-          <!-- <pre>{JSON.stringify(presetClone, null, 2)}</pre> -->
-
         </div>
         <div class="flex-1 space-y-2">
           {#each Object.entries(presetClone.completionParams) as [key, value]}
             <div class="flex-1 flex flex-col">
               <label for={key}>{key}</label>
-              {#if typeof value === "string"}
-                <input
-                  type="text"
-                  bind:value={presetClone.completionParams[key]}
-                  name={key}
-                />
-              {:else if typeof value === "number"}
-                <input
-                  type="number"
-                  step="any"
-                  bind:value={presetClone.completionParams[key]}
-                  name={key}
-                />
-              {:else if typeof value === "boolean"}
+              <div class="flex items-center h-[20px]">
                 <input
                   type="checkbox"
-                  bind:checked={presetClone.completionParams[key]}
-                  name={key}
+                  checked={value !== null}
+                  on:change={() => presetClone.completionParams[key] === null ? presetClone.completionParams[key] = paramDefaults[key] : presetClone.completionParams[key] = null}
+                  class="mr-1"
                 />
-              {:else if Array.isArray(value)}
-                <TagInput
-                  bind:value={presetClone.completionParams[key]}
-                  name={key}
-                />
-              {:else if typeof value === "object"}
-                <textarea
-                  class="h-12"
-                  bind:value={presetClone.completionParams[key]}
-                  name={key}
-                />
-              {/if}
+                <div class="flex-1">
+                  {#if value === null}
+                    <span class="italic opacity-70">
+                      Not included in request payload.
+                    </span>
+                  {:else if typeof value === "string"}
+                    <input
+                      type="text"
+                      class="w-full"
+                      bind:value={presetClone.completionParams[key]}
+                      name={key}
+                    />
+                  {:else if typeof value === "number"}
+                    <input
+                      type="number"
+                      step="any"
+                      class="w-full"
+                      bind:value={presetClone.completionParams[key]}
+                      name={key}
+                    />
+                  {:else if typeof value === "boolean"}
+                    <input
+                      type="checkbox"
+                      bind:checked={presetClone.completionParams[key]}
+                      name={key}
+                    />
+                  {:else if Array.isArray(value)}
+                    <TagInput
+                      bind:value={presetClone.completionParams[key]}
+                      name={key}
+                    />
+                  {:else if typeof value === "object"}
+                    <textarea
+                      class="h-12 w-full"
+                      bind:value={presetClone.completionParams[key]}
+                      name={key}
+                    />
+                  {/if}
+                </div>
+              </div>
             </div>
           {/each}
         </div>

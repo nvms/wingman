@@ -30,6 +30,7 @@
   import EventListener from "./EventListener.svelte";
   import ModeView from "./ModeView.svelte";
   import Wizard from "./Wizard.svelte";
+  import SimpleNotification from "./SimpleNotification.svelte";
 
   marked.use(
     markedHighlight({
@@ -226,7 +227,7 @@
   });
 </script>
 
-<Notifications>
+<Notifications item={SimpleNotification}>
   <EventListener />
 
   {#if showWizard}

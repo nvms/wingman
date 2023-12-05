@@ -195,6 +195,8 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                   State.set(stateKeys.activeModeActivePreset(), nextPreset);
                 }
 
+                sendNotificationSuccess(webviewView, "Preset deleted.");
+
                 webviewView.webview.postMessage({ id, content: nextPresets });
                 break;
               }
@@ -206,6 +208,9 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 promptMap[value.promptId] = undefined;
 
                 State.set(stateKeys.promptMap(), nextPrompts);
+
+                sendNotificationSuccess(webviewView, "Prompt deleted.");
+
                 // Reply because the webview needs to know to update its state.
                 webviewView.webview.postMessage({ id, content: nextPrompts });
                 break;
@@ -247,6 +252,8 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 State.set(`${mode.id}-presets`, undefined);
                 State.set(`${mode.id}-activePreset`, undefined);
                 State.set(`${mode.id}-chatHistory`, undefined);
+
+                sendNotificationSuccess(webviewView, "Mode deleted.");
 
                 webviewView.webview.postMessage({ id, content: true });
                 break;

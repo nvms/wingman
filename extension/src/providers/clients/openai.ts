@@ -111,7 +111,7 @@ export class OpenAIClient {
     });
 
     pTimeout(responseP, {
-      milliseconds: 60000,
+      milliseconds: 10 * 60 * 1000,
       message: "Completion stream timed out.",
     }).catch(() => {
       abortController.abort();

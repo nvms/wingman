@@ -21,7 +21,7 @@
     on:click={close}
   >
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="bg-neutral-800 text-white p-4 rounded" on:click|stopPropagation>
+    <div class="bg-neutral-800 text-white p-4 rounded-md shadow-xl max-w-[75%]" on:click|stopPropagation>
       <slot />
       <div class="flex justify-end mt-4">
         <Button variant="secondary" on:click={close}>Close</Button>
@@ -29,3 +29,11 @@
     </div>
   </div>
 {/if}
+
+<style lang="scss">
+  :global {
+    code {
+      @apply text-white;
+    }
+  }
+</style>

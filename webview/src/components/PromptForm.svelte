@@ -52,6 +52,8 @@
     });
   };
 
+  let showInterpolationHelp = false;
+
   const close = () => {
     dispatch("close");
   };
@@ -98,36 +100,42 @@
       bind:value={prompt.message}
       name="message"
     />
-    <div class="text-xs">
-      <ul class="list-disc pl-4 mt-2">
-        <li>
-          <code>{"{{"}ft{"}}"}</code> - Converts to the language ID of the active
-          window, e.g. "cpp".
-        </li>
-        <li>
-          <code>{"{{"}language{"}}"}</code> - Takes the language ID of the active
-          window, e.g. "cpp" and converts it to a human-readable language name, e.g.
-          "C++". Works with all known VSCode language identifiers.
-        </li>
-        <li>
-          <code>{"{{"}input{"}}"}</code> - Prompts for, and is replaced by, user
-          input. Additionally, you can use the
-          <code>{"{{"}input:Here's some hint text?{"}}"}</code> format to provide hint text
-          for the input.
-        </li>
-        <li>
-          <code>{"{{"}selection{"}}"}</code> - Replaced with the current selection
-          in the active editor.
-        </li>
-        <!-- <li>
-          <code>{"{{"}language_instructions{"}}"}</code> - A map of language ID
-          to additional prompt instructions. For example,
-          <code>{"{"} cpp: "Use modern C++ syntax" {"}"}</code>. When the active
-          document has a language ID that matches one of the keys,
-          <code>{"{{"}language_instructions{"}}"}</code> will be replaced with the
-          value.
-        </li> -->
-      </ul>
+    <div class="text-xs mt-2">
+      <Button variant="secondary" size="sm" on:click={() => showInterpolationHelp = true}>View supported interpolations</Button>
+      <ConfirmationDialog open={showInterpolationHelp} on:close={() => showInterpolationHelp = false}>
+        <ul class="list-disc pl-4 space-y-4">
+          <li>
+            <code>{"{{"}ft{"}}"}</code> - Converts to the language ID of the active
+            window, e.g. "cpp".
+          </li>
+          <li>
+            <code>{"{{"}language{"}}"}</code> - Takes the language ID of the active
+            window, e.g. "cpp" and converts it to a human-readable language name, e.g.
+            "C++". Works with all known VSCode language identifiers.
+          </li>
+          <li>
+            <code>{"{{"}input{"}}"}</code> - Prompts for, and is replaced by, user
+            input. Additionally, you can use the
+            <code>{"{{"}input:Here's some hint text?{"}}"}</code> format to provide hint text
+            for the input.
+          </li>
+          <li>
+            <code>{"{{"}selection{"}}"}</code> - Replaced with the current selection
+            in the active editor.
+          </li>
+          <li>
+            <code>{"{{"}:PARAM:VAL{"}}"}</code> - Set a completion parameter for the prompt when it is dispatched, e.g. <code>{"{{"}:top_k:4{"}}"}</code>.
+          </li>
+          <!-- <li>
+            <code>{"{{"}language_instructions{"}}"}</code> - A map of language ID
+            to additional prompt instructions. For example,
+            <code>{"{"} cpp: "Use modern C++ syntax" {"}"}</code>. When the active
+            document has a language ID that matches one of the keys,
+            <code>{"{{"}language_instructions{"}}"}</code> will be replaced with the
+            value.
+          </li> -->
+        </ul>
+      </ConfirmationDialog>
     </div>
   </div>
   <!-- <pre>{JSON.stringify(prompt, null, 2)}</pre> -->

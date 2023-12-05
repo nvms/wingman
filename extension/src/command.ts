@@ -7,10 +7,9 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
   const editor = vscode.window.activeTextEditor;
   const readable = getHumanReadableLanguageName(languageid(editor), extension(editor));
   const selection = getSelectionInfo(editor);
+  const activeModeCompletionParams = getActiveModeActivePresetKeyValue("completionParams") as Preset["completionParams"];
   const completionParams = Object.fromEntries(
-    Object.entries(
-      getActiveModeActivePresetKeyValue("completionParams") as Preset["completionParams"]
-    )
+    Object.entries(activeModeCompletionParams)
       .filter(([_, value]) => value != null)
   ) as unknown as Preset["completionParams"];
 
@@ -60,7 +59,9 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
           const paramName = matchGroups[1];
           const paramValue = matchGroups[2];
 
-          if (Object.hasOwnProperty.call(completionParams, paramName)) {
+          // Check against activeModeCompletionParams, because this particular param may have been stripped
+          // at the Preset level (see assignment to `completionParams`), but we still want the prompt to be able to override this value.
+          if (Object.hasOwnProperty.call(activeModeCompletionParams, paramName)) {
             const numberRegex = /^[0-9]+(\.[0-9]+)?$/;
             completionParams[paramName] = numberRegex.test(paramValue) ? Number(paramValue) : paramValue;
           }

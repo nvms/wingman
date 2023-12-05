@@ -2,7 +2,7 @@ A highly flexible, customizable, and powerful extension for working with LLMs wi
 
 Highlights:
 
-- Compatible with OpenAI (any model), Anthropic (any model), KoboldCpp (any model) — and any API following the same request/response pattern. Do you self-host an inference server and LLM? You will love Wingman.
+- Compatible with OpenAI (any model), Anthropic (any model), KoboldCpp (soon!) — and any API following the same request/response pattern. Do you self-host an inference server and LLM? You will love Wingman.
 - Complete control over completion parameters, system message, and more.
 - Highly customizable prompt templates with built-in prompt management.
 - Workspace-specific chat history storage. Review old chats whenever.

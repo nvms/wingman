@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
-import { ChatEvents, InsertionMethod, PromptDefinition, Preset } from "../../shared";
+import { ChatEvents, InsertionMethod, Preset, PromptDefinition } from "../../shared";
 import { createPrompt } from "./command";
 import { providers } from "./providers/common";
 import { OpenAIProvider } from "./providers/openai";
-import { addTextAfterSelection, addTextBeforeSelection, alertError, promptMap, getActiveModeActivePresetKeyValue, getSelectionInfo, replaceLinesWithText, addTextToNewBuffer, alertWarning, stateKeys, getActiveMode } from "./utils";
-import { sendEvent, sendNotification, sendNotificationError } from "./views/main";
 import { State } from "./state";
+import { addTextAfterSelection, addTextBeforeSelection, addTextToNewBuffer, alertError, getActiveModeActivePresetKeyValue, getSelectionInfo, replaceLinesWithText, stateKeys } from "./utils";
+import { sendEvent, sendNotification, sendNotificationError } from "./views/main";
 
 interface DispatcherOptions {
   promptId: string;

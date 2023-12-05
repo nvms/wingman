@@ -30,7 +30,9 @@ export class AnthropicProvider implements APIProvider {
       this.history = `${this.history}${user}`;
     }
 
+    // @ts-ignore
     this.command.completionParams.stream = true;
+    // @ts-ignore
     this.command.completionParams.prompt = this.history;
 
     try {

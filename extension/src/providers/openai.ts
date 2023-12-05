@@ -40,8 +40,11 @@ export class OpenAIProvider implements APIProvider {
     // const maxTokens = Number(this.command.completionParams.max_tokens) >= 0 ? Number(this.command.completionParams.max_tokens) : 2048;
     // this.command.completionParams.max_tokens = Tokenizer.maxTokens(text, maxTokens);
 
+    // @ts-ignore
     this.command.completionParams.max_tokens = 2048;
+    // @ts-ignore
     this.command.completionParams.stream = true;
+    // @ts-ignore
     this.command.completionParams.messages = this.messages;
 
     try {

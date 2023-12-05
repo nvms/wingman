@@ -81,6 +81,8 @@ export const createDefaultPresetsForAllModes = () => {
           system: systems.get(mode.id),
           completionParams: {
             ...getProviderCompletionParamDefaults("OpenAI") as any,
+            model: null,
+            stop: null,
           },
         }
       ] as Preset[]);

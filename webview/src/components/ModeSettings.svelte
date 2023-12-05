@@ -28,7 +28,7 @@
 
 <div class="flex flex-1 bg-neutral-500/10">
   <div class="flex-0 border-r border-panel overflow-y-auto">
-    <div class="font-semibold px-4 pt-2 select-none">Prompts</div>
+    <div class="font-semibold px-4 pt-2 select-none">Modes</div>
     <div class="flex flex-col">
       {#each $uniqueModeStore as mode}
         <button

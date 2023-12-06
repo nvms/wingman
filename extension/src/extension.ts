@@ -89,6 +89,8 @@ export const createDefaultPresetsForAllModes = () => {
       State.set(`${mode.id}-activePreset`, State.get(`${mode.id}-presets`)[0]);
     });
   }
+
+  State.set(stateKeys.activeMode(), modes[0]);
 };
 
 const setShowWelcomeWizard = () => {

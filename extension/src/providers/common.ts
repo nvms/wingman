@@ -47,6 +47,7 @@ export const formats: { [key: string]: Format } = {
     user: "<s>[INST] {user_message} [/INST]",
     first: "<s>[INST] {system}\n\n{user_message} [/INST]",
     stops: ["</s>"],
+    // <s>[INST] <<SYS>>\n{your_system_message}\n<</SYS>>\n\n{user_message_1} [/INST] {model_reply_1}</s><s>[INST] {user_message_2} [/INST]
   },
   "Orca 2": {
     system: "### System:\n{system_message}",

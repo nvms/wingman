@@ -214,7 +214,7 @@
   // I need to be able to list my chats, and the assistant chats.
 </script>
 
-<div class="flex-1 flex flex-col overflow-hidden">
+<div class="flex-1 flex flex-col overflow-y-auto">
   {#if showPresetSettings}
     <div class="flex-0 border-b border-panel">
       <PresetSettings />

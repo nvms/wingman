@@ -1,5 +1,3 @@
-import { SignatureHelp } from "vscode";
-
 export type PromptDefinition = {
   modeId: string;
   category: string;

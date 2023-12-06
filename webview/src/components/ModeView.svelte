@@ -88,9 +88,9 @@
   
   async function updateChatsAndScroll(message, from) {
     if (from === "assistant" && chats.length && chats[chats.length - 1].from === "assistant") {
-      chats[chats.length - 1].message = String(message.value);
+      chats = [...chats.slice(0, -1), {...chats[chats.length - 1], message: String(message.value)}];
     } else {
-      chats.push({ from, message: message.value });
+      chats = [...chats, { from, message: message.value }];
     }
   
     await tick();

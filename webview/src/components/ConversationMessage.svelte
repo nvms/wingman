@@ -5,6 +5,7 @@
   import Button from "./Button.svelte";
   import { getNotificationsContext } from "svelte-notifications";
   import extComm from "@/messaging";
+  import { createEventDispatcher, tick } from "svelte";
 
   export let from: "user" | "assistant" = "user";
   export let message: string = "";
@@ -12,6 +13,7 @@
   export let isLastMessage = false;
   export let showCompareSource = true;
 
+  const dispatch = createEventDispatcher();
   let messageBlock;
   let codeElements: HTMLElement[] = [];
   let searchedForCodeElements = false;
@@ -96,6 +98,10 @@
           }
         });
       }
+
+      setTimeout(() => {
+        dispatch("scrollToBottom");
+      }, 50); // :shrug:
     }
   }
 </script>

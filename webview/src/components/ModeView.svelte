@@ -118,10 +118,12 @@
     updateChatsAndScroll(message, "assistant");
   });
   
-  const listenChatMessageSent = extComm.on(ChatEvents.ChatMessageSent, message => {
+  const listenChatMessageSent = extComm.on(ChatEvents.ChatMessageSent, async (message) => {
     updateChatsAndScroll(message, "user");
     responseInProgress = true;
     disableSidebar = true;
+    await tick();
+    scrollToBottom();
   });
   
   const listenAbort = extComm.on("aborted", () => {
@@ -259,6 +261,7 @@
             message={chat.message}
             responseInProgress={responseInProgress && chat.from === "assistant"}
             isLastMessage={index === chats.length - 1}
+            on:scrollToBottom={scrollToBottom}
           />
         {/each}
       </div>

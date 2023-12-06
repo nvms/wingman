@@ -51767,7 +51767,7 @@ function B_(r) {
     r[20]
   ), {
     c() {
-      e = b("form"), t = b("div"), n = b("div"), a = b("label"), a.textContent = "System message", o = U(), i = b("textarea"), s = U(), l = b("div"), c = b("div"), _ = b("div"), d = b("label"), d.textContent = "Preset name", m = U(), u = b("input"), p = U(), E = b("div"), S = b("label"), S.textContent = "URL", T = U(), C = b("input"), v = U(), A = b("div"), y = b("label"), y.textContent = "Provider", M = U(), I = b("select");
+      e = b("form"), t = b("div"), n = b("div"), a = b("label"), a.textContent = "System message", o = U(), i = b("textarea"), s = U(), l = b("div"), c = b("div"), _ = b("div"), d = b("label"), d.textContent = "Preset name", m = U(), u = b("input"), p = U(), E = b("div"), S = b("label"), S.textContent = "API Endpoint", T = U(), C = b("input"), v = U(), A = b("div"), y = b("label"), y.textContent = "Provider API style", M = U(), I = b("select");
       for (let h = 0; h < Q.length; h += 1)
         Q[h].c();
       L = U(), B = b("div");

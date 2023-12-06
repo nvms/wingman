@@ -111,12 +111,12 @@
           </div>
 
           <div class="flex-1 flex flex-col">
-            <label for="url">URL</label>
+            <label for="url">API Endpoint</label>
             <input type="text" bind:value={presetClone.url} name="url" />
           </div>
 
           <div class="flex-1 flex flex-col">
-            <label for="provider">Provider</label>
+            <label for="provider">Provider API style</label>
             <select bind:value={presetClone.provider} name="provider" on:change={getNewCompletionParams}>
               {#each providers as provider}
                 <option value={provider}>{provider}</option>

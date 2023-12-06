@@ -124,7 +124,7 @@ export class Dispatcher {
         break;
       }
       case InsertionMethod.New: {
-        addTextToNewBuffer(this.editor, response);
+        addTextToNewBuffer(response);
         break;
       }
       default: {

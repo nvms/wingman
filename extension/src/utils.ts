@@ -21,7 +21,7 @@ const indentText = (text: string, line: vscode.TextLine): string => {
     .join("\n");
 };
 
-export const addTextToNewBuffer = async (editor: vscode.TextEditor, text: string) => {
+export const addTextToNewBuffer = async (text: string) => {
   const doc = await vscode.workspace.openTextDocument();
   const newEditor = await vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
   await newEditor.edit((edit) => {

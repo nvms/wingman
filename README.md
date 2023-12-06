@@ -17,9 +17,9 @@ Highlights:
 
 # Usage
 
-First, configure API keys for whichever providers you plan to use.
+If you're using a local solution, you can skip setting an API key.
 
-Open the command pallete (Windows: <kbd>⊞</kbd><kbd>⇧</kbd><kbd>P</kbd>, macOS: <kbd>⌘</kbd><kbd>⇧</kbd><kbd>P</kbd>) and search for the command named. "Wingman: Set API key". Select the provider you want to use, enter your API key, and press enter.
+Otherwise, you need to configure API keys for whichever providers you plan to use by opening the command pallete (Windows: <kbd>⊞</kbd><kbd>⇧</kbd><kbd>P</kbd>, macOS: <kbd>⌘</kbd><kbd>⇧</kbd><kbd>P</kbd>) and running the command labeled: "Wingman: Set API key". Select the provider you want to use, enter your API key, and press enter.
 
 # Core concepts
 

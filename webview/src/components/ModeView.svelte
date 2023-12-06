@@ -26,6 +26,7 @@
   import Sidebar from "./Sidebar.svelte";
   import ModeSettings from "./ModeSettings.svelte";
   import ExtensionSettings from "./ExtensionSettings.svelte";
+  import GrowingTextarea from "./GrowingTextarea.svelte";
 
   export let showPresetSettings = false;
   export let showPromptSettings = false;
@@ -190,26 +191,19 @@
     extComm.ABORT();
   };
 
-  const onInputKeydown = (e) => {
-    if (e.keyCode === 13) {
-      if (e.shiftKey) {
-        e.target.value += "\n";
-        return;
-      }
-
-      // Don't allow submission if we're still receiving a reply.
-      if (responseInProgress) return;
-
-      const input = e.target.value;
-
-      if (input.trim() === "") {
-        return;
-      }
-
-      e.target.value = "";
-      extComm.SEND(input);
-    }
+  const onChatSubmit = (e) => {
+    const input = e.detail;
+    if (input.trim() === "") { return; }
+    if (responseInProgress) return;
+    extComm.SEND(input);
+    _setInputValue("");
   };
+
+  let setInputValue;
+
+  function _setInputValue (v) {
+    setInputValue?.(v);
+  }
 
   // I need to be able to list my chats, and the assistant chats.
 </script>
@@ -284,12 +278,12 @@
       <div class="flex-0 px-5 flex flex-col justify-center items-center w-full">
         <div class="w-full max-w-[768px]">
           {#if chats.length !== 0}
-            <input
+            <GrowingTextarea
               bind:this={input}
-              type="text"
+              bind:setValue={setInputValue}
               class="w-full border border-panel p-2"
-              placeholder="Chat"
-              on:keydown={onInputKeydown}
+              placeholder="Say something..."
+              on:submit={onChatSubmit}
             />
           {/if}
         </div>
@@ -320,18 +314,3 @@
     </div>
   </div>
 </div>
-
-<style lang="scss">
-  input[type="text"] {
-    background: var(--vscode-input-background);
-    border: 1px solid var(--vscode-panel-border);
-    color: var(--vscode-input-foreground);
-
-    @apply transition-all;
-
-    &:focus {
-      outline: none;
-      border-color: var(--vscode-inputOption-activeBorder);
-    }
-  }
-</style>

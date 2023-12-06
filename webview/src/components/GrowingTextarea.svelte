@@ -3,6 +3,7 @@
 
   export let value = "";
   export let name = "";
+  export let placeholder = "";
   let className = "";
   export let enterCreatesNewLine = false; // Prop to control Enter key behavior
   export { className as class };
@@ -10,8 +11,20 @@
   const dispatch = createEventDispatcher();
   let textArea;
 
+  export function focus() {
+    textArea.focus();
+  }
+
+  export function setValue(v) {
+    value = v;
+    tick().then(() => {
+      autoGrow();
+    });
+  }
+
   // Emit event or create new line based on enterCreatesNewLine prop
   function handleKeydown(event) {
+    dispatch("keydown", event);
     if (event.key === "Enter") {
       if (!event.shiftKey && !enterCreatesNewLine) {
         event.preventDefault();
@@ -19,7 +32,9 @@
       } else if (!event.shiftKey && enterCreatesNewLine) {
         event.preventDefault();
         value += "\n";
-        autoGrow();
+        tick().then(() => {
+          autoGrow();
+        });
       }
     }
   }
@@ -41,9 +56,9 @@
   bind:this={textArea}
   bind:value
   on:keydown={handleKeydown}
+  {placeholder}
   {name}
   class={`textarea resize-none border ${className} overflow-y-auto`}
-  placeholder="Type here..."
   wrap="hard"
   style="width: 100%; max-width: 100%;"
 />

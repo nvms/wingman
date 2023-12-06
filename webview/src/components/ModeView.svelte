@@ -36,126 +36,115 @@
   let description = "";
   let disableSidebar = false;
   let input;
-
+  
   function showDescription(event) {
     const title = event.target.textContent;
     for (const category of categories) {
-      const matchingItem = category.items.find((item) => item.title === title);
+      const matchingItem = category.items.find(item => item.title === title);
       if (matchingItem) {
-        description =
-          matchingItem.description +
-          "\n\nPROMPT\n======\n\n" +
-          matchingItem.message;
+        description = `${matchingItem.description}\n\nPROMPT\n======\n\n${matchingItem.message}`;
         return;
       }
     }
   }
-
+  
   function hideDescription() {
     description = "";
   }
-
-  const runCommand = (item) => {
-    if (disableSidebar) {
-      return;
-    }
-
+  
+  function runCommand(item) {
+    if (disableSidebar) return;
+  
     closeConversation();
-
-    const { promptId } = item;
-    extComm.RUN(promptId);
-  };
-
+    extComm.RUN(item.promptId);
+  }
+  
   let conversationContainer;
-
-  const scrollToBottom = () => {
-    conversationContainer.scrollTop = conversationContainer.scrollHeight;
-  };
-
+  let ignoreScrollEvents = false;
   let conversationHistory: Conversation[] = [];
   let chats: ChatMessage[] = [];
   let responseInProgress = false;
-
-  const listenChatInitiated = extComm.on(ChatEvents.ChatInitiated, () => {
+  let scrolledWhileResponseInProgress = false;
+  
+  const scrollToBottom = () => {
+    if (ignoreScrollEvents) return;
+  
+    ignoreScrollEvents = true;
+    conversationContainer.scrollTop = conversationContainer.scrollHeight;
+    setTimeout(() => (ignoreScrollEvents = false), 50);
+  };
+  
+  $: canCloseConversation = chats.length && !responseInProgress;
+  $: preventScrolling = responseInProgress && scrolledWhileResponseInProgress;
+  
+  function onConversationContainerScrolled() {
+    if (ignoreScrollEvents || !responseInProgress) return;
+  
+    const isNearBottom =
+      conversationContainer.scrollTop + conversationContainer.clientHeight >=
+      conversationContainer.scrollHeight - 10;
+    scrolledWhileResponseInProgress = !isNearBottom;
+  }
+  
+  async function updateChatsAndScroll(message, from) {
+    if (from === "assistant" && chats.length && chats[chats.length - 1].from === "assistant") {
+      chats[chats.length - 1].message = String(message.value);
+    } else {
+      chats.push({ from, message: message.value });
+    }
+  
+    await tick();
+    if (!preventScrolling) scrollToBottom();
+  }
+  
+  const listenChatInitiated = extComm.on(ChatEvents.ChatInitiated, async () => {
     disableSidebar = true;
     chats = [];
     responseInProgress = true;
+    await tick();
+    scrollToBottom();
   });
-
+  
   const listenChatEnded = extComm.on(ChatEvents.ChatEnded, async () => {
     disableSidebar = false;
     responseInProgress = false;
-
     await tick();
-
     input.focus();
-
     scrollToBottom();
+    scrolledWhileResponseInProgress = false;
   });
-
-  $: canCloseConversation = chats.length && !responseInProgress;
-
-  const listenChatMessageReceived = extComm.on(
-    ChatEvents.ChatMessageReceived,
-    async (message) => {
-      const lastMessage = chats[chats.length - 1];
-      if (lastMessage.from === "assistant") {
-        const newLastMessage = {
-          from: "assistant",
-          message: String(message.value),
-        } as ChatMessage;
-        chats = [...chats.slice(0, chats.length - 1), newLastMessage];
-      } else {
-        chats = [...chats, { from: "assistant", message: message.value }];
-      }
-
-      await tick();
-
-      scrollToBottom();
-    },
-  );
-
-  const listenChatMessageSent = extComm.on(
-    ChatEvents.ChatMessageSent,
-    async (message) => {
-      chats = [...chats, { from: "user", message: message.value }];
-      responseInProgress = true;
-      disableSidebar = true;
-
-      await tick();
-
-      scrollToBottom();
-    },
-  );
-
+  
+  const listenChatMessageReceived = extComm.on(ChatEvents.ChatMessageReceived, message => {
+    updateChatsAndScroll(message, "assistant");
+  });
+  
+  const listenChatMessageSent = extComm.on(ChatEvents.ChatMessageSent, message => {
+    updateChatsAndScroll(message, "user");
+    responseInProgress = true;
+    disableSidebar = true;
+  });
+  
   const listenAbort = extComm.on("aborted", () => {
     responseInProgress = false;
     disableSidebar = false;
     input.focus();
   });
-
-  const getHistory = () => {
-    extComm.GET("chatHistory").then((history) => {
-      conversationHistory = history;
-
-      conversationHistory = conversationHistory.map((conversation) => {
-        conversation.archived = new Date(conversation.archived);
-        return conversation;
-      });
+  
+  function getHistory() {
+    extComm.GET("chatHistory").then(history => {
+      conversationHistory = history.map(conversation => ({
+        ...conversation,
+        archived: new Date(conversation.archived)
+      }));
     });
-  };
-
-  activeMode.subscribe(() => {
-    getHistory();
-  });
-
+  }
+  
+  activeMode.subscribe(getHistory);
+  
   onMount(() => {
-    tick().then(() => {
-      input?.focus?.();
-    });
-
+    tick().then(() => input?.focus());
     getHistory();
-
+  
     return () => {
       listenChatInitiated();
       listenChatEnded();
@@ -204,8 +193,6 @@
   function _setInputValue (v) {
     setInputValue?.(v);
   }
-
-  // I need to be able to list my chats, and the assistant chats.
 </script>
 
 <div class="flex-1 flex flex-col overflow-y-auto">
@@ -263,6 +250,7 @@
 
       <div
         class="flex flex-col overflow-auto px-5 items-center w-full"
+        on:scroll={onConversationContainerScrolled}
         bind:this={conversationContainer}
       >
         {#each chats as chat, index}

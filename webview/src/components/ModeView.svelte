@@ -47,7 +47,7 @@
       }
     }
   }
-  
+
   function hideDescription() {
     description = "";
   }

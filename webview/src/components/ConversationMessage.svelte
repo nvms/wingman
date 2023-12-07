@@ -1,11 +1,10 @@
 <script lang="ts">
+  import extComm from "@/messaging";
+  import { createEventDispatcher } from "svelte";
+  import { getNotificationsContext } from "svelte-notifications";
+  import Highlighter from "./Highlighter.svelte";
   import AIAvatarIcon from "./icons/AIAvatarIcon.svelte";
   import UserAvatarIcon from "./icons/UserAvatarIcon.svelte";
-  import Highlighter from "./Highlighter.svelte";
-  import Button from "./Button.svelte";
-  import { getNotificationsContext } from "svelte-notifications";
-  import extComm from "@/messaging";
-  import { createEventDispatcher, tick } from "svelte";
 
   export let from: "user" | "assistant" = "user";
   export let message: string = "";

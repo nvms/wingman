@@ -37,7 +37,7 @@
   };
 </script>
 
-<div class="flex-1 bg-neutral-500/10 space-y-6 p-4">
+<div class="flex-1 bg-gray-500/5 space-y-6 p-4">
   <div class="space-y-2">
     <h2 class="text-lg font-semibold">Restore defaults</h2>
     <p>

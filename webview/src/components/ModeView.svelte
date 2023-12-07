@@ -27,6 +27,7 @@
   import ModeSettings from "./ModeSettings.svelte";
   import ExtensionSettings from "./ExtensionSettings.svelte";
   import GrowingTextarea from "./GrowingTextarea.svelte";
+  import { slide, fade } from "svelte/transition";
 
   export let showPresetSettings = false;
   export let showPromptSettings = false;
@@ -199,22 +200,22 @@
 
 <div class="flex-1 flex flex-col overflow-y-auto">
   {#if showPresetSettings}
-    <div class="flex-0 border-b border-panel">
+    <div class="flex-0 border-b border-panel" transition:slide={{ duration: 150 }}>
       <PresetSettings />
     </div>
   {/if}
   {#if showPromptSettings}
-    <div class="flex-0 border-b border-panel">
+    <div class="flex-0 border-b border-panel" transition:slide={{ duration: 150 }}>
       <PromptSettings on:getPrompts />
     </div>
   {/if}
   {#if showModeSettings}
-    <div class="flex-0 border-b border-panel">
+    <div class="flex-0 border-b border-panel" transition:slide={{ duration: 150 }}>
       <ModeSettings on:getPrompts />
     </div>
   {/if}
   {#if showExtensionSettings}
-    <div class="flex-0 border-b border-panel">
+    <div class="flex-0 border-b border-panel" transition:slide={{ duration: 150 }}>
       <ExtensionSettings on:getPrompts />
     </div>
   {/if}

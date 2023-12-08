@@ -88,6 +88,10 @@ class ExtensionCommunication {
     return this.sendMessage({ type: "send", value });
   }
 
+  public SEND_UNPROMPTED(value: string): Promise<any> {
+    return this.sendMessage({ type: "sendUnprompted", value });
+  }
+
   public REPLACE_SELECTION(value: string): Promise<any> {
     return this.sendMessage({ type: "replaceSelection", value });
   }

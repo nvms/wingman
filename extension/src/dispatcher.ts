@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatEvents, InsertionMethod, Preset, PromptDefinition } from "../../shared";
+import { ChatEvents, InsertionMethod, Mode, Preset, PromptDefinition } from "../../shared";
 import { createPrompt } from "./command";
 import { providers } from "./providers/common";
 import { OpenAIProvider } from "./providers/openai";
@@ -8,7 +8,8 @@ import { addTextAfterSelection, addTextBeforeSelection, addTextToNewBuffer, aler
 import { sendEvent, sendNotification, sendNotificationError } from "./views/main";
 
 interface DispatcherOptions {
-  promptId: string;
+  promptId?: string;
+  message?: string;
 }
 
 export class Dispatcher {
@@ -24,13 +25,30 @@ export class Dispatcher {
     this.editor = vscode.window.activeTextEditor;
     this.selection = getSelectionInfo(this.editor);
 
-    const command = State.get(stateKeys.promptMap())[options.promptId];
+    if (options.promptId) {
+      const command = State.get(stateKeys.promptMap())[options.promptId];
+  
+      if (!command) {
+        throw new Error(`Command ${options.promptId} not found`);
+      }
+  
+      this.runCommand(command);
+    } else if (options.message) {
+      const command: PromptDefinition & { mode: Mode; promptId: string; } = {
+        category: "",
+        title: "",
+        description: "",
+        promptId: "",
+        insertionMethod: InsertionMethod.None,
+        mode: State.get(stateKeys.activeMode()) as Mode,
+        modeId: (State.get(stateKeys.activeMode()) as Mode).id,
+        system: getActiveModeActivePresetKeyValue("system") as string,
+        message: options.message,
+      };
 
-    if (!command) {
-      throw new Error(`Command ${options.promptId} not found`);
+      this.runCommand(command);
     }
 
-    this.runCommand(command);
   }
 
   async runCommand(command: PromptDefinition & { promptId }) {

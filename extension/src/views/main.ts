@@ -49,6 +49,16 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
+    webviewView.onDidChangeVisibility(() => {
+      if (webviewView.visible) {
+        // SecondaryViewProvider.postMessage({ type: "shown" });
+        webviewView.webview.postMessage({ content: { type: "shown" } });
+      } else {
+        // SecondaryViewProvider.postMessage({ type: "hidden" });
+        webviewView.webview.postMessage({ content: { type: "hidden" } });
+      }
+    });
+
     MainViewProvider._view = webviewView;
 
     webviewView.webview.html = this.getWebviewHTML(webviewView.webview);
@@ -445,6 +455,10 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
           case "send": {
             if (!currentDispatcher) return;
             currentDispatcher.send(value);
+            break;
+          }
+          case "sendUnprompted": {
+            currentDispatcher = new Dispatcher(webviewView, { message: value });
             break;
           }
           case "abort": {

@@ -143,6 +143,14 @@
   }
   
   activeMode.subscribe(getHistory);
+
+  const listenShown = extComm.on("shown", () => {
+    tick().then(() => input?.focus());
+  });
+
+  const listenHidden = extComm.on("hidden", () => {
+    input?.blur();
+  });
   
   onMount(() => {
     tick().then(() => input?.focus());
@@ -154,6 +162,8 @@
       listenChatMessageReceived();
       listenChatMessageSent();
       listenAbort();
+      listenShown();
+      listenHidden();
     };
   });
 
@@ -188,6 +198,14 @@
     if (input.trim() === "") { return; }
     if (responseInProgress) return;
     extComm.SEND(input);
+    _setInputValue("");
+  };
+
+  const onNewChatSubmit = (e) => {
+    const input = e.detail;
+    if (input.trim() === "") { return; }
+    if (responseInProgress) return;
+    extComm.SEND_UNPROMPTED(input);
     _setInputValue("");
   };
 
@@ -276,6 +294,14 @@
               class="w-full border border-panel p-2"
               placeholder="Say something..."
               on:submit={onChatSubmit}
+            />
+            {:else}
+            <GrowingTextarea
+              bind:this={input}
+              bind:setValue={setInputValue}
+              class="w-full border border-panel p-2"
+              placeholder="Say something..."
+              on:submit={onNewChatSubmit}
             />
           {/if}
         </div>

@@ -74,7 +74,8 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
     const inst = languageInstructions[languageid(editor)] ?? "";
 
     text = text.replaceAll("{{language_instructions}}", inst);
-    return text.replaceAll("{{selection}}", selection.selectedText).trim();
+    text = text.replaceAll("{{selection}}", selection.selectedText).trim();
+    return text.replaceAll("{{file}}", editor.document.getText());
   };
 
   const message = await substitute(prompt.message);

@@ -23,6 +23,9 @@ jobs:
       - name: Build extension
         run: cd extension && npm install && npm run build
 
+      - name: Build extension (for browser)
+        run: cd extension && npm run build:browser
+
       - name: Copy README so it gets published
         run: cp README.md extension
 

@@ -148,7 +148,7 @@
     <div
       class="flex-1 flex flex-col overflow-x-hidden overflow-y-auto justify-center align-middle items-center my-4 space-y-4"
     >
-      <div class="max-w-[768px]">
+      <div class="max-w-[768px] px-4">
         Placeholders are used to insert dynamic values into your prompts. Placeholders can include other placeholders, but be careful not to create circular references between them.
       </div>
 

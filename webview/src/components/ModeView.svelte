@@ -314,14 +314,14 @@
             />
             {:else}
               {#if !viewingArchivedConversation}
-            <GrowingTextarea
-              bind:this={input}
-              bind:setValue={setInputValue}
-              class="w-full border border-panel p-2"
-              placeholder="Say something..."
-              on:submit={onNewChatSubmit}
-            />
-            {/if}
+                <GrowingTextarea
+                  bind:this={input}
+                  bind:setValue={setInputValue}
+                  class="w-full border border-panel p-2"
+                  placeholder="Say something..."
+                  on:submit={onNewChatSubmit}
+                />
+              {/if}
           {/if}
         </div>
         <status-bar class="w-full pt-2 flex justify-between h-8">

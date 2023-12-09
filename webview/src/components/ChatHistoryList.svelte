@@ -1,14 +1,22 @@
 <script lang="ts">
-  import { tick } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   import Button from "./Button.svelte";
   import ConversationMessage from "./ConversationMessage.svelte";
   import type { Conversation } from "./ModeView.svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let chatHistory: Conversation[] = [];
   let activeHistoryConversation: Conversation | null;
 
   const setActiveHistoryConversation = (conversation: Conversation | null) => {
     activeHistoryConversation = conversation;
+
+    if (conversation === null) {
+      dispatch("toggleHistoryMessage", false);
+    } else [
+      dispatch("toggleHistoryMessage", true),
+    ]
 
     tick().then(() => {
       scrollToBottom();

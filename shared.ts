@@ -13,6 +13,16 @@ export interface Mode {
   id: string;
 }
 
+export interface Placeholder {
+  id: string;
+  key: string;
+  value: string;
+}
+
+export interface Placeholders {
+  [id: string]: Placeholder;
+}
+
 export enum InsertionMethod {
   None = "none",
   Replace = "replace",

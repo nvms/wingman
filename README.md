@@ -98,6 +98,4 @@ Switching between modes automatically activates the last preset used in that mod
 |                       | `{{gh_pr_diff}}`                                            | Soon  |
 | Code review           | PR review, comment generation                               | Soon  |
 |                       | PR review, provide solutions driven by commenter suggestion | Soon  |
-| Personalities         | Simple personality management UI.                           | Later |
-|                       | `{{personality:me}}` `{{personality:sarcastic}}`            | Later |
 | Import/export prompts | Export prompts to JSON                                      | Soon  |

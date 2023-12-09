@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 // @ts-ignore
-import { Preset, PromptDefinition, getHumanReadableLanguageName, languageInstructions } from "../../shared";
-import { extension, getActiveModeActivePresetKeyValue, getSelectionInfo, languageid } from "./utils";
+import { Placeholders, Preset, PromptDefinition, getHumanReadableLanguageName, languageInstructions } from "../../shared";
+import { extension, getActiveModeActivePresetKeyValue, getSelectionInfo, languageid, stateKeys } from "./utils";
+import { State } from "./state";
 
 export async function createPrompt(prompt: PromptDefinition & { promptId: string }) {
   const editor = vscode.window.activeTextEditor;
@@ -14,6 +15,28 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
   ) as unknown as Preset["completionParams"];
 
   const substitute = async (text: string) => {
+    const placeholders = { ...State.get(stateKeys.placeholders()) as Placeholders ?? {} };
+
+    function replacePlaceholders(text: string, placeholders: Placeholders, seenKeys: Set<string> = new Set()): string {
+      for (const placeholder of Object.values(placeholders)) {
+        let value = String(placeholder.value);
+        if (seenKeys.has(placeholder.key)) {
+          text = text.replaceAll(`{{${placeholder.key}}}`, `[Wingman: possible placeholder circular reference detected (key: ${placeholder.key})]`);
+          continue;
+        }
+
+        if (Object.values(placeholders).some(p => value.includes(`{{${p.key}}}`))) {
+          seenKeys.add(placeholder.key);
+          value = replacePlaceholders(value, placeholders, seenKeys);
+        }
+
+        text = text.replaceAll(`{{${placeholder.key}}}`, value);
+      }
+      return text;
+    }
+
+    text = replacePlaceholders(text, placeholders);
+
     text = text.replaceAll("{{ft}}", languageid(editor));
     text = text.replaceAll("{{language}}", readable);
 
@@ -74,8 +97,8 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
     const inst = languageInstructions[languageid(editor)] ?? "";
 
     text = text.replaceAll("{{language_instructions}}", inst);
-    text = text.replaceAll("{{selection}}", selection.selectedText).trim();
-    return text.replaceAll("{{file}}", editor.document.getText());
+    text = text.replaceAll("{{file}}", editor.document.getText());
+    return text.replaceAll("{{selection}}", selection.selectedText).trim();
   };
 
   const message = await substitute(prompt.message);

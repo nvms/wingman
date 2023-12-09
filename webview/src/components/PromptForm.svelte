@@ -101,7 +101,7 @@
       name="message"
     />
     <div class="text-xs mt-2">
-      <Button variant="secondary" size="sm" on:click={() => showInterpolationHelp = true}>View supported interpolations</Button>
+      <Button variant="secondary" size="sm" on:click={() => showInterpolationHelp = true}>View supported placeholders</Button>
       <ConfirmationDialog open={showInterpolationHelp} on:close={() => showInterpolationHelp = false}>
         <ul class="list-disc pl-4 space-y-4">
           <li>

@@ -4,6 +4,7 @@
   export let value = "";
   export let name = "";
   export let placeholder = "";
+  export let maxHeight = "200px";
   let className = "";
   export let enterCreatesNewLine = false; // Prop to control Enter key behavior
   export { className as class };
@@ -45,6 +46,7 @@
   }
 
   onMount(() => {
+    console.log("onMount");
     textArea.addEventListener("input", autoGrow);
     tick().then(() => {
       autoGrow();
@@ -60,7 +62,7 @@
   {name}
   class={`textarea resize-none border ${className} overflow-y-auto`}
   wrap="hard"
-  style="width: 100%; max-width: 100%;"
+  style="width: 100%; max-width: 100%; max-height: {maxHeight};"
 />
 
 <style lang="scss">
@@ -68,7 +70,6 @@
     background: var(--vscode-input-background);
     border: 1px solid var(--vscode-panel-border);
     color: var(--vscode-input-foreground);
-    max-height: 200px;
 
     @apply transition-all h-6;
 

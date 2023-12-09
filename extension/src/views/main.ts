@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 // @ts-ignore
-import { Mode, Preset, PromptDefinition, defaultPrompts, generateId, systems } from "../../../shared";
+import { Mode, Placeholder, Preset, PromptDefinition, defaultPrompts, generateId, systems } from "../../../shared";
 import { createDiff } from "../diff";
 import { Dispatcher } from "../dispatcher";
 import { formats, getProviderCompletionParamDefaults, providers, tokenizers } from "../providers/common";
@@ -26,6 +26,16 @@ export const sendNotificationSuccess = (webviewView: vscode.WebviewView, message
 
 export const sendNotificationWarning = (webviewView: vscode.WebviewView, message: string) => {
   webviewView.webview.postMessage({ content: { type: "notificationWarning", message } });
+};
+
+/**
+ * A placeholder key is only allowed to contain letters, numbers, and underscores.
+ * If the key contains anything other than those characters, it is invalid.
+ * This function returns a boolean indicating whether the key is valid.
+ * @param key 
+ */
+const isValidPlaceholderKey = (key: string) => {
+  return /^[a-zA-Z0-9_]+$/.test(key);
 };
 
 let currentDispatcher: Dispatcher | undefined;
@@ -137,6 +147,11 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
               case "chatHistory": {
                 const history = State.getWorkspace(stateKeys.activeModeChatHistory()) ?? [];
                 webviewView.webview.postMessage({ id, content: history });
+                break;
+              }
+              case "placeholders": {
+                const placeholders = State.get(stateKeys.placeholders()) ?? {};
+                webviewView.webview.postMessage({ id, content: placeholders });
                 break;
               }
               default: {
@@ -268,6 +283,15 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 webviewView.webview.postMessage({ id, content: true });
                 break;
               }
+              case "placeholder": {
+                const placeholder = value as Placeholder;
+                const placeholders = State.get(stateKeys.placeholders()) || {};
+                delete placeholders[placeholder.id];
+                State.set(stateKeys.placeholders(), placeholders);
+                sendNotificationSuccess(webviewView, "Placeholder deleted.");
+                webviewView.webview.postMessage({ id, content: placeholders });
+                break;
+              }
               default: {
                 throw new Error(`Invalid 'key' in 'delete' request: ${key}`);
               }
@@ -287,6 +311,22 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 State.set(stateKeys.activeModePresets(), presets);
                 sendNotificationSuccess(webviewView, "Preset created.");
                 webviewView.webview.postMessage({ id, content: newPreset });
+                break;
+              }
+              case "placeholder": {
+                const placeholder = value as Placeholder & { id?: string; };
+
+                if (!isValidPlaceholderKey(placeholder.key)) {
+                  sendNotificationError(webviewView, "Placeholder key must only contain letters, numbers, and underscores.");
+                  return;
+                }
+
+                placeholder.id = generateId();
+                const placeholders = State.get(stateKeys.placeholders()) || {};
+                placeholders[placeholder.id] = placeholder;
+                State.set(stateKeys.placeholders(), placeholders);
+                sendNotificationSuccess(webviewView, "Placeholder created.");
+                webviewView.webview.postMessage({ id, content: placeholder });
                 break;
               }
               case "mode": {
@@ -429,6 +469,21 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
               }
               case "chatHistory": {
                 State.setWorkspace(stateKeys.activeModeChatHistory(), value);
+                break;
+              }
+              case "placeholder": {
+                const placeholder = value as Placeholder;
+
+                if (!isValidPlaceholderKey(placeholder.key)) {
+                  sendNotificationError(webviewView, "Placeholder key must only contain letters, numbers, and underscores.");
+                  return;
+                }
+
+                const placeholders = State.get(stateKeys.placeholders()) || {};
+                placeholders[placeholder.id] = placeholder;
+                State.set(stateKeys.placeholders(), placeholders);
+                sendNotificationSuccess(webviewView, "Placeholder updated.");
+                webviewView.webview.postMessage({ id, content: placeholder });
                 break;
               }
               default: {

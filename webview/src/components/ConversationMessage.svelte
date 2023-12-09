@@ -105,7 +105,7 @@
   }
 </script>
   
-<div class="mb-4 w-full max-w-[768px]">
+<div class="mb-4 w-full">
   <div class="flex items-start">
     {#if from === "user"}
       <UserAvatarIcon class="w-6 h-6 mr-2" />
@@ -113,7 +113,7 @@
       <AIAvatarIcon class="w-6 h-6 mr-2" />
     {/if}
     <div class="flex-1 overflow-hidden">
-      <div class="message p-4 flex flex-col max-w-[768px]" bind:this={messageBlock}>
+      <div class="message p-4 flex flex-col" bind:this={messageBlock}>
         <Highlighter code={message} />
         {#if responseInProgress && isLastMessage}
           <svg class="mt-2 animate-spin h-6 w-6 foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

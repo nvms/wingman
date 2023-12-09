@@ -106,6 +106,17 @@ export const createState = () => {
 
   createPromptMap();
 
+  {
+    const id = generateId();
+    State.set(stateKeys.placeholders(), {
+      [id]: {
+        id,
+        key: "important",
+        value: "IMPORTANT: Only return the code inside of a Markdown code block nothing else, like this:\n\n```{{ft}}\n[CODE HERE]\n```\n\nDo not explain your changes."
+      },
+    });
+  }
+
   State.set(stateKeys.stateCreated(), true);
 };
 

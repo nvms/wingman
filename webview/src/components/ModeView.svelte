@@ -28,11 +28,13 @@
   import ExtensionSettings from "./ExtensionSettings.svelte";
   import GrowingTextarea from "./GrowingTextarea.svelte";
   import { slide, fade } from "svelte/transition";
+  import PlaceholderSettings from "./PlaceholderSettings.svelte";
 
   export let showPresetSettings = false;
   export let showPromptSettings = false;
   export let showModeSettings = false;
   export let showExtensionSettings = false;
+  export let showPlaceholderSettings = false;
   export let categories: Category[] = [];
   let description = "";
   let disableSidebar = false;
@@ -214,6 +216,16 @@
   function _setInputValue (v) {
     setInputValue?.(v);
   }
+
+  let viewingArchivedConversation = false;
+
+  const onToggleHistoryMessage = (e: CustomEventInit<Boolean>) => {
+    if (e.detail) {
+      viewingArchivedConversation = true;
+    } else {
+      viewingArchivedConversation = false;
+    }
+  };
 </script>
 
 <div class="flex-1 flex flex-col overflow-y-auto">
@@ -237,6 +249,11 @@
       <ExtensionSettings on:getPrompts />
     </div>
   {/if}
+  {#if showPlaceholderSettings}
+    <div class="flex-0 border-b border-panel" transition:slide={{ duration: 150 }}>
+      <PlaceholderSettings />
+    </div>
+  {/if}
   <div class="flex flex-1 overflow-hidden">
     <Sidebar>
       {#each categories as category}
@@ -258,14 +275,14 @@
       class="flex-1 flex flex-col justify-between opacity-100 overflow-hidden relative h-full p-2 items-center"
     >
       {#if description}
-        <div class="absolute z-10 top-2 right-2 left-2 p-2 bg-gray-700 text-white">
+        <div class="absolute z-10 top-2 right-2 left-2 p-2 bg-black text-gray-300">
           <pre class="whitespace-pre-wrap">{description}</pre>
         </div>
       {/if}
 
       {#if chats.length === 0 && conversationHistory.length > 0}
         <div class="flex flex-col overflow-auto px-5 items-center w-full">
-          <ChatHistoryList chatHistory={conversationHistory} />
+          <ChatHistoryList chatHistory={conversationHistory} on:toggleHistoryMessage={onToggleHistoryMessage} />
         </div>
       {/if}
 
@@ -286,7 +303,7 @@
       </div>
 
       <div class="flex-0 px-5 flex flex-col justify-center items-center w-full">
-        <div class="w-full max-w-[768px]">
+        <div class="w-full">
           {#if chats.length !== 0}
             <GrowingTextarea
               bind:this={input}
@@ -296,6 +313,7 @@
               on:submit={onChatSubmit}
             />
             {:else}
+              {#if !viewingArchivedConversation}
             <GrowingTextarea
               bind:this={input}
               bind:setValue={setInputValue}
@@ -303,9 +321,10 @@
               placeholder="Say something..."
               on:submit={onNewChatSubmit}
             />
+            {/if}
           {/if}
         </div>
-        <status-bar class="w-full max-w-[768px] pt-2 flex justify-between h-8">
+        <status-bar class="w-full pt-2 flex justify-between h-8">
           <div class="flex items-center">
             {#if responseInProgress}
               <Button variant="danger" size="md" class="mr-2" on:click={cancel}

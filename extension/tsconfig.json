@@ -26,7 +26,6 @@
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "types": ["vite/client"],
     "rootDir": ".",
   },
 }

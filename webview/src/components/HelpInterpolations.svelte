@@ -1,10 +1,5 @@
-<script lang="ts">
-  let foo: string = "Hello";
-  let bar: string = "World";
-</script>
-
 <div class="p-2 space-y-2">
-  <h2 class="text-lg">Interpolations</h2>
+  <h2 class="text-lg">Placeholders</h2>
   <p class="opacity-80">
     These are variables that can be used in your prompts. They are surrounded by
     curly braces.
@@ -26,10 +21,12 @@
       <code>{"{{"}selection{"}}"}</code> - Replaced with the current selection in the active editor.
     </li>
     <li>
+      <code>{"{{"}file{"}}"}</code> - Replaced with the contents of the active editor.
+    </li>
+    <li>
       <code>{"{{"}language_instructions{"}}"}</code> - A map of language ID to additional prompt instructions.
       For example, <code>{"{"} cpp: "Use modern C++ syntax" {"}"}</code>. When the active document has a language
       ID that matches one of the keys, <code>{"{{"}language_instructions{"}}"}</code> will be replaced with the value.
-
     </li>
   </ul>
   <br />

@@ -169,9 +169,10 @@
   let showPromptSettings = false;
   let showExtensionSettings = false;
   let showModeSettings = false;
+  let showPlaceholderSettings = false;
 
   const toggleSetting = (
-    setting: "preset" | "prompt" | "extension" | "mode",
+    setting: "preset" | "prompt" | "extension" | "mode" | "placeholders",
   ) => {
     if (setting === "preset" && showPresetSettings) {
       showPresetSettings = false;
@@ -193,10 +194,16 @@
       return;
     }
 
+    if (setting === "placeholders" && showPlaceholderSettings) {
+      showPlaceholderSettings = false;
+      return;
+    }
+
     showPresetSettings = setting === "preset";
     showPromptSettings = setting === "prompt";
     showExtensionSettings = setting === "extension";
     showModeSettings = setting === "mode";
+    showPlaceholderSettings = setting === "placeholders";
   };
 
   let disableNavigation = false;
@@ -292,6 +299,15 @@
                   Prompts
                 </div>
               </button>
+              <button on:click={() => toggleSetting("placeholders")}>
+                <div
+                  class={`mode-icon py-2 px-2 ${
+                    showPlaceholderSettings ? "active" : ""
+                  }`}
+                >
+                  Placeholders
+                </div>
+              </button>
               <button on:click={() => toggleSetting("extension")}>
                 <div
                   class={`mode-icon py-2 px-2 ${
@@ -314,6 +330,7 @@
             {showPresetSettings}
             {showPromptSettings}
             {showExtensionSettings}
+            {showPlaceholderSettings}
             categories={currentCategories}
             on:getPrompts={getPrompts}
           />

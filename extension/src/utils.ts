@@ -154,6 +154,7 @@ export const stateKeys = {
   stateCreated(): string { return "stateCreated"; },
   prompt(promptId: string): string { return `${promptId}-prompt`; },
   promptMap(): string { return "promptMap"; },
+  placeholders(): string { return "placeholders"; },
 };
 
 export const getPrompt = (promptId: string) => {

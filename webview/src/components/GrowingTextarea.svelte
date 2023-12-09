@@ -1,5 +1,5 @@
 <script>
-  import { onMount, createEventDispatcher, tick } from "svelte";
+  import { onMount, createEventDispatcher, tick, onDestroy } from "svelte";
 
   export let value = "";
   export let name = "";
@@ -50,11 +50,16 @@
   }
 
   onMount(() => {
-    console.log("onMount");
     textArea.addEventListener("input", autoGrow);
     tick().then(() => {
       autoGrow();
     });
+  });
+
+  onDestroy(() => {
+    if (textArea) {
+      textArea.removeEventListener("input", autoGrow);
+    }
   });
 </script>
 

@@ -32,7 +32,11 @@
         dispatch("submit", value);
       } else if (!event.shiftKey && enterCreatesNewLine) {
         event.preventDefault();
-        value += "\n";
+        const selectionStart = event.target.selectionStart;
+        const selectionEnd = event.target.selectionEnd;
+        value = value.slice(0, selectionStart) + "\n" + value.slice(selectionEnd);
+        event.target.value = value; // Set the textarea value to the updated value
+        event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
         tick().then(() => {
           autoGrow();
         });

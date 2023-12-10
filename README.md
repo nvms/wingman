@@ -90,12 +90,8 @@ Switching between modes automatically activates the last preset used in that mod
 2. In `/extension`: `npm run build:watch`
 3. Run the extension using the debug panel.
 
-# What's next?
+# TODO
 
-|                       | What?                                                       | When? |
-| --------------------- | ----------------------------------------------------------- | ----- |
-| Github placeholders   | `{{gh_pr_comments}}`                                        | Soon  |
-|                       | `{{gh_pr_diff}}`                                            | Soon  |
-| Code review           | PR review, comment generation                               | Soon  |
-|                       | PR review, provide solutions driven by commenter suggestion | Soon  |
-| Import/export prompts | Export prompts to JSON                                      | Soon  |
+- UI for configuring `{{language_instructions}}`.
+- Continue archived conversations.
+- Sync data to settings.json, so that it can be restored on another machine.

@@ -94,4 +94,3 @@ Switching between modes automatically activates the last preset used in that mod
 
 - UI for configuring `{{language_instructions}}`.
 - Continue archived conversations.
-- Sync data to settings.json, so that it can be restored on another machine.

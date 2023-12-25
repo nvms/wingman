@@ -77,9 +77,9 @@ export const providers = {
     // https://platform.openai.com/docs/api-reference/chat/create
     completionParams: [
       { name: "n", default: 1 },
-      { name: "model", default: "gpt-3.5-turbo" },
+      { name: "model", default: "gpt-3.5-turbo-1106" },
       { name: "temperature", default: 0.3 },
-      { name: "max_tokens", default: 2048 },
+      { name: "max_tokens", default: 4096 },
       { name: "frequency_penalty", default: 0 },
       { name: "presence_penalty", default: 0 },
       { name: "top_p", default: 1 },

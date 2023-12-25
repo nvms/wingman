@@ -22,7 +22,7 @@ export const createDefaultPresetsForAllModes = () => {
       State.set(`${mode.id}-presets`, [
         {
           id: generateId(),
-          name: "OpenAI (gpt-3.5-turbo)",
+          name: "OpenAI (gpt-3.5-turbo-1106)",
           provider: "OpenAI",
           format: "OpenAI",
           tokenizer: "OpenAI",
@@ -43,7 +43,6 @@ export const createDefaultPresetsForAllModes = () => {
           completionParams: {
             ...getProviderCompletionParamDefaults("OpenAI") as any,
             model: "gpt-4-1106-preview",
-            max_tokens: 64_000,
           },
         },
         {

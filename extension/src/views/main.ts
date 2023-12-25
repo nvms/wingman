@@ -154,6 +154,11 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
                 webviewView.webview.postMessage({ id, content: placeholders });
                 break;
               }
+              case "disablePromptInsertion": {
+                const disablePromptInsertion = State.get(stateKeys.disablePromptInsertion()) ?? false;
+                webviewView.webview.postMessage({ id, content: disablePromptInsertion });
+                break;
+              }
               default: {
                 throw new Error(`Invalid 'key' in 'get' request: ${key}`);
               }
@@ -189,6 +194,10 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
               }
               case "apiKey": {
                 promptSetProviderKey(value);
+                break;
+              }
+              case "disablePromptInsertion": {
+                State.set(stateKeys.disablePromptInsertion(), value);
                 break;
               }
               default: {

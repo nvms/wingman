@@ -121,6 +121,12 @@ export class Dispatcher {
   }
 
   handleResponseInsertionMethod(response: string) {
+    const disablePromptInsertion = State.get(stateKeys.disablePromptInsertion()) ?? false;
+
+    if (disablePromptInsertion) {
+      return;
+    }
+
     const { insertionMethod } = this.prepared;
     const editor = vscode.window.activeTextEditor;
     response = this.extractFirstCodeBlock(response);

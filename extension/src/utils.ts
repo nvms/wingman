@@ -155,6 +155,7 @@ export const stateKeys = {
   prompt(promptId: string): string { return `${promptId}-prompt`; },
   promptMap(): string { return "promptMap"; },
   placeholders(): string { return "placeholders"; },
+  disablePromptInsertion(): string { return "disablePromptInsertion"; },
 };
 
 export const getPrompt = (promptId: string) => {

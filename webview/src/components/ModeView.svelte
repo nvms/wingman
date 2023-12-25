@@ -157,6 +157,11 @@
   onMount(() => {
     tick().then(() => input?.focus());
     getHistory();
+
+    extComm.GET("disablePromptInsertion").then((value) => {
+      disablePromptInsertion = value;
+      console.log("disablePromptInsertion", value);
+    });
   
     return () => {
       listenChatInitiated();
@@ -225,6 +230,13 @@
     } else {
       viewingArchivedConversation = false;
     }
+  };
+
+  let disablePromptInsertion = false;
+
+  const onToggleDisablePromptInsertion = (e) => {
+    const checked = e.target.checked;
+    extComm.SET("disablePromptInsertion", checked);
   };
 </script>
 
@@ -333,12 +345,22 @@
             {/if}
 
             {#if canCloseConversation}
-              <Button variant="secondary" size="md" on:click={closeConversation}
+              <Button variant="secondary" size="md" class="mr-2" on:click={closeConversation}
                 >Close conversation</Button
               >
             {/if}
           </div>
-          <div class="flex-0 flex justify-end items-center text-xs">
+          <div class="flex-1 flex justify-between items-center text-xs">
+            <div class="">
+              <div class="flex flex-col items-start">
+                <span class="opacity-50">Global overrides</span>
+                <span class="flex items-center">
+                  <input type="checkbox" id="disablePromptInsertion" on:change={onToggleDisablePromptInsertion} bind:checked={disablePromptInsertion}/>
+                  <label class="opacity-50 ml-1" for="disablePromptInsertion">Disable prompt insertion method</label>
+                </span>
+              </div>
+            </div>
+
             <div class="ml-8">
               <div class="flex flex-col items-end">
                 <span class="opacity-50">Active preset</span>

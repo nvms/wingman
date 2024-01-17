@@ -124,6 +124,14 @@
             in the active editor.
           </li>
           <li>
+            <code>{"{{"}cursor{"}}"}</code> - Replaced with the full text cursors current line
+            in the active editor.<br />
+            <code>{"{{"}cursor:BEFORE:AFTER{"}}"}</code> - Replaced with lines from
+            'text cursor line-BEFORE' to 'text cursor line+AFTER'<br />
+            - e.g. <code>{"{{"}cursor:2:5{"}}"}</code><br />
+            <code>{"{{"}cursor:2:5:'[MARKER]'{"}}"}</code> - Like previous but inserts [MARKER] at text cursor position.
+          </li>
+          <li>
             <code>{"{{"}:PARAM:VAL{"}}"}</code> - Set a completion parameter for the prompt when it is dispatched, e.g. <code>{"{{"}:top_k:4{"}}"}</code>.
           </li>
           <!-- <li>

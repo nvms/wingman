@@ -94,6 +94,56 @@ export async function createPrompt(prompt: PromptDefinition & { promptId: string
       }
     }
 
+    /**
+     * Text manipulation around the text cursor
+     * 1. {{cursor}}
+     *   - Returns the text cursors current line
+     * 2. {{cursor:2:5}}
+     *   - Returns the text from...
+     *       'cursor line-2 at the start of the line' to
+     *       'cursor line+5 at the end of the line'
+     * 3. {{cursor:1:1:'[SOME_MARKER]'}}
+     *   - Like 2. but inserts [SOME_MARKER] at text cursor position
+     * 
+     * Important:
+     * - When text is selected the cursor position is always at the end of selection
+     * - Only one {{cursor}} marker may be included in any prompt
+     * 
+     * Why: https://huggingface.co/stabilityai/stable-code-3b#run-with-fill-in-middle-fim-%E2%9A%A1%EF%B8%8F
+     */
+
+    const cursorRegex     = /\{\{cursor(?::([0-9]+):([0-9]+)(?::(['"])(.+)(?<!\\)\3)?)?\}\}/g;
+    const cursorMatches   = text.match(cursorRegex);
+
+    if (cursorMatches) {
+      const document      = editor.document;
+      const cursor        = editor.selection.active;
+
+      const match         = cursorMatches[0];
+      const matchGroups   = cursorRegex.exec(match);
+      const rowsBefore    = parseInt(matchGroups[1], 10);
+      const rowsAfter     = parseInt(matchGroups[2], 10);
+      const quoteChar     = matchGroups[3] || '';
+      const cursorMarker  = matchGroups[4]?.replace('\\' + quoteChar, quoteChar) || '';
+
+      const startLine     = Math.max(0, cursor.line - rowsBefore);
+      const endLine       = Math.min(document.lineCount, cursor.line + rowsAfter);
+      const endCharacters = document.lineAt(endLine).text.replace(/[\r\n]+$/, '').length;
+
+      const prefixPos     = new vscode.Position(startLine, 0);
+      const suffixPos     = new vscode.Position(endLine, endCharacters);
+
+      const prefixRange   = new vscode.Range(prefixPos, cursor);
+      const suffixRange   = new vscode.Range(cursor, suffixPos);
+
+      const prefixText    = document.getText(prefixRange);
+      const suffixText    = document.getText(suffixRange);
+
+      text = text.replace(match, prefixText + cursorMarker + suffixText);
+
+      editor.selection = new vscode.Selection(prefixPos, suffixPos);
+    }
+
     const inst = languageInstructions[languageid(editor)] ?? "";
 
     text = text.replaceAll("{{language_instructions}}", inst);

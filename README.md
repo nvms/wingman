@@ -40,6 +40,10 @@ Wingman makes your prompts dynamic with support for placeholders.
 Current placeholders:
 
 - `{{selection}}` is replaced with the selected text.
+- `{{cursor}}` is replaced with text cursors current line.
+- `{{cursor:NUM_BEFORE:NUM_AFTER}}` is replaced with text cursors current line.
+  - e.g. `{{cursor:2:5}}` for lines curser pos - NUM_BEFORE to curser pos + NUM_AFTER
+- `{{cursor:2:5:'[MARKER]'}}` like previous but inserts [MARKER] at text cursor position.
 - `{{ft}}` is replaced with the VSCode language identifier (`go`, `typescript`)
 - `{{language}}` is replaced with a friendly language name (`Go`, `TypeScript`).
 - `{{file}}` is replaced with the contents of the active file.

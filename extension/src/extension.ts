@@ -72,18 +72,30 @@ export const createDefaultPresetsForAllModes = () => {
         },
         {
           id: generateId(),
-          name: "LM Studio",
-          provider: "OpenAI",
-          format: "OpenAI",
-          tokenizer: "OpenAI",
-          url: "http://localhost:1234/v1/chat/completions",
+          name: "Claude v3.5 Sonnet",
+          provider: "ClaudeV3",
+          format: "Anthropic",
+          tokenizer: "Anthropic",
+          url: "https://api.anthropic.com/v1/messages",
           system: systems.get(mode.id),
           completionParams: {
-            ...getProviderCompletionParamDefaults("OpenAI") as any,
-            model: null,
-            stop: null,
+            ...getProviderCompletionParamDefaults("ClaudeV3") as any,
+            model: "claude-3-5-sonnet-20240620",
           },
-        }
+        },
+        {
+          id: generateId(),
+          name: "Claude v3 Opus",
+          provider: "ClaudeV3",
+          format: "Anthropic",
+          tokenizer: "Anthropic",
+          url: "https://api.anthropic.com/v1/messages",
+          system: systems.get(mode.id),
+          completionParams: {
+            ...getProviderCompletionParamDefaults("ClaudeV3") as any,
+            model: "claude-3-opus-20240229",
+          },
+        },
       ] as Preset[]);
       State.set(`${mode.id}-activePreset`, State.get(`${mode.id}-presets`)[0]);
     });

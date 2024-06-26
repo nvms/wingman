@@ -78,6 +78,7 @@
   "activationEvents": [],
   "dependencies": {
     "@ai-zen/node-fetch-event-source": "^2.1.2",
+    "@anthropic-ai/sdk": "^0.20.1",
     "gpt-tokenizer": "^2.1.2",
     "llama-tokenizer-js": "^1.1.3",
     "p-timeout": "^6.1.2"

@@ -1,7 +1,7 @@
 import { WebviewView } from "vscode";
 import { PreparedCommand } from "../dispatcher";
-import { OpenAIClient, PartialResponse } from "./clients/openai";
-import { APIProvider } from "./common";
+import { OpenAIClient } from "./clients/openai";
+import { APIProvider, ClaudeOpenAIMessage, PartialResponse } from "./common";
 
 export class OpenAIProvider implements APIProvider {
   webviewView: WebviewView;
@@ -9,7 +9,7 @@ export class OpenAIProvider implements APIProvider {
   onProgressCallback: (text: string) => void;
   client: OpenAIClient;
   abortController: AbortController;
-  messages: any[] = [];
+  messages: Array<ClaudeOpenAIMessage>;
 
   constructor(viewProvider: WebviewView, command: PreparedCommand, onProgressCallback?: (text: string) => void) {
     this.webviewView = viewProvider;
@@ -23,8 +23,8 @@ export class OpenAIProvider implements APIProvider {
    * @param message Only provided when this is a follow-up message. Otherwise, the command message is used.
    */
   async send(message: string = undefined): Promise<string> {
-    if (this.messages.length === 0) {
-      this.messages.push({ role: "system", content: this.command.system });
+    if (message === undefined || !this.messages || this.messages.length === 0) {
+      this.messages = [{ role: "system", content: this.command.system }];
     }
 
     if (message === undefined) {

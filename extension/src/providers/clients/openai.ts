@@ -2,17 +2,7 @@ import { PreparedCommand } from "../../dispatcher";
 import { fetchEventSource } from "@ai-zen/node-fetch-event-source";
 import pTimeout from "p-timeout";
 import { getCurrentProviderAPIKey } from "../../utils";
-
-export type PartialResponse = {
-  id: string;
-  text: string;
-  role: "user" | "system" | "assistant" | "function";
-  name?: string;
-  delta?: string;
-  detail?: any;
-  parentMessageId?: string;
-  conversationId?: string;
-};
+import { PartialResponse } from "../common";
 
 export class OpenAIClient {
   private key: string;

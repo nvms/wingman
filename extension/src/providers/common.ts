@@ -3,6 +3,7 @@ import { PreparedCommand } from "../dispatcher";
 import { OpenAITokenizer } from "../tokenizers/openai";
 import { AnthropicProvider } from "./anthropic";
 import { OpenAIProvider } from "./openai";
+import { ClaudeV3Provider } from "./claudev3";
 
 interface Format {
   system: string;
@@ -23,6 +24,12 @@ export const formats: { [key: string]: Format } = {
     user: "\n\nHuman: {user_message}\n\nAssistant:",
     first: "{system}{user}",
     stops: ["Human:"],
+  },
+  ClaudeV3: {
+    system: "{system_message}",
+    user: "{user_message}",
+    first: "{system}{user}",
+    stops: [],
   },
   Alpaca: {
     system: "{system_message}",
@@ -86,6 +93,7 @@ export const providers = {
       { name: "stop", default: [] },
     ],
   },
+  // Legacy API
   Anthropic: {
     instance: AnthropicProvider,
     // https://docs.anthropic.com/claude/reference/complete_post
@@ -95,6 +103,19 @@ export const providers = {
       { name: "top_p", default: 0.7 },
       { name: "model", default: "claude-instant-1" },
       { name: "temperature", default: 0.3 },
+      // { name: "stop_sequence", default: ["\\n\\nHuman:"] },
+    ],
+  },
+  ClaudeV3: {
+    instance: ClaudeV3Provider,
+    // https://docs.anthropic.com/claude/reference/messages_post
+    completionParams: [
+      // The current max configurable value across all Anthropic models is 4096
+      // Source: https://web.archive.org/web/20240402111826/https://docs.anthropic.com/claude/docs/models-overview
+      { name: "max_tokens", default: 4096 },
+      { name: "model", default: "claude-3-5-sonnet-20240620" },
+      // Anthropic recommends only setting top_k and top_p for special use cases, and says temperature is usually sufficient.
+      { name: "temperature", default: 0.0 },
       // { name: "stop_sequence", default: ["\\n\\nHuman:"] },
     ],
   },
@@ -108,6 +129,9 @@ export const tokenizers = {
     instance: OpenAITokenizer,
   },
   Anthropic: {
+    instance: OpenAITokenizer,
+  },
+  ClaudeV3: {
     instance: OpenAITokenizer,
   },
 };
@@ -137,3 +161,18 @@ export interface APIProvider {
 }
 
 export const EXTENSION_SCHEME = "wingman";
+
+export type ClaudeOpenAIMessage = {
+  role: string;
+  content: string;
+};
+export type PartialResponse = {
+  id: string;
+  text: string;
+  role: "user" | "system" | "assistant" | "function";
+  name?: string;
+  delta?: string;
+  detail?: any;
+  parentMessageId?: string;
+  conversationId?: string;
+};

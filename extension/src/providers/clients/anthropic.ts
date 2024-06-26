@@ -15,6 +15,7 @@ export type CompletionResponse = {
 const ANTHROPIC_SDK = "anthropic-typescript/0.4.4";
 const ANTHROPIC_VERSION = "2023-01-01";
 
+// Note that this client is only for Anthropic's legacy v1 and v2 Claude APIs.
 export class AnthropicClient {
   private key: string;
   private command: PreparedCommand;

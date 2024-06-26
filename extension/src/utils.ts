@@ -172,9 +172,9 @@ export const getActiveModeActivePresetKeyValue = (key: keyof Preset): string | {
   return activePreset[key] as string | Record<string, string | number | boolean>;
 };
 
-export const getCurrentProviderAPIKey = async (): Promise<string> => {
-  const provider = getActiveModeActivePresetKeyValue("provider") as string;
-  const apiKey = await getSecret(stateKeys.providerApiKey(provider));
+export const getCurrentProviderAPIKey = async (api?: string): Promise<string> => {
+  const apiKind = (typeof(api) !== 'undefined') ? api : getActiveModeActivePresetKeyValue("provider") as string;
+  const apiKey = await getSecret(stateKeys.providerApiKey(apiKind));
   if (!apiKey) return "";
   return apiKey as string;
 };

@@ -3,6 +3,7 @@ import { PreparedCommand } from "../dispatcher";
 import { AnthropicClient, CompletionResponse } from "./clients/anthropic";
 import { APIProvider, applyFormat } from "./common";
 
+// Note that this provider is only for Anthropic's legacy v1 and v2 Claude APIs.
 export class AnthropicProvider implements APIProvider {
   webviewView: WebviewView;
   command: PreparedCommand;
